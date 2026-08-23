@@ -72,10 +72,6 @@ export default async function Fiche({ params }) {
             </div>
             <p className="accroche">« {p.accroche} »</p>
             <div className="meta-row">
-              <span className="note">
-                <i className="ti ti-star-filled" aria-hidden="true" /> {p.note.toFixed(1)}
-                <span className="muted" style={{ fontWeight: 400 }}> &nbsp;· {p.avis} avis</span>
-              </span>
               <span className="prix" style={{ fontSize: 15 }}>{p.prix}</span>
             </div>
           </div>
