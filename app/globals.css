@@ -216,3 +216,10 @@ img { max-width: 100%; display: block; }
 .site-footer a { display: block; font-size: 14px; padding: 3px 0; color: #cdbfb4; }
 .site-footer a:hover { color: var(--or); }
 .site-footer .bottom { border-top: 1px solid rgba(255,255,255,0.10); padding-top: 18px; font-size: 13px; color: #9c8d81; text-align: center; }
+
+/* Prose — pages de texte (règles du salon…) */
+.prose p { margin: 0 0 16px; line-height: 1.7; }
+.prose p:last-child { margin-bottom: 0; }
+.prose ul { margin: 0 0 16px; padding-left: 22px; list-style: disc; }
+.prose li { margin-bottom: 8px; line-height: 1.6; }
+.prose .section-title { text-align: left; }

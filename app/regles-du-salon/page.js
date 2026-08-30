@@ -22,7 +22,7 @@ export default function ReglesDuSalon() {
       </section>
 
       <section className="section">
-        <div className="container" style={{ maxWidth: 780 }}>
+        <div className="container prose" style={{ maxWidth: 780 }}>
           <div className="eyebrow">le classement</div>
           <h2 className="section-title">Comment les stands sont ordonnés</h2>
           <p>
@@ -37,8 +37,10 @@ export default function ReglesDuSalon() {
             </li>
             <li>
               <strong>La fraîcheur du stand</strong> : un stand récemment mis à
-              jour par son exposant (nouvelle vidéo, nouvelle offre) remonte
-              avant un stand inchangé ;
+              jour par son exposant remonte avant un stand inchangé — et toute
+              mise à jour compte autant, qu&apos;il s&apos;agisse d&apos;une
+              offre rédigée gratuitement ou d&apos;une nouvelle vidéo, quel
+              qu&apos;en soit le producteur ;
             </li>
             <li>
               <strong>L&apos;actualité</strong> : pendant une édition du salon,
@@ -64,7 +66,7 @@ export default function ReglesDuSalon() {
       </section>
 
       <section className="section">
-        <div className="container" style={{ maxWidth: 780 }}>
+        <div className="container prose" style={{ maxWidth: 780 }}>
           <div className="eyebrow">l&apos;entrée</div>
           <h2 className="section-title">Comment on entre au salon</h2>
           <p>
@@ -90,7 +92,7 @@ export default function ReglesDuSalon() {
       </section>
 
       <section className="section">
-        <div className="container" style={{ maxWidth: 780 }}>
+        <div className="container prose" style={{ maxWidth: 780 }}>
           <div className="eyebrow">suspension &amp; retrait</div>
           <h2 className="section-title">
             Dans quels cas un stand est suspendu ou retiré
@@ -117,14 +119,19 @@ export default function ReglesDuSalon() {
             <li>
               <strong>Le non-renouvellement de la présence annuelle</strong> :
               le stand est dépublié — jamais effacé — et rouvre au retour de
-              l&apos;exposant.
+              l&apos;exposant ;
+            </li>
+            <li>
+              <strong>Une obligation légale ou une décision de justice</strong>{" "}
+              imposant le retrait du stand ou d&apos;un contenu.
             </li>
           </ul>
           <p>
             En pratique : toute suspension ou tout retrait est notifié par
             écrit à l&apos;exposant avec son motif. En cas de manquement grave,
             la suspension peut être immédiate ; pour une résiliation, un préavis
-            de 30 jours s&apos;applique. Un stand dépublié n&apos;est pas
+            de 30 jours s&apos;applique, sauf obligation légale contraire ou
+            manquements graves répétés. Un stand dépublié n&apos;est pas
             effacé : les éléments de l&apos;exposant lui restent restituables.
           </p>
           <p>
@@ -136,7 +143,7 @@ export default function ReglesDuSalon() {
       </section>
 
       <section className="section">
-        <div className="container" style={{ maxWidth: 780 }}>
+        <div className="container prose" style={{ maxWidth: 780 }}>
           <div className="eyebrow">questions</div>
           <h2 className="section-title">Une question sur ces règles ?</h2>
           <p>
