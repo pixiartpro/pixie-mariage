@@ -1,0 +1,152 @@
+import { SALON } from "../../lib/data";
+
+export const metadata = {
+  title: "Les règles du salon — Pixie Mariage",
+  description:
+    "Comment les stands sont classés, comment on entre au salon, et dans quels cas un stand peut être suspendu ou retiré. La position ne se vend jamais.",
+};
+
+export default function ReglesDuSalon() {
+  return (
+    <>
+      <section className="partner-hero">
+        <div className="container">
+          <span className="kicker">Transparence · Pixie Mariage</span>
+          <h1>Les règles du salon</h1>
+          <p>
+            Un salon, même en ligne, a un règlement. Le nôtre tient sur cette
+            page : comment les stands sont classés, comment on entre, et dans
+            quels cas un stand peut être suspendu ou retiré.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container" style={{ maxWidth: 780 }}>
+          <div className="eyebrow">le classement</div>
+          <h2 className="section-title">Comment les stands sont ordonnés</h2>
+          <p>
+            L&apos;ordre d&apos;affichage des stands ne s&apos;achète pas et ne
+            se vendra jamais. Les stands sont présentés selon des critères
+            simples et identiques pour tous :
+          </p>
+          <ul>
+            <li>
+              <strong>La catégorie et les filtres choisis par le visiteur</strong>{" "}
+              (métier, recherche par mot-clé) ;
+            </li>
+            <li>
+              <strong>La fraîcheur du stand</strong> : un stand récemment mis à
+              jour par son exposant (nouvelle vidéo, nouvelle offre) remonte
+              avant un stand inchangé ;
+            </li>
+            <li>
+              <strong>L&apos;actualité</strong> : pendant une édition du salon,
+              les exposants qui y participent avec une offre en cours peuvent
+              être regroupés dans une rubrique dédiée, clairement titrée.
+            </li>
+          </ul>
+          <p>
+            Aucune rémunération, aucun lien commercial et aucun lien
+            capitalistique n&apos;influence cet ordre. Lorsqu&apos;un espace de
+            mise en avant payant existe (par exemple « le partenaire du mois »),
+            il est affiché <strong>dans un bloc séparé du classement</strong> et
+            porte la mention explicite « sponsorisé ». La rédaction (choix des sujets, des
+            invités de plateau, des mises à la une éditoriales) ne se vend pas.
+          </p>
+          <p>
+            À savoir : le salon est édité par PIX-I-ART, qui produit également
+            les vidéos des stands. Ce lien de prestation est le même pour tous
+            les exposants et n&apos;a aucun effet sur l&apos;ordre
+            d&apos;affichage.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container" style={{ maxWidth: 780 }}>
+          <div className="eyebrow">l&apos;entrée</div>
+          <h2 className="section-title">Comment on entre au salon</h2>
+          <p>
+            Un salon ne prend pas n&apos;importe qui, et un stand n&apos;est
+            publié que lorsque son exposant remplit trois conditions,
+            vérifiées :
+          </p>
+          <ul>
+            <li>une immatriculation active (SIRET) ;</li>
+            <li>une assurance responsabilité civile professionnelle à jour ;</li>
+            <li>
+              la pièce réglementaire propre à son métier lorsqu&apos;elle existe
+              (déclaration sanitaire, licence, diplôme…).
+            </li>
+          </ul>
+          <p>
+            S&apos;y ajoutent la signature de la charte exposant (répondre aux
+            couples, devis écrits, assurance maintenue) et une rencontre avec
+            l&apos;équipe du salon. C&apos;est ce que résume le badge
+            « Visité par PIX-I-ART » : papiers vérifiés, exposant rencontré.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container" style={{ maxWidth: 780 }}>
+          <div className="eyebrow">suspension &amp; retrait</div>
+          <h2 className="section-title">
+            Dans quels cas un stand est suspendu ou retiré
+          </h2>
+          <p>
+            Les motifs sont connus d&apos;avance — les voici, en liste fermée :
+          </p>
+          <ul>
+            <li>
+              <strong>La perte d&apos;une condition d&apos;entrée</strong>{" "}
+              (immatriculation radiée, assurance ou pièce réglementaire
+              expirée) : le stand est dépublié automatiquement jusqu&apos;à
+              régularisation ;
+            </li>
+            <li>
+              <strong>Un manquement à la charte exposant</strong> : absence
+              répétée de réponse aux couples, informations fausses sur le stand,
+              pratique commerciale trompeuse ;
+            </li>
+            <li>
+              <strong>Un fait grave signalé et vérifié</strong> mettant en cause
+              la sécurité ou la confiance (fraude, mise en danger) ;
+            </li>
+            <li>
+              <strong>Le non-renouvellement de la présence annuelle</strong> :
+              le stand est dépublié — jamais effacé — et rouvre au retour de
+              l&apos;exposant.
+            </li>
+          </ul>
+          <p>
+            En pratique : toute suspension ou tout retrait est notifié par
+            écrit à l&apos;exposant avec son motif. En cas de manquement grave,
+            la suspension peut être immédiate ; pour une résiliation, un préavis
+            de 30 jours s&apos;applique. Un stand dépublié n&apos;est pas
+            effacé : les éléments de l&apos;exposant lui restent restituables.
+          </p>
+          <p>
+            Le salon ne publie pas d&apos;avis : les retours des couples et des
+            professionnels sont traités en privé, et c&apos;est
+            l&apos;organisateur qui décide, sur pièces.
+          </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container" style={{ maxWidth: 780 }}>
+          <div className="eyebrow">questions</div>
+          <h2 className="section-title">Une question sur ces règles ?</h2>
+          <p>
+            Écrivez-nous : <a href={`mailto:${SALON.email}`}>{SALON.email}</a>.
+            Toute réclamation d&apos;un exposant reçoit une réponse écrite.
+            Avant toute vente aux particuliers, un médiateur de la consommation
+            sera désigné et affiché sur cette page.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}
