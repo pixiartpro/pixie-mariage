@@ -1,4 +1,4 @@
-:HL["/pixie-mariage/_next/static/chunks/2dlb5nogtw075.css","style"]
+:HL["/pixie-mariage/_next/static/chunks/3p_rj06u0xt6v.css","style"]
 :HL["/pixie-mariage/_next/static/media/01e4147cff8141ee-s.p.3huc2loe0ie8a.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/pixie-mariage/_next/static/media/81cef6a21128489e-s.p.2csanl8cs02r-.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"prestataire","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"domaine-des-flamboyants","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"kuPTwJx7BmfmdqgQ8dS6p"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"prestataire","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"domaine-des-flamboyants","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"54IlnzD11bynQfK95vD81"}
