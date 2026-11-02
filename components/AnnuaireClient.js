@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { CATEGORIES, PRESTATAIRES } from "../lib/data";
+import Link from "next/link";
+import { CATEGORIES, PRESTATAIRES, catByKey } from "../lib/data";
 import PrestataireCard from "./PrestataireCard";
 
 export default function AnnuaireClient() {
@@ -20,6 +21,8 @@ export default function AnnuaireClient() {
     window.history.replaceState(null, "", url);
   }
 
+  const current = cat === "all" ? null : catByKey(cat);
+  const catVide = current && !PRESTATAIRES.some((p) => p.categorie === cat);
   const s = q.trim().toLowerCase();
   const list = PRESTATAIRES.filter((p) => {
     const okCat = cat === "all" || p.categorie === cat;
@@ -63,6 +66,17 @@ export default function AnnuaireClient() {
           ))}
         </div>
 
+        {current?.lien && (
+          <p className="cat-note">
+            <i className="ti ti-microphone-2" aria-hidden="true" />
+            <span>
+              {current.lien.texte}{" "}
+              <a href={current.lien.url} target="_blank" rel="noopener">{current.lien.nom}</a>
+              {current.lien.fin}
+            </span>
+          </p>
+        )}
+
         <p className="result-count">
           {list.length} prestataire{list.length > 1 ? "s" : ""}
         </p>
@@ -72,6 +86,16 @@ export default function AnnuaireClient() {
             {list.map((p) => (
               <PrestataireCard key={p.slug} p={p} />
             ))}
+          </div>
+        ) : catVide && !s ? (
+          <div className="cat-ouvre">
+            <h2>Les premiers stands arrivent</h2>
+            <p>
+              La catégorie {"«\u00a0"}{current.nom}{"\u00a0» "}ouvre au salon. Vous êtes un
+              professionnel de ce métier à La Réunion ? Prenez l&apos;un des
+              premiers stands.
+            </p>
+            <Link href="/partenaires" className="btn btn-gold">Devenir partenaire</Link>
           </div>
         ) : (
           <div className="muted" style={{ padding: "40px 0", textAlign: "center" }}>

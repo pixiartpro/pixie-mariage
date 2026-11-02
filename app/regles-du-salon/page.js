@@ -149,9 +149,37 @@ export default function ReglesDuSalon() {
           <p>
             Écrivez-nous : <a href={`mailto:${SALON.email}`}>{SALON.email}</a>.
             Toute réclamation d&apos;un exposant reçoit une réponse écrite.
-            Avant toute vente aux particuliers, un médiateur de la consommation
-            sera désigné et affiché sur cette page.
           </p>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container prose" style={{ maxWidth: 780 }}>
+          <div className="eyebrow">médiation</div>
+          <h2 className="section-title">Médiation de la consommation</h2>
+          <p>
+            Conformément aux dispositions du Code de la consommation concernant
+            « le processus de médiation des litiges de la consommation »,
+            après nous avoir sollicités et à défaut de réponse vous
+            satisfaisant, vous avez la possibilité de recourir gratuitement à
+            une procédure de médiation de la consommation auprès de :
+          </p>
+          <address className="mediateur">
+            <strong>CM2C</strong>
+            <br />
+            49 rue de Ponthieu
+            <br />
+            75 008 PARIS
+            <br />
+            Tel : 01 89 47 00 14
+            <br />
+            Site internet :{" "}
+            <a href="https://www.cm2c.net/declarer-un-litige.php" target="_blank" rel="noopener">
+              https://www.cm2c.net/declarer-un-litige.php
+            </a>
+            <br />
+            Mail : <a href="mailto:litiges@cm2c.net">litiges@cm2c.net</a>
+          </address>
         </div>
       </section>
     </>
