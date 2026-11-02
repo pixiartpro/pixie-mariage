@@ -1,7 +1,7 @@
 import { SALON, PARTENAIRES } from "../../lib/data";
 
 export const metadata = {
-  title: "Devenir partenaire — Pixie Mariage",
+  title: "Devenir exposant — Pixie Mariage",
   description: PARTENAIRES.heroTexte.slice(0, 150),
 };
 
@@ -9,9 +9,9 @@ const ICONS = ["calendar-heart", "video", "users-group", "id-badge-2"];
 
 export default function Partenaires() {
   const mailto = `mailto:${SALON.email}?subject=${encodeURIComponent(
-    "Devenir partenaire Pixie Mariage"
+    "Devenir exposant Pixie Mariage"
   )}&body=${encodeURIComponent(
-    "Bonjour,\n\nJe suis prestataire (catégorie : ...) et je souhaite référencer mon activité sur Pixie Mariage.\n\nNom de l'entreprise :\nVille :\nSite / réseaux :\n\nMerci !"
+    "Bonjour,\n\nJe suis prestataire (catégorie : ...) et je souhaite prendre un stand sur Pixie Mariage.\n\nNom de l'entreprise :\nVille :\nSite / réseaux :\n\nMerci !"
   )}`;
 
   return (

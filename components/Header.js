@@ -11,12 +11,12 @@ export default function Header() {
           <span className="sig hide-mobile">· {SALON.signature}</span>
         </Link>
         <nav className="nav">
-          <Link href="/annuaire">L&apos;annuaire</Link>
+          <Link href="/annuaire">Les stands</Link>
           <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="hide-mobile">
             Plan de table
           </a>
           <Link href="/partenaires" className="nav-cta">
-            Devenir partenaire
+            Devenir exposant
           </Link>
         </nav>
       </div>

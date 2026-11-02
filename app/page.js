@@ -26,7 +26,7 @@ export default function Home() {
           <p className="lead">{COPY.heroSousTitre}</p>
           <div className="cta-row">
             <Link href="/annuaire" className="btn btn-gold">
-              Explorer l&apos;annuaire <i className="ti ti-arrow-right" aria-hidden="true" />
+              Visiter les stands <i className="ti ti-arrow-right" aria-hidden="true" />
             </Link>
             <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
               <i className="ti ti-armchair-2" aria-hidden="true" /> Plan de table offert
@@ -71,7 +71,7 @@ export default function Home() {
             ))}
           </div>
           <div style={{ textAlign: "center", marginTop: 30 }}>
-            <Link href="/annuaire" className="btn btn-rose">Voir tout l&apos;annuaire</Link>
+            <Link href="/annuaire" className="btn btn-rose">Voir tous les stands</Link>
           </div>
         </div>
       </section>

@@ -73,6 +73,8 @@ img { max-width: 100%; display: block; }
 .nav .nav-cta { background: var(--rose); color: #fff; padding: 9px 18px; border-radius: 10px; }
 .nav .nav-cta:hover { background: var(--rose-fonce); color: #fff; }
 @media (max-width: 760px) { .nav { gap: 14px; } .nav .hide-mobile { display: none; } .logo .sig { display: none; } }
+.logo .name, .nav a { white-space: nowrap; }
+@media (max-width: 420px) { .site-header .inner { gap: 8px; height: 62px; } .logo { gap: 6px; } .logo .name { font-size: 21px; } .nav { gap: 10px; } .nav a { font-size: 14px; } .nav .nav-cta { padding: 8px 10px; } }
 
 /* ---------- Hero ---------- */
 .hero { text-align: center; padding: 70px 0 50px; position: relative; overflow: hidden; }

@@ -34,7 +34,7 @@ export default async function Fiche({ params }) {
         <div className="container">
           <h1 className="section-title">Prestataire introuvable</h1>
           <div style={{ textAlign: "center" }}>
-            <Link href="/annuaire" className="btn btn-rose">Retour à l&apos;annuaire</Link>
+            <Link href="/annuaire" className="btn btn-rose">Retour aux stands</Link>
           </div>
         </div>
       </section>
@@ -53,7 +53,7 @@ export default async function Fiche({ params }) {
     <>
       <div className="container">
         <div className="breadcrumb">
-          <Link href="/">Accueil</Link> &nbsp;/&nbsp; <Link href="/annuaire">Annuaire</Link> &nbsp;/&nbsp;{" "}
+          <Link href="/">Accueil</Link> &nbsp;/&nbsp; <Link href="/annuaire">Les stands</Link> &nbsp;/&nbsp;{" "}
           <span>{p.nom}</span>
         </div>
 

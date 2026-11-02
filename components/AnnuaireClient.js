@@ -34,7 +34,7 @@ export default function AnnuaireClient() {
   return (
     <section className="section">
       <div className="container">
-        <div className="eyebrow">l&apos;annuaire</div>
+        <div className="eyebrow">les stands</div>
         <h1 className="section-title">Les prestataires de votre mariage</h1>
         <p className="section-sub">Tous à La Réunion, présentés en vidéo, disponibles toute l&apos;année.</p>
 
@@ -95,7 +95,7 @@ export default function AnnuaireClient() {
               professionnel de ce métier à La Réunion ? Prenez l&apos;un des
               premiers stands.
             </p>
-            <Link href="/partenaires" className="btn btn-gold">Devenir partenaire</Link>
+            <Link href="/partenaires" className="btn btn-gold">Devenir exposant</Link>
           </div>
         ) : (
           <div className="muted" style={{ padding: "40px 0", textAlign: "center" }}>
