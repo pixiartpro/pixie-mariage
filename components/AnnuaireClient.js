@@ -77,9 +77,11 @@ export default function AnnuaireClient() {
           </p>
         )}
 
-        <p className="result-count">
-          {list.length} prestataire{list.length > 1 ? "s" : ""}
-        </p>
+        {!catVide && (
+          <p className="result-count">
+            {list.length} prestataire{list.length > 1 ? "s" : ""}
+          </p>
+        )}
 
         {list.length ? (
           <div className="presta-grid">

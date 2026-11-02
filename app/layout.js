@@ -1,4 +1,6 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
+// Icônes Tabler servies par le site lui-même (paquet npm, version figée), plus de CDN tiers.
+import "@tabler/icons-webfont/dist/tabler-icons.min.css";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
