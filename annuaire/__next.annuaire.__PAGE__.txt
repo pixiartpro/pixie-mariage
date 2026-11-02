@@ -1,6 +1,6 @@
 1:"$Sreact.fragment"
-2:I[14652,["/pixie-mariage/_next/static/chunks/3rdqn8rx95pw7.js","/pixie-mariage/_next/static/chunks/14mrh2-p_w84d.js","/pixie-mariage/_next/static/chunks/41oivww9a5uw7.js"],"default"]
+2:I[14652,["/pixie-mariage/_next/static/chunks/3rdqn8rx95pw7.js","/pixie-mariage/_next/static/chunks/14mrh2-p_w84d.js","/pixie-mariage/_next/static/chunks/3ols7fmlec31o.js"],"default"]
 3:I[97367,["/pixie-mariage/_next/static/chunks/3rdqn8rx95pw7.js","/pixie-mariage/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
 4:"$Sreact.suspense"
-0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/pixie-mariage/_next/static/chunks/41oivww9a5uw7.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"54IlnzD11bynQfK95vD81"}
+0:{"rsc":["$","$1","c",{"children":[["$","$L2",null,{}],[["$","script","script-0",{"src":"/pixie-mariage/_next/static/chunks/3ols7fmlec31o.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"890p3EvYizxPhDwPW3Ufu"}
 5:null
