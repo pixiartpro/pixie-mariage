@@ -1,4 +1,6 @@
-:HL["/pixie-mariage/_next/static/chunks/0450kd0w3kkng.css","style"]
+:HL["/pixie-mariage/_next/static/chunks/33y22_xloq332.css","style"]
+:HL["/pixie-mariage/_next/static/chunks/3hw6o57nzwjc6.css","style"]
+:HL["/pixie-mariage/_next/static/chunks/3zkau3dnxjb08.css","style"]
 :HL["/pixie-mariage/_next/static/media/01e4147cff8141ee-s.p.3huc2loe0ie8a.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/pixie-mariage/_next/static/media/81cef6a21128489e-s.p.2csanl8cs02r-.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"prestataire","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"atelier-vanille-traiteur","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"GzxiM-9LE3gZJ7spBPR7H"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"prestataire","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"atelier-vanille-traiteur","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}},"staleTime":300,"buildId":"GGXKbVMFbMcrJgB184ZJ7"}
