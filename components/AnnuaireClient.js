@@ -36,7 +36,7 @@ export default function AnnuaireClient() {
       <div className="container">
         <div className="eyebrow">les stands</div>
         <h1 className="section-title">Les prestataires de votre mariage</h1>
-        <p className="section-sub">Tous à La Réunion, présentés en vidéo, disponibles toute l&apos;année.</p>
+        <p className="section-sub">Tous à La Réunion, présentés en vidéo, disponibles toute l&apos;année. Les fiches affichées aujourd&apos;hui sont des exemples, en attendant les premiers stands tournés.</p>
 
         <div className="filter-bar">
           <div className="search">

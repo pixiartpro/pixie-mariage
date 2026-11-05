@@ -14,6 +14,7 @@ export default function PrestataireCard({ p }) {
         </span>
       </div>
       <div className="presta-body">
+        {p.exemple && <span className="exemple-tag">Exemple</span>}
         <h3>{p.nom}</h3>
         <div className="ville">
           <i className="ti ti-map-pin" aria-hidden="true" />

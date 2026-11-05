@@ -62,9 +62,9 @@ export default function Home() {
 
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
-          <div className="eyebrow">à la une</div>
-          <h2 className="section-title">Nos coups de cœur</h2>
-          <p className="section-sub">Un aperçu des prestataires présents sur le salon.</p>
+          <div className="eyebrow">aperçu</div>
+          <h2 className="section-title">À quoi ressemblera un stand</h2>
+          <p className="section-sub">Ces fiches sont des exemples inventés pour montrer le salon. Les premiers vrais stands arriveront après leur tournage.</p>
           <div className="presta-grid">
             {FEATURED.map((p) => (
               <PrestataireCard key={p.slug} p={p} />

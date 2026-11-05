@@ -19,7 +19,7 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const p = prestataireBySlug(slug);
   return {
-    title: p ? `${p.nom} — Pixie Mariage` : "Prestataire — Pixie Mariage",
+    title: p ? `${p.nom}${p.exemple ? " (exemple)" : ""} — Pixie Mariage` : "Prestataire — Pixie Mariage",
     description: p ? p.accroche : "",
   };
 }
@@ -56,6 +56,12 @@ export default async function Fiche({ params }) {
           <Link href="/">Accueil</Link> &nbsp;/&nbsp; <Link href="/annuaire">Les stands</Link> &nbsp;/&nbsp;{" "}
           <span>{p.nom}</span>
         </div>
+
+        {p.exemple && (
+          <p className="exemple-bandeau">
+            <i className="ti ti-info-circle" aria-hidden="true" /> Cette fiche est un exemple inventé pour montrer à quoi ressemblera un stand. Ce prestataire n&apos;existe pas.
+          </p>
+        )}
 
         <div className="fiche-hero">
           <div className="fiche-thumb" style={{ background: catGrad(p.categorie) }}>
@@ -94,12 +100,22 @@ export default async function Fiche({ params }) {
           </div>
           <aside>
             <div className="devis-card">
-              <h3>Intéressé·e&nbsp;?</h3>
-              <p>Contactez directement {p.nom} pour une disponibilité ou un devis. Sans intermédiaire, sans frais.</p>
-              <div className="prix-big">{p.prix}</div>
-              <a href={mailto} className="btn btn-rose">
-                <i className="ti ti-mail" aria-hidden="true" /> Demander un devis
-              </a>
+              {p.exemple ? (
+                <>
+                  <h3>Une fiche d&apos;exemple</h3>
+                  <p>Ce stand n&apos;existe pas : on ne peut pas lui demander de devis. Vous êtes un pro du mariage à La Réunion ? Votre stand peut prendre sa place.</p>
+                  <Link href="/partenaires" className="btn btn-rose">Devenir exposant</Link>
+                </>
+              ) : (
+                <>
+                  <h3>Intéressé·e&nbsp;?</h3>
+                  <p>Contactez directement {p.nom} pour une disponibilité ou un devis. Sans intermédiaire, sans frais.</p>
+                  <div className="prix-big">{p.prix}</div>
+                  <a href={mailto} className="btn btn-rose">
+                    <i className="ti ti-mail" aria-hidden="true" /> Demander un devis
+                  </a>
+                </>
+              )}
               <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
                 Préparer mon plan de table
               </a>
