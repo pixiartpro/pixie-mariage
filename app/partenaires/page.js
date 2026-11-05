@@ -6,7 +6,7 @@ const PRIX = [
   { nom: "Le stand filmé", prix: "700 € HT", detail: "Visite, tournage en sortie groupée avec d'autres exposants de votre coin de l'île, film monté, stand en ligne et première année de présence comprise. Facturé en deux lignes : le film 500 € HT, la présence de la première année 200 € HT." },
   { nom: "La vidéo sur mesure", prix: "800 € HT", detail: "Le même film, tourné chez vous seul, à la date qui vous arrange. Première année de présence comprise." },
   { nom: "La présence annuelle", prix: "200 € HT / an", detail: "Votre place dans le salon à partir de la deuxième année, éditions du Salon comprises. Pour un vidéaste, dès la première année : son stand présente ses propres films." },
-  { nom: "Le tarif fondateur", prix: "150 € HT / an", detail: "Pour les 10 premiers exposants : la présence à 150 € HT au lieu de 200 € HT, pendant 3 ans à compter de la signature, puis la grille publique. La date de fin est écrite dans votre fiche." },
+  { nom: "Le tarif fondateur", prix: "150 € HT / an", detail: "Pour les 10 premiers exposants, vidéastes compris : la présence à 150 € HT au lieu de 200 € HT pour vos trois premières années, la première comprise. Votre stand filmé revient donc à 650 € HT. Ensuite, la grille publique ; la date de fin est écrite dans votre fiche." },
   { nom: "Le partenaire du mois", prix: "690 € HT", detail: "Un portrait monté et l'encart du mois sur l'accueil, signalé « sponsorisé », dans un bloc séparé du classement. 12 par an, pas un de plus." },
 ];
 
