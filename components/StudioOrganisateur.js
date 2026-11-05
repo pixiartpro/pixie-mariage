@@ -14,7 +14,7 @@ export default function StudioOrganisateur() {
         <div className="eyebrow">le studio organisateur · hors classement</div>
         <h2 className="section-title" id="studio-orga-titre">Votre mariage filmé, et en direct pour ceux qui sont loin</h2>
         <p className="section-sub">
-          PIX-I-ART organise ce salon et tourne les vidéos des stands. Le studio filme aussi les mariages :
+          PIX-I-ART organise ce salon et tourne les vidéos des stands, sauf celles des vidéastes, qui montrent leurs propres films. Le studio filme aussi les mariages :
           en direct sur Internet, pour les proches qui ne peuvent pas venir, ou en film classique, tourné par
           PIX-I-ART ou par l&apos;un de ses cadreurs partenaires.
         </p>

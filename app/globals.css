@@ -121,6 +121,14 @@ img { max-width: 100%; display: block; }
 .prix { font-size: 13px; color: var(--doux); }
 
 /* ---------- Dark video band ---------- */
+.prix-grille { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--ligne); border-radius: 18px; box-shadow: var(--ombre-sm); }
+.prix-ligne { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 18px; padding: 20px 24px; border-bottom: 1px solid var(--ligne); align-items: start; }
+.prix-ligne:last-child { border-bottom: 0; }
+.prix-quoi h3 { font-size: 22px; margin-bottom: 4px; }
+.prix-quoi p { color: var(--doux); font-size: 15px; margin: 0; }
+.prix-montant { font-family: var(--font-cormorant), Georgia, serif; font-size: 26px; font-weight: 600; color: var(--texte); white-space: nowrap; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .prix-ligne { grid-template-columns: minmax(0,1fr); gap: 6px; } }
+.prix-note { text-align: center; color: var(--doux); font-size: 14px; max-width: 640px; margin: 18px auto 0; }
 .studio-orga { padding-top: 0; }
 .studio-panel { background: var(--surface); border: 1px solid var(--ligne); border-radius: 18px; padding: 36px 28px; box-shadow: var(--ombre-sm); }
 .studio-panel .section-sub { margin-bottom: 24px; }
