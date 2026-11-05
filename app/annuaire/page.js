@@ -1,4 +1,5 @@
 import AnnuaireClient from "../../components/AnnuaireClient";
+import StudioOrganisateur from "../../components/StudioOrganisateur";
 
 export const metadata = {
   title: "Les stands du salon — Pixie Mariage",
@@ -7,5 +8,10 @@ export const metadata = {
 };
 
 export default function AnnuairePage() {
-  return <AnnuaireClient />;
+  return (
+    <>
+      <AnnuaireClient />
+      <StudioOrganisateur />
+    </>
+  );
 }

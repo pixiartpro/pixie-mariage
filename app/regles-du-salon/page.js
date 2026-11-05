@@ -62,6 +62,14 @@ export default function ReglesDuSalon() {
             les exposants et n&apos;a aucun effet sur l&apos;ordre
             d&apos;affichage.
           </p>
+          <p id="studio">
+            PIX-I-ART filme aussi des mariages (en direct sur Internet ou en
+            film classique, tourné par le studio ou par l&apos;un de ses
+            cadreurs partenaires). Cette offre de l&apos;organisateur est
+            présentée dans un bloc à part, titré « Le studio organisateur ».
+            Ce bloc ne figure pas dans le classement des exposants et
+            n&apos;occupe la place d&apos;aucun d&apos;entre eux.
+          </p>
         </div>
       </section>
 
@@ -87,6 +95,16 @@ export default function ReglesDuSalon() {
             couples, devis écrits, assurance maintenue) et une rencontre avec
             l&apos;équipe du salon. C&apos;est ce que résume le badge
             « Visité par PIX-I-ART » : papiers vérifiés, exposant rencontré.
+          </p>
+          <p>
+            <strong>Les vidéastes de mariage ne sont pas admis comme
+            exposants.</strong> L&apos;organisateur, PIX-I-ART, exerce ce métier
+            et tourne lui-même les vidéos des stands : il serait à la fois
+            juge et concurrent. Toute demande d&apos;un vidéaste reçoit une
+            réponse écrite qui rappelle cette règle. Les photographes sont
+            admis ; un photographe qui propose aussi de la vidéo peut le
+            mentionner sur son stand, qui reste classé parmi les
+            photographes.
           </p>
         </div>
       </section>

@@ -121,6 +121,11 @@ img { max-width: 100%; display: block; }
 .prix { font-size: 13px; color: var(--doux); }
 
 /* ---------- Dark video band ---------- */
+.studio-orga { padding-top: 0; }
+.studio-panel { background: var(--surface); border: 1px solid var(--ligne); border-radius: 18px; padding: 36px 28px; box-shadow: var(--ombre-sm); }
+.studio-panel .section-sub { margin-bottom: 24px; }
+.studio-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.studio-note { text-align: center; color: var(--doux); font-size: 14px; max-width: 620px; margin: 20px auto 0; }
 .band-dark { background: var(--sombre); color: #F5EEE6; padding: 64px 0; }
 .band-dark .eyebrow { color: var(--or); }
 .band-dark .section-title { color: #fff; }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SALON, CATEGORIES, PRESTATAIRES, COPY, prestataireBySlug } from "../lib/data";
 import { catGrad } from "../lib/theme";
 import PrestataireCard from "../components/PrestataireCard";
+import StudioOrganisateur from "../components/StudioOrganisateur";
 
 const FEATURED = [
   "domaine-des-flamboyants",
@@ -75,6 +76,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <StudioOrganisateur />
 
       <section className="band-dark">
         <div className="container">
