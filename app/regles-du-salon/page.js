@@ -68,7 +68,8 @@ export default function ReglesDuSalon() {
             cadreurs partenaires). Cette offre de l&apos;organisateur est
             présentée dans un bloc à part, titré « Le studio organisateur ».
             Ce bloc ne figure pas dans le classement des exposants et
-            n&apos;occupe la place d&apos;aucun d&apos;entre eux.
+            n&apos;occupe la place d&apos;aucun d&apos;entre eux. PIX-I-ART ne
+            figure jamais parmi les vidéastes exposants.
           </p>
         </div>
       </section>
@@ -96,15 +97,35 @@ export default function ReglesDuSalon() {
             l&apos;équipe du salon. C&apos;est ce que résume le badge
             « Visité par PIX-I-ART » : papiers vérifiés, exposant rencontré.
           </p>
+          <p id="videastes">
+            <strong>Les vidéastes de mariage.</strong> L&apos;organisateur,
+            PIX-I-ART, exerce aussi ce métier. Pour qu&apos;il ne soit jamais à
+            la fois juge et concurrent, la catégorie « Vidéastes » suit des
+            règles écrites, les mêmes pour tous :
+          </p>
+          <ul>
+            <li>
+              les trois conditions d&apos;entrée ci-dessus, la charte et la
+              rencontre, comme pour tout exposant ;
+            </li>
+            <li>
+              au moins 10 mariages filmés à La Réunion au cours des deux
+              dernières années, avec 3 références vérifiables (couples ou
+              lieux) ;
+            </li>
+            <li>
+              un film de mariage réel, complet, que le vidéaste a le droit de
+              montrer (accord des mariés, musique sous licence).
+            </li>
+          </ul>
           <p>
-            <strong>Les vidéastes de mariage ne sont pas admis comme
-            exposants.</strong> L&apos;organisateur, PIX-I-ART, exerce ce métier
-            et tourne lui-même les vidéos des stands : il serait à la fois
-            juge et concurrent. Toute demande d&apos;un vidéaste reçoit une
-            réponse écrite qui rappelle cette règle. Les photographes sont
-            admis ; un photographe qui propose aussi de la vidéo peut le
-            mentionner sur son stand, qui reste classé parmi les
-            photographes.
+            Le stand d&apos;un vidéaste présente ses propres films :
+            PIX-I-ART ne le tourne pas. Il est affiché dans l&apos;ordre public
+            du salon, comme tous les autres. Toute décision de refus ou de
+            retrait d&apos;un vidéaste est motivée par écrit et cite le critère
+            en cause. Les photographes ont leur propre catégorie ; un
+            photographe qui propose aussi de la vidéo peut le mentionner sur
+            son stand.
           </p>
         </div>
       </section>

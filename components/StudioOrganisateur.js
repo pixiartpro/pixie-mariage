@@ -26,7 +26,7 @@ export default function StudioOrganisateur() {
         </div>
         <p className="studio-note">
           C&apos;est l&apos;offre de l&apos;organisateur du salon. Elle est présentée à part et ne figure pas
-          dans le classement des exposants. Le salon ne référence pas d&apos;autres vidéastes de mariage.
+          dans le classement des exposants : les vidéastes exposants ont leur propre catégorie, dans l&apos;ordre public du salon.
         </p>
         </div>
       </div>
