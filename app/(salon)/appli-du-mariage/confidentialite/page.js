@@ -47,7 +47,7 @@ export default function Confidentialite() {
           Les informations des mariés sont enregistrées chez Supabase, sur des serveurs situés en Union européenne (Paris). Le site lui-même est servi par GitHub Pages. Comme tout hébergeur, Supabase et GitHub gardent quelques jours l&apos;adresse technique (IP) des visites dans leurs journaux ; nous ne nous en servons pas.
         </p>
         <p>
-          Ces deux sous-traitants sont des sociétés américaines (Supabase Inc., GitHub Inc.). Un accès depuis les États-Unis reste possible ; il est encadré par le cadre de protection des données UE–États-Unis et par les clauses contractuelles types de la Commission européenne.
+          GitHub (GitHub, Inc.) est une société américaine : un accès depuis les États-Unis reste possible, encadré par le cadre de protection des données UE–États-Unis et par les clauses contractuelles types. Supabase (Supabase Pte. Ltd.) est une société de Singapour : les transferts éventuels hors de l&apos;Union européenne sont encadrés par les clauses contractuelles types de la Commission européenne.
         </p>
         <p>
           <b>L&apos;appli et tout son contenu sont effacés 90 jours après la date du mariage.</b> Les mariés peuvent aussi tout effacer avant, d&apos;un bouton, depuis leur lien privé. Les sauvegardes techniques de l&apos;hébergeur disparaissent ensuite d&apos;elles-mêmes, en quelques jours.
