@@ -295,3 +295,19 @@ img { max-width: 100%; display: block; }
 /* Le menu a grandi (appli, sélection) : le slogan du logo se retire avant de se replier. */
 @media (max-width: 1100px) { .logo .sig { display: none; } }
 @media (min-width: 761px) and (max-width: 940px) { .nav { gap: 12px; } .nav a { font-size: 14px; } }
+
+/* ---------- Socle commun : lien d'évitement, mentions ---------- */
+.aller-contenu { position: absolute; left: 12px; top: -60px; z-index: 100; background: var(--sombre); color: #fff; padding: 10px 16px; border-radius: 10px; transition: top 0.15s ease-out; }
+.aller-contenu:focus { top: 12px; outline: 2px solid var(--or); }
+.site-footer .bottom a { text-decoration: underline; text-underline-offset: 2px; }
+.socle-mentions h1 { font-size: 38px; margin-bottom: 6px; }
+.socle-mentions .socle-maj { color: var(--doux); font-size: 14px; }
+.socle-mentions dl { display: grid; grid-template-columns: minmax(140px, 0.4fr) 1fr; gap: 6px 16px; }
+.socle-mentions dt { font-weight: 500; }
+.socle-mentions dd { margin: 0; color: var(--texte); overflow-wrap: anywhere; }
+.socle-tableau { overflow-x: auto; }
+.socle-mentions table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin: 10px 0; }
+.socle-mentions th, .socle-mentions td { border: 1px solid var(--ligne); padding: 8px 10px; text-align: left; vertical-align: top; }
+.socle-mentions th { background: var(--surface2); font-weight: 500; }
+@media (max-width: 560px) { .socle-mentions dl { grid-template-columns: 1fr; } .socle-mentions dt { margin-top: 8px; } }
+.site-footer .bottom a { display: inline; }

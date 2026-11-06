@@ -17,6 +17,11 @@ const VIDEOS = ["domaine-des-flamboyants", "lumiere-australe-studio", "esprit-bo
   .map(prestataireBySlug)
   .filter(Boolean);
 
+import { SITE } from "../../lib/chemin";
+
+// L'accueil : son adresse canonique (les autres pages ont la leur).
+export const metadata = { alternates: { canonical: `${SITE}/` } };
+
 export default function Home() {
   return (
     <>

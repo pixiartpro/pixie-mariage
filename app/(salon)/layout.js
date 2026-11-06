@@ -5,8 +5,9 @@ import Footer from "../../components/Footer";
 export default function SalonLayout({ children }) {
   return (
     <>
+      <a href="#contenu" className="aller-contenu">Aller au contenu</a>
       <Header />
-      <main>{children}</main>
+      <main id="contenu">{children}</main>
       <Footer />
     </>
   );

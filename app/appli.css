@@ -299,3 +299,4 @@
   .feuille-a5 .charte b { font-size: 11.5px; line-height: 1.3; }
   .feuille-a5 .charte span { display: block; font-size: 10.5px; line-height: 1.3; }
 }
+.ap h1.ap-attente { font: 400 16px/1.5 var(--font-jost), system-ui, sans-serif; letter-spacing: 0; }

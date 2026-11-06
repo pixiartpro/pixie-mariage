@@ -120,7 +120,12 @@ export default function VueInvites() {
     return () => clearInterval(id);
   }, [etat, slug, charger]);
 
-  if (etat === "chargement") return <Coque><p className="ap-attente">Ouverture de l&apos;appli du mariage…</p></Coque>;
+  if (etat === "chargement")
+    return (
+      <Coque>
+        <h1 className="ap-attente">Ouverture de l&apos;appli du mariage…</h1>
+      </Coque>
+    );
 
   if (etat === "sans-lien")
     return (

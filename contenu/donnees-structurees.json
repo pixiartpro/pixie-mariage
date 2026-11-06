@@ -1,0 +1,41 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "PIX-I-ART",
+      "url": "https://pix-i-art.re/",
+      "email": "contact@pix-i-art.re",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "81 Chemin Finette",
+        "postalCode": "97490",
+        "addressLocality": "Sainte-Clotilde",
+        "addressCountry": "FR"
+      },
+      "telephone": "06 92 69 18 11",
+      "identifier": {
+        "@type": "PropertyValue",
+        "propertyID": "SIREN",
+        "value": "980951065"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "name": "Pixie Mariage",
+      "url": "https://pixiartpro.github.io/pixie-mariage/",
+      "inLanguage": "fr"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Pixie Mariage",
+      "url": "https://pixiartpro.github.io/pixie-mariage/",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Web, iOS, Android",
+      "publisher": {
+        "@type": "Organization",
+        "name": "PIX-I-ART"
+      }
+    }
+  ]
+}

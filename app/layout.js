@@ -4,6 +4,7 @@ import "@tabler/icons-webfont/dist/tabler-icons.min.css";
 import "./globals.css";
 import "./appli.css";
 import { PREFIXE } from "../lib/chemin";
+import donneesStructurees from "../contenu/donnees-structurees.json";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -18,6 +19,8 @@ const jost = Jost({
   display: "swap",
 });
 
+export const viewport = { themeColor: "#FBF6F0" };
+
 // Les aperçus de partage (WhatsApp, Facebook, Messenger) : titre, texte et image de chaque page.
 export const metadata = {
   metadataBase: new URL("https://pixiartpro.github.io"),
@@ -31,15 +34,21 @@ export const metadata = {
     images: [{ url: `${PREFIXE}/og/og-salon.png`, width: 1200, height: 630, alt: "Pixie Mariage, le salon du mariage de La Réunion" }],
   },
   twitter: { card: "summary_large_image" },
+  icons: { icon: `${PREFIXE}/favicon.ico`, apple: `${PREFIXE}/icones/appli-180.png` },
   title: "Pixie Mariage — le salon du oui, toute l'année (La Réunion)",
   description:
-    "Le salon du mariage 100 % en ligne à La Réunion : tous les prestataires (salles, traiteurs, photographes, fleuristes…) réunis au même endroit, en vidéo, toute l'année. Et un plan de table offert.",
+    "Le salon du mariage en ligne de La Réunion : les prestataires de l'île en vidéo, toute l'année. Ma sélection à deux offerte, et bientôt l'appli du mariage.",
+  referrer: "strict-origin-when-cross-origin",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={`${cormorant.variable} ${jost.variable}`}>
-      <body>{children}</body>
+      <body>
+        {/* Qui édite le site, pour les moteurs de recherche (données structurées, depuis la fiche du socle). */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(donneesStructurees) }} />
+        {children}
+      </body>
     </html>
   );
 }

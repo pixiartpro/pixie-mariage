@@ -6,7 +6,7 @@ import { SITE } from "../lib/chemin";
 export const dynamic = "force-static";
 
 export default function sitemap() {
-  const pages = ["", "annuaire/", "partenaires/", "regles-du-salon/", "appli-du-mariage/", "appli-du-mariage/confidentialite/"];
+  const pages = ["", "annuaire/", "partenaires/", "partenaires/candidater/", "regles-du-salon/", "appli-du-mariage/", "appli-du-mariage/confidentialite/", "mentions-legales/"];
   return [
     ...pages.map((p) => ({ url: `${SITE}/${p}`, changeFrequency: "monthly", priority: p === "" ? 1 : 0.7 })),
     ...PRESTATAIRES.filter((p) => !p.exemple).map((p) => ({ url: `${SITE}/prestataire/${p.slug}/`, changeFrequency: "monthly", priority: 0.8 })),

@@ -31,7 +31,9 @@ export default function Footer() {
           </div>
         </div>
         <div className="bottom">
-          Un Monde Pixie, façonné par PIX-I-ART · Prototype · {SALON.lieu}
+          © 2026 PIX-I-ART · <Link href="/mentions-legales/">Mentions légales</Link> · <Link href="/mentions-legales/#confidentialite">Confidentialité</Link> · <Link href="/regles-du-salon/">Règles du salon</Link>
+          <br />
+          Un Monde Pixie, façonné par PIX-I-ART · {SALON.lieu}
         </div>
       </div>
     </footer>
