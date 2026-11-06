@@ -7,6 +7,8 @@
 -- ============================================================
 
 create extension if not exists pgcrypto with schema extensions;
+-- L'effacement automatique à 90 jours en dépend : sans pg_cron, le script s'arrête (jamais d'effacement promis et pas fait).
+create extension if not exists pg_cron;
 
 -- ---------- Les tables ----------
 create table if not exists public.mariages (
@@ -17,6 +19,7 @@ create table if not exists public.mariages (
   date_mariage date not null,
   annonce      text check (char_length(annonce) <= 280),
   annonce_le   timestamptz,
+  lu_le        timestamptz,                 -- dernière ouverture par un invité (sert à ne compter que les vrais mariages)
   cree_le      timestamptz not null default now(),
   modifie_le   timestamptz not null default now()
 );
@@ -39,6 +42,8 @@ create table if not exists public.compteurs (
 alter table public.mariages  enable row level security;
 alter table public.exposants enable row level security;
 alter table public.compteurs enable row level security;
+create index if not exists mariages_cree_le on public.mariages (cree_le);
+create index if not exists mariages_date on public.mariages (date_mariage);
 -- Aucune règle d'accès (policy) : sans fonction, personne ne lit ni n'écrit.
 revoke all on public.mariages, public.exposants, public.compteurs from anon, authenticated;
 
@@ -55,23 +60,30 @@ returns bytea language sql immutable set search_path = '' as $$
 $$;
 
 -- Vérifie la forme d'un mariage reçu et rend sa date.
-create or replace function public.pm_verifier(p_contenu jsonb)
+-- p_ancienne : la date déjà enregistrée (modification). Si elle ne change pas, pas de contrôle de plage :
+-- les mariés doivent pouvoir ajouter le film et la galerie APRÈS le mariage.
+create or replace function public.pm_verifier(p_contenu jsonb, p_ancienne date default null)
 returns date language plpgsql set search_path = '' as $$
-declare d date;
+declare d date; aujourdhui date := (now() at time zone 'Indian/Reunion')::date;
 begin
   if p_contenu is null or jsonb_typeof(p_contenu) <> 'object' then raise exception 'PM: Contenu illisible.'; end if;
   if octet_length(p_contenu::text) > 16000 then raise exception 'PM: Trop de texte : raccourcissez un peu.'; end if;
   if coalesce(trim(p_contenu->'prenoms'->>0), '') = '' or coalesce(trim(p_contenu->'prenoms'->>1), '') = '' then
     raise exception 'PM: Il manque les deux prénoms.';
   end if;
+  if coalesce(p_contenu->>'date', '') !~ '^\d{4}-\d{2}-\d{2}$' then raise exception 'PM: La date du mariage est illisible.'; end if;
   begin
     d := (p_contenu->>'date')::date;
   exception when others then
     raise exception 'PM: La date du mariage est illisible.';
   end;
-  if d is null then raise exception 'PM: Il manque la date du mariage.'; end if;
-  if d < (now() at time zone 'Indian/Reunion')::date - 1 or d > (now() at time zone 'Indian/Reunion')::date + 1100 then
-    raise exception 'PM: La date doit être dans les trois prochaines années.';
+  if (jsonb_typeof(p_contenu->'programme') = 'array' and jsonb_array_length(p_contenu->'programme') > 20)
+     or (jsonb_typeof(p_contenu->'prestataires') = 'array' and jsonb_array_length(p_contenu->'prestataires') > 20)
+     or (jsonb_typeof(p_contenu->'infos') = 'array' and jsonb_array_length(p_contenu->'infos') > 8) then
+    raise exception 'PM: Trop de lignes.';
+  end if;
+  if p_ancienne is distinct from d and (d < aujourdhui - 1 or d > aujourdhui + 800) then
+    raise exception 'PM: La date doit être dans les deux prochaines années.';
   end if;
   return d;
 end $$;
@@ -105,35 +117,52 @@ end $$;
 
 -- Pour les invités : le contenu, seulement avec le bon code, et jamais après les 90 jours.
 create or replace function public.mariage_lire(p_slug text, p_code text)
-returns json language sql stable security definer set search_path = '' as $$
-  select json_build_object('contenu', contenu, 'annonce', coalesce(annonce, ''), 'annonce_le', annonce_le)
-  from public.mariages
+returns json language sql volatile security definer set search_path = '' as $$
+  update public.mariages set lu_le = now()
   where slug = p_slug and code = upper(coalesce(p_code, ''))
     and date_mariage + 90 >= (now() at time zone 'Indian/Reunion')::date
+  returning json_build_object('contenu', contenu, 'annonce', coalesce(annonce, ''), 'annonce_le', annonce_le)
 $$;
 
 create or replace function public.mariage_ouvrir(p_slug text, p_cle text)
 returns json language sql stable security definer set search_path = '' as $$
-  select json_build_object('contenu', contenu, 'code', code, 'annonce', coalesce(annonce, ''))
+  select json_build_object('contenu', contenu, 'code', code, 'annonce', coalesce(annonce, ''), 'version', modifie_le::text)
   from public.mariages
   where slug = p_slug and cle_hash = public.pm_hash(p_cle)
+    and date_mariage + 90 >= (now() at time zone 'Indian/Reunion')::date
 $$;
 
-create or replace function public.mariage_modifier(p_slug text, p_cle text, p_contenu jsonb)
-returns boolean language plpgsql security definer set search_path = '' as $$
-declare d date := public.pm_verifier(p_contenu);
+-- p_version : la version ouverte par les mariés. Si quelqu'un a enregistré entre-temps, on refuse au lieu d'écraser.
+create or replace function public.mariage_modifier(p_slug text, p_cle text, p_contenu jsonb, p_version text)
+returns text language plpgsql security definer set search_path = '' as $$
+declare m record; d date; v text;
 begin
-  update public.mariages set contenu = p_contenu, date_mariage = d, modifie_le = now()
-  where slug = p_slug and cle_hash = public.pm_hash(p_cle);
+  select * into m from public.mariages where slug = p_slug and cle_hash = public.pm_hash(p_cle) for update;
   if not found then raise exception 'PM: Lien de modification inconnu.'; end if;
-  return true;
+  if m.modifie_le::text is distinct from p_version then
+    raise exception 'PM: Une autre modification a été enregistrée entre-temps (sur un autre téléphone ?). Rechargez la page avant d''enregistrer.';
+  end if;
+  d := public.pm_verifier(p_contenu, m.date_mariage);
+  update public.mariages set contenu = p_contenu, date_mariage = d, modifie_le = clock_timestamp()
+  where slug = p_slug returning modifie_le::text into v;
+  return v;
+end $$;
+
+-- Nouveau code pour les invités (si le faire-part a circulé trop loin). L'ancien code ne marche plus.
+create or replace function public.mariage_nouveau_code(p_slug text, p_cle text)
+returns text language plpgsql security definer set search_path = '' as $$
+declare v_code text := public.pm_hasard(6, 'ABCDEFGHJKMNPQRSTUVWXYZ23456789');
+begin
+  update public.mariages set code = v_code where slug = p_slug and cle_hash = public.pm_hash(p_cle);
+  if not found then raise exception 'PM: Lien de modification inconnu.'; end if;
+  return v_code;
 end $$;
 
 create or replace function public.mariage_annoncer(p_slug text, p_cle text, p_texte text)
 returns boolean language plpgsql security definer set search_path = '' as $$
 declare t text := nullif(left(trim(coalesce(p_texte, '')), 280), '');
 begin
-  update public.mariages set annonce = t, annonce_le = case when t is null then null else now() end, modifie_le = now()
+  update public.mariages set annonce = t, annonce_le = case when t is null then null else now() end
   where slug = p_slug and cle_hash = public.pm_hash(p_cle);
   if not found then raise exception 'PM: Lien de modification inconnu.'; end if;
   return true;
@@ -166,6 +195,7 @@ returns void language sql volatile security definer set search_path = '' as $$
   where p_type in ('vue', 'contact', 'depuis_mariage')
     and exists (select 1 from public.exposants where slug = p_slug)
   on conflict (slug, type, jour) do update set n = public.compteurs.n + 1
+    where public.compteurs.n < 2000   -- plafond par jour : une boucle ne peut pas gonfler les chiffres sans limite
 $$;
 
 create or replace function public.exposant_chiffres(p_slug text, p_cle text)
@@ -189,7 +219,8 @@ begin
         'depuis_mariage', coalesce(sum(n) filter (where type = 'depuis_mariage'), 0))
       from public.compteurs where slug = p_slug and jour > aujourdhui - 30),
     'mariages', (select count(*) from public.mariages
-      where contenu->'prestataires' @> jsonb_build_array(jsonb_build_object('slug', p_slug))),
+      where lu_le is not null
+        and contenu->'prestataires' @> jsonb_build_array(jsonb_build_object('slug', p_slug))),
     'jours', (select coalesce(json_agg(j order by j.jour), '[]'::json) from (
         select g::date as jour,
           coalesce(sum(c.n) filter (where c.type = 'vue'), 0) as vue,
@@ -217,7 +248,8 @@ grant execute on function
   public.mariage_creer(jsonb),
   public.mariage_lire(text, text),
   public.mariage_ouvrir(text, text),
-  public.mariage_modifier(text, text, jsonb),
+  public.mariage_modifier(text, text, jsonb, text),
+  public.mariage_nouveau_code(text, text),
   public.mariage_annoncer(text, text, text),
   public.mariage_supprimer(text, text),
   public.compter(text, text),
@@ -225,10 +257,11 @@ grant execute on function
 to anon;
 -- Les fonctions appelées par celles-ci tournent avec les droits du propriétaire : rien d'autre à ouvrir.
 
--- ---------- Le ménage de chaque nuit (si pg_cron est activé dans le projet) ----------
-do $$
-begin
-  if exists (select 1 from pg_extension where extname = 'pg_cron') then
-    perform cron.schedule('pm-purge-mariages', '17 23 * * *', 'select public.mariages_purger()');
-  end if;
-end $$;
+-- ---------- Le ménage de chaque nuit (23 h 17 UTC = 3 h 17 à La Réunion) ----------
+select cron.schedule('pm-purge-mariages', '17 23 * * *', 'select public.mariages_purger()');
+
+-- ---------- Ce qui sera ajouté plus tard reste fermé par défaut ----------
+-- (le droit EXECUTE donné à tout le monde est un réglage global de Postgres : on le retire globalement, puis schéma par schéma pour les rôles de Supabase)
+alter default privileges for role postgres revoke execute on functions from public;
+alter default privileges for role postgres in schema public revoke execute on functions from anon, authenticated;
+alter default privileges for role postgres in schema public revoke all on tables from anon, authenticated;

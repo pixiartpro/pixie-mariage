@@ -5,6 +5,7 @@ export const metadata = {
 
 export const viewport = {
   themeColor: "#2B2421",
+  viewportFit: "cover",
 };
 
 export default function AppliLayout({ children }) {

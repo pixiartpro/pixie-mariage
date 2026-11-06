@@ -8,7 +8,7 @@ import Link from "next/link";
 import Formulaire from "./Formulaire";
 import QrCode from "./QrCode";
 import { mariageVide, nettoyer, manques, liensRefuses, LIMITES, dateLisible } from "../../lib/appli/contenu";
-import { creerMariage, ouvrirMariage, modifierMariage, annoncer, supprimerMariage, MODE } from "../../lib/appli/stockage";
+import { creerMariage, ouvrirMariage, modifierMariage, annoncer, supprimerMariage, nouveauCode, MODE } from "../../lib/appli/stockage";
 import { PREFIXE } from "../../lib/chemin";
 
 const BROUILLON = "pm:brouillon";
@@ -46,6 +46,47 @@ function ranger(c) {
   return m;
 }
 
+// Le brouillon revient tel qu'il a été tapé (liens incomplets compris) : seule la forme est réparée.
+function restaurer(b) {
+  const v = mariageVide();
+  const tab = (x, d) => (Array.isArray(x) ? x.filter((e) => e && typeof e === "object") : d);
+  return {
+    ...v,
+    prenoms: Array.isArray(b.prenoms) ? [String(b.prenoms[0] ?? ""), String(b.prenoms[1] ?? "")] : v.prenoms,
+    date: typeof b.date === "string" ? b.date : "",
+    lieu: { ...v.lieu, ...(b.lieu && typeof b.lieu === "object" ? b.lieu : {}) },
+    infos: tab(b.infos, v.infos),
+    programme: tab(b.programme, v.programme),
+    reponse: { ...v.reponse, ...(b.reponse && typeof b.reponse === "object" ? b.reponse : {}) },
+    conseil: typeof b.conseil === "string" ? b.conseil : "",
+    photos_soir: typeof b.photos_soir === "string" ? b.photos_soir : "",
+    apres: { ...v.apres, ...(b.apres && typeof b.apres === "object" ? b.apres : {}) },
+    prestataires: tab(b.prestataires, []),
+  };
+}
+
+// Une ligne commencée sans titre serait jetée à l'enregistrement : on prévient d'abord.
+function lignesIncompletes(m) {
+  const r = [];
+  if (m.infos.some((i) => !(i.titre || "").trim() && (i.texte || "").trim())) r.push("une info pratique a un texte mais pas de « Quoi »");
+  if (m.programme.some((p) => !(p.titre || "").trim() && ((p.detail || "").trim() || p.heure)))
+    r.push("un moment du programme a une heure ou un détail mais pas de nom");
+  if (m.prestataires.some((p) => p.slug === undefined && !(p.nom || "").trim() && ((p.role || "").trim() || (p.lien || "").trim())))
+    r.push("un prestataire n'a pas de nom");
+  return r;
+}
+
+// Tout ce qui doit être juste avant d'envoyer. Rend le message à afficher, ou "".
+function controler(m) {
+  const manque = manques(nettoyer(m));
+  if (manque.length) return `Il manque ${manque.join(", ")}.`;
+  const refuses = liensRefuses(m);
+  if (refuses.length) return `Ces liens doivent commencer par https:// : ${refuses.join(", ")}.`;
+  const inc = lignesIncompletes(m);
+  if (inc.length) return `À compléter ou à retirer : ${inc.join(" ; ")}.`;
+  return "";
+}
+
 const liens = (slug, code, cle) => {
   const base = `${window.location.origin}${PREFIXE}`;
   return {
@@ -75,7 +116,7 @@ export function CreerAppli() {
     try {
       b = JSON.parse(stock.get(BROUILLON) || "null");
     } catch {}
-    setM(b ? nettoyer(b) : mariageVide());
+    setM(b && typeof b === "object" ? restaurer(b) : mariageVide());
   }, []);
 
   useEffect(() => {
@@ -86,17 +127,15 @@ export function CreerAppli() {
 
   if (cree) return <Partage {...cree} premiere />;
 
-  const manque = manques(nettoyer(m));
-
   return (
     <form
       className="ed"
+      noValidate
       onSubmit={async (e) => {
         e.preventDefault();
         setErreur("");
-        if (manque.length) return setErreur(`Il manque ${manque.join(", ")}.`);
-        const refuses = liensRefuses(m);
-        if (refuses.length) return setErreur(`Ces liens doivent commencer par https:// : ${refuses.join(", ")}.`);
+        const probleme = controler(m);
+        if (probleme) return setErreur(probleme);
         if (!accord) return setErreur("Cochez la case sur vos données pour continuer.");
         setEnvoi(true);
         try {
@@ -120,7 +159,7 @@ export function CreerAppli() {
         <label className="ed-accord">
           <input type="checkbox" checked={accord} onChange={(e) => setAccord(e.target.checked)} />
           <span>
-            Nous acceptons que ces informations soient hébergées par PIX-I-ART pour faire fonctionner l&apos;appli. Elles sont visibles seulement avec le code du faire-part et effacées 90 jours après le mariage.{" "}
+            Nous avons lu comment nos informations sont traitées : enregistrées chez l&apos;hébergeur de Pixie Mariage (Supabase) pour faire fonctionner l&apos;appli, visibles par les invités qui ont le code du faire-part (qui protège sans être un coffre-fort), et effacées 90 jours après le mariage.{" "}
             <Link href="/appli-du-mariage/confidentialite/">Le détail</Link>
           </span>
         </label>
@@ -136,12 +175,12 @@ export function CreerAppli() {
 function ModeEssai() {
   return (
     <p className="ed-essai">
-      <i className="ti ti-flask" aria-hidden="true" /> Mode essai : l&apos;appli s&apos;enregistre seulement dans ce navigateur. Vos invités ne la verront pas encore sur leur téléphone.
+      <i className="ti ti-flask" aria-hidden="true" /> Mode essai : l&apos;appli s&apos;enregistre seulement dans ce navigateur, rien n&apos;est envoyé chez nous. Vos invités ne la verront pas encore sur leur téléphone : n&apos;imprimez pas ce QR code. Pour tout effacer, utilisez le bouton « Effacer ».
     </p>
   );
 }
 
-function Partage({ slug, code, cle, prenoms, date, premiere }) {
+function Partage({ slug, code, cle, prenoms, date, premiere, onNouveauCode }) {
   const [l, setL] = useState(null);
   const [copie, setCopie] = useState("");
   useEffect(() => setL(liens(slug, code, cle)), [slug, code, cle]);
@@ -157,6 +196,7 @@ function Partage({ slug, code, cle, prenoms, date, premiere }) {
   };
   return (
     <div className="ed-partage">
+      {MODE === "essai" && <ModeEssai />}
       {premiere && (
         <div className="ed-bravo">
           <h2>L&apos;appli de {prenoms[0]} &amp; {prenoms[1]} est prête</h2>
@@ -182,6 +222,15 @@ function Partage({ slug, code, cle, prenoms, date, premiere }) {
         <a className="btn btn-ghost btn-sm" href={l.invites} target="_blank" rel="noopener noreferrer">
           <i className="ti ti-eye" aria-hidden="true" /> Voir comme un invité
         </a>
+        {onNouveauCode && (
+          <p className="ed-aide">
+            Le faire-part a circulé trop loin ?{" "}
+            <button type="button" className="ed-lien" onClick={onNouveauCode}>
+              Changer le code
+            </button>{" "}
+            : l&apos;ancien code et l&apos;ancien QR code ne marcheront plus.
+          </p>
+        )}
       </section>
       <section className="ed-bloc ed-prive">
         <h3>Votre lien privé, pour modifier</h3>
@@ -204,6 +253,7 @@ function Partage({ slug, code, cle, prenoms, date, premiere }) {
             </a>
           )}
         </div>
+        <p className="ed-aide">Envoyez ce mail seulement à votre propre adresse : quiconque le reçoit peut modifier ou effacer l&apos;appli.</p>
       </section>
     </div>
   );
@@ -219,6 +269,7 @@ export function ModifierAppli() {
   const [annonceEnLigne, setAnnonceEnLigne] = useState("");
   const [msg, setMsg] = useState({ texte: "", type: "" });
   const [occupe, setOccupe] = useState(false);
+  const [version, setVersion] = useState("");
 
   useEffect(() => {
     const s = new URLSearchParams(window.location.search).get("m") || "";
@@ -230,6 +281,9 @@ export function ModifierAppli() {
       .then((r) => {
         if (!r) return setEtat("sans-cle");
         stock.set(`pm:cle:${s}`, k);
+        // La clé ne reste pas dans l'adresse (historique, capture d'écran) : elle est gardée sur cet appareil.
+        if (window.location.hash) window.history.replaceState(null, "", window.location.pathname + window.location.search);
+        setVersion(r.version || "");
         setM(r.contenu);
         setCode(r.code);
         setAnnonce(r.annonce || "");
@@ -270,15 +324,13 @@ export function ModifierAppli() {
       </div>
     );
 
-  const manque = manques(nettoyer(m));
-
   return (
     <div className="ed">
       {MODE === "essai" && <ModeEssai />}
 
       <section className="ed-bloc ed-annonce">
         <h3><i className="ti ti-speakerphone" aria-hidden="true" /> Un mot à tous les invités, tout de suite</h3>
-        <p className="ed-aide">Le jour J : « La cérémonie passe sous le kiosque, même heure. » Le mot s&apos;affiche en haut de l&apos;appli, chez tout le monde, en moins d&apos;une minute.</p>
+        <p className="ed-aide">Le jour J : « La cérémonie passe sous le kiosque, même heure. » Le mot s&apos;affiche en haut de l&apos;appli : dans la minute chez les invités qui l&apos;ont ouverte, et dès l&apos;ouverture chez les autres.</p>
         <label className="ed-champ">
           <span>Votre mot ({annonce.length}/{LIMITES.annonce})</span>
           <textarea rows={2} maxLength={LIMITES.annonce} value={annonce} onChange={(e) => setAnnonce(e.target.value)} />
@@ -298,7 +350,7 @@ export function ModifierAppli() {
               try {
                 await annoncer(slug, cle, annonce);
                 setAnnonceEnLigne(annonce.trim());
-                direAnnonce(MODE === "essai" ? "Le mot est affiché (sur cet appareil, en mode essai)." : "Le mot est affiché chez les invités.");
+                direAnnonce(MODE === "essai" ? "Le mot est affiché (sur cet appareil, en mode essai)." : "Le mot est en ligne : vos invités le verront dans la minute.");
               } catch (e) {
                 direAnnonce(e.message, "erreur");
               } finally {
@@ -335,19 +387,35 @@ export function ModifierAppli() {
 
       <details className="ed-details">
         <summary>Le lien des invités, le QR code et votre lien privé</summary>
-        <Partage slug={slug} code={code} cle={cle} prenoms={m.prenoms} date={m.date} />
+        <Partage
+          slug={slug}
+          code={code}
+          cle={cle}
+          prenoms={m.prenoms}
+          date={m.date}
+          onNouveauCode={async () => {
+            if (!window.confirm("Changer le code des invités ? L'ancien code et l'ancien QR code ne marcheront plus : il faudra renvoyer le nouveau lien.")) return;
+            try {
+              setCode(await nouveauCode(slug, cle));
+              dire("Nouveau code prêt. Renvoyez le nouveau lien ou le nouveau QR code à vos invités.");
+            } catch (e) {
+              dire(e.message, "erreur");
+            }
+          }}
+        />
       </details>
 
       <form
+        noValidate
         onSubmit={async (e) => {
           e.preventDefault();
-          if (manque.length) return dire(`Il manque ${manque.join(", ")}.`, "erreur");
-          const refuses = liensRefuses(m);
-          if (refuses.length) return dire(`Ces liens doivent commencer par https:// : ${refuses.join(", ")}.`, "erreur");
+          const probleme = controler(m);
+          if (probleme) return dire(probleme, "erreur");
           setOccupe(true);
           try {
             const c = ranger(m);
-            await modifierMariage(slug, cle, c);
+            const v = await modifierMariage(slug, cle, c, version);
+            setVersion(v || "");
             setM(c);
             dire("Enregistré. Les invités voient la nouvelle version.");
           } catch (er) {
@@ -369,6 +437,21 @@ export function ModifierAppli() {
           </button>
         </div>
       </form>
+
+      <section className="ed-bloc ed-effacer">
+        <h3>Cet appareil</h3>
+        <p className="ed-aide">Ce navigateur garde votre lien privé pour vous éviter de le recopier. Sur un ordinateur ou un téléphone partagé, faites-le oublier.</p>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={() => {
+            stock.del(`pm:cle:${slug}`);
+            dire("Ce navigateur a oublié votre lien privé. Gardez-le ailleurs pour revenir.");
+          }}
+        >
+          <i className="ti ti-device-desktop-off" aria-hidden="true" /> Oublier le lien privé sur cet appareil
+        </button>
+      </section>
 
       <section className="ed-bloc ed-effacer">
         <h3>Effacer l&apos;appli</h3>

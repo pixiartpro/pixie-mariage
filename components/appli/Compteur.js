@@ -4,16 +4,20 @@
 import { useEffect } from "react";
 import { compter } from "../../lib/appli/stockage";
 
-// Une seule fois par fiche et par visite d'onglet, pour ne pas compter les rechargements.
 export function CompteurVue({ slug }) {
   useEffect(() => {
-    const k = `pm:vu:${slug}`;
+    let dejaVu = false;
+    let depuisMariage = false;
     try {
-      if (sessionStorage.getItem(k)) return;
-      sessionStorage.setItem(k, "1");
+      // Une seule vue par fiche et par onglet : un rechargement ne compte pas deux fois.
+      dejaVu = !!sessionStorage.getItem(`pm:vu:${slug}`);
+      sessionStorage.setItem(`pm:vu:${slug}`, "1");
+      // « Venu d'une appli de mariage » : seulement après un vrai clic dans l'appli d'un mariage, pas un lien qui circule.
+      depuisMariage = sessionStorage.getItem("pm:depuis-mariage") === slug;
+      if (depuisMariage) sessionStorage.removeItem("pm:depuis-mariage");
     } catch {}
-    compter(slug, "vue");
-    if (new URLSearchParams(window.location.search).get("depuis") === "mariage") compter(slug, "depuis_mariage");
+    if (!dejaVu) compter(slug, "vue");
+    if (depuisMariage) compter(slug, "depuis_mariage");
   }, [slug]);
   return null;
 }

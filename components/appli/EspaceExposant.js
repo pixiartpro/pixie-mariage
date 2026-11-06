@@ -24,6 +24,7 @@ export default function EspaceExposant() {
     try {
       const r = await chiffresExposant(s, k);
       if (!r) setErreur("Ce stand et cette clé ne vont pas ensemble. La clé vous a été remise à la signature de votre contrat.");
+      else if (!PRESTATAIRES.some((p) => p.slug === s)) setErreur("Votre stand n'est pas encore en ligne sur le site. Vos chiffres s'afficheront dès sa mise en ligne.");
       else {
         setRes(r);
         try {
@@ -109,7 +110,7 @@ export default function EspaceExposant() {
         )}
 
         <p className="ed-aide">
-          Depuis l&apos;ouverture : {nombre(res.totaux?.vue)} fiches vues, {nombre(res.totaux?.contact)} clics sur le contact. Ce sont des totaux bruts : une même personne peut revenir plusieurs fois. Nous ne savons pas qui regarde, et c&apos;est voulu.
+          Depuis l&apos;ouverture : {nombre(res.totaux?.vue)} fiches vues, {nombre(res.totaux?.contact)} clics sur le contact. Ce sont des chiffres indicatifs, bruts : une même personne peut revenir plusieurs fois, et nous ne savons pas qui regarde, c&apos;est voulu. Les mariages comptés sont ceux dont l&apos;appli a été ouverte par au moins un invité.
         </p>
 
         <div className="ex-actions">

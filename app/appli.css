@@ -201,3 +201,11 @@
 .ex-barres { height: 110px; display: flex; align-items: flex-end; gap: 3px; border-bottom: 1px solid var(--ligne); }
 .ex-barres span { flex: 1; background: var(--rose); border-radius: 3px 3px 0 0; min-width: 2px; }
 .ex-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.ed-lien { font: inherit; background: none; border: 0; padding: 0; color: var(--rose-fonce); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+@media (prefers-color-scheme: dark) { body:has(.appli-fond) { background: #1A1411; } }
+.ap-dest { display: block; width: 100%; font-size: 11.5px; font-weight: 400; opacity: 0.75; margin-top: 1px; overflow-wrap: anywhere; }
+.ap-btn:has(.ap-dest) { flex-wrap: wrap; row-gap: 0; }
+.ap-colle { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.ap-champ { font: inherit; font-size: 16px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--a-line); background: var(--a-bg); color: var(--a-fg); width: 100%; }
+.ap-champ:focus { outline: 2px solid var(--a-or-vif); outline-offset: 1px; }
+.appli-maj { color: var(--doux); font-size: 14px; margin-top: 26px; }

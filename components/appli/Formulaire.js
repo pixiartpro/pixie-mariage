@@ -4,7 +4,7 @@
 import { PRESTATAIRES, CATEGORIES, catByKey } from "../../lib/data";
 import { LIMITES } from "../../lib/appli/contenu";
 
-const SUGGESTIONS_INFOS = ["Parking", "Code du portail", "Tenue", "Navette", "Hébergement", "Enfants", "Cadeaux"];
+const SUGGESTIONS_INFOS = ["Parking", "Accès", "Tenue", "Navette", "Hébergement", "Enfants", "Cadeaux"];
 
 // Seuls les vrais stands se choisissent ici : les fiches d'exemple ne sont pas des prestataires réels.
 const STANDS = PRESTATAIRES.filter((p) => !p.exemple);
@@ -35,7 +35,7 @@ export default function Formulaire({ valeur, onChange }) {
         </div>
       </Bloc>
 
-      <Bloc titre="Les infos pratiques" sous="Parking, code du portail, tenue, navette… Une ligne par information.">
+      <Bloc titre="Les infos pratiques" sous="Parking, accès, tenue, navette… Une ligne par information. Pas de code secret : le code du faire-part protège sans être un coffre-fort.">
         {m.infos.map((i, k) => (
           <div className="ed-rang" key={k}>
             <Champ label="Quoi" valeur={i.titre} max={40} onChange={(v) => maj((c) => (c.infos[k].titre = v))} />
@@ -107,6 +107,11 @@ export default function Formulaire({ valeur, onChange }) {
               <label className="ed-champ">
                 <span>Stand du salon</span>
                 <select value={p.slug} onChange={(e) => maj((c) => (c.prestataires[k].slug = e.target.value))}>
+                  {!STANDS.some((s) => s.slug === p.slug) && (
+                    <option value={p.slug} disabled>
+                      Stand qui n&apos;est plus au salon
+                    </option>
+                  )}
                   {CATEGORIES.map((cat) => {
                     const liste = STANDS.filter((s) => s.categorie === cat.key);
                     if (!liste.length) return null;

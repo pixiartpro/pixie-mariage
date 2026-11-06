@@ -17,6 +17,17 @@ import {
 } from "../../lib/appli/contenu";
 import { prestataireBySlug, catByKey } from "../../lib/data";
 import Installer from "./Installer";
+import { PREFIXE } from "../../lib/chemin";
+
+// Le site vers lequel part un bouton : affiché à côté, pour que personne ne soit envoyé ailleurs sans le voir.
+const site = (u) => {
+  try {
+    return new URL(u).hostname.replace(/^www\./, "");
+  } catch {
+    return "";
+  }
+};
+const Dest = ({ lien }) => (site(lien) ? <small className="ap-dest">{site(lien)}</small> : null);
 
 const lireHash = () => {
   const h = new URLSearchParams(window.location.hash.slice(1));
@@ -46,6 +57,8 @@ export default function VueInvites() {
   const [onglet, setOnglet] = useState(null);
   const [maintenant, setMaintenant] = useState(() => Date.now());
   const barre = useRef(null);
+  const codeOk = useRef("");
+  const [colle, setColle] = useState("");
   // Changer d'onglet remonte au début du contenu, au lieu de rester au milieu de l'ancien.
   const choisir = (k) => {
     if (k === onglet) return;
@@ -67,6 +80,7 @@ export default function VueInvites() {
         }
         return;
       }
+      codeOk.current = code;
       if (s !== "demo") {
         memo.set(`pm:code:${s}`, code);
         memo.set("pm:dernier", s);
@@ -101,7 +115,7 @@ export default function VueInvites() {
     if (etat !== "pret") return;
     const id = setInterval(() => {
       setMaintenant(Date.now());
-      if (document.visibilityState === "visible" && slug !== "demo") charger(slug, memo.get(`pm:code:${slug}`), true);
+      if (document.visibilityState === "visible" && slug !== "demo") charger(slug, codeOk.current, true);
     }, 60000);
     return () => clearInterval(id);
   }, [etat, slug, charger]);
@@ -114,7 +128,30 @@ export default function VueInvites() {
         <div className="ap-carte ap-centre">
           <h1 className="ap-h">L&apos;appli du mariage</h1>
           <p className="ap-sous">Ouvrez le lien ou le QR code reçu avec votre faire-part : il mène directement au mariage.</p>
-          <Link className="ap-btn" href="/mariage/?m=demo">Voir un mariage de démonstration</Link>
+          <form
+            className="ap-colle"
+            onSubmit={(e) => {
+              e.preventDefault();
+              try {
+                const u = new URL(colle.trim());
+                const s = u.searchParams.get("m") || "";
+                const c = new URLSearchParams(u.hash.slice(1)).get("c") || "";
+                if (!/^[a-z0-9-]{1,80}$/.test(s)) throw new Error();
+                setSlug(s);
+                setEtat("chargement");
+                if (s === "demo" || c) charger(s, c);
+                else setEtat("code");
+              } catch {
+                setErreur("Ce lien ne ressemble pas au lien du faire-part.");
+              }
+            }}
+          >
+            <label className="ap-label" htmlFor="colle">Ou collez ici le lien reçu</label>
+            <input id="colle" className="ap-champ" value={colle} onChange={(e) => setColle(e.target.value)} inputMode="url" autoComplete="off" placeholder="https://…" />
+            {erreur && <p className="ap-erreur" role="alert">{erreur}</p>}
+            <button className="ap-btn ap-btn-clair" type="submit">Ouvrir ce lien</button>
+          </form>
+          <a className="ap-btn" href={`${PREFIXE}/mariage/?m=demo`}>Voir un mariage de démonstration</a>
           <Link className="ap-lien" href="/appli-du-mariage/">Vous vous mariez ? Créez la vôtre, gratuitement</Link>
         </div>
       </Coque>
@@ -222,7 +259,6 @@ export default function VueInvites() {
             role="tab"
             type="button"
             aria-selected={vue === k}
-            onPointerDown={() => choisir(k)}
             onClick={() => choisir(k)}
           >
             {t}
@@ -241,7 +277,7 @@ export default function VueInvites() {
                 {m.reponse.avant_le ? `Les mariés attendent votre réponse avant le ${dateLisible(m.reponse.avant_le).toLowerCase()}.` : "Les mariés attendent votre réponse."}
               </p>
               {m.reponse.lien && (
-                <a className="ap-btn" href={m.reponse.lien} target="_blank" rel="noopener noreferrer">Répondre aux mariés</a>
+                <a className="ap-btn" href={m.reponse.lien} target="_blank" rel="noopener noreferrer">Répondre aux mariés <Dest lien={m.reponse.lien} /></a>
               )}
             </section>
           )}
@@ -269,7 +305,7 @@ export default function VueInvites() {
               <h2>Partagez vos photos</h2>
               <p className="ap-sous">L&apos;album partagé choisi par les mariés. Ils décident ensuite de ce qui reste.</p>
               <a className="ap-btn" href={m.photos_soir} target="_blank" rel="noopener noreferrer">
-                <i className="ti ti-camera-plus" aria-hidden="true" /> Ajouter mes photos
+                <i className="ti ti-camera-plus" aria-hidden="true" /> Ajouter mes photos <Dest lien={m.photos_soir} />
               </a>
             </section>
           )}
@@ -287,8 +323,8 @@ export default function VueInvites() {
             <section className="ap-carte">
               <h2>Le film</h2>
               <div className="ap-btns">
-                {m.apres.teaser && <a className="ap-btn" href={m.apres.teaser} target="_blank" rel="noopener noreferrer"><i className="ti ti-player-play" aria-hidden="true" /> Le teaser</a>}
-                {m.apres.film && <a className="ap-btn" href={m.apres.film} target="_blank" rel="noopener noreferrer"><i className="ti ti-movie" aria-hidden="true" /> Le film complet</a>}
+                {m.apres.teaser && <a className="ap-btn" href={m.apres.teaser} target="_blank" rel="noopener noreferrer"><i className="ti ti-player-play" aria-hidden="true" /> Le teaser <Dest lien={m.apres.teaser} /></a>}
+                {m.apres.film && <a className="ap-btn" href={m.apres.film} target="_blank" rel="noopener noreferrer"><i className="ti ti-movie" aria-hidden="true" /> Le film complet <Dest lien={m.apres.film} /></a>}
               </div>
             </section>
           )}
@@ -296,23 +332,25 @@ export default function VueInvites() {
             <section className="ap-carte">
               <h2>Les photos</h2>
               <div className="ap-btns">
-                {m.apres.galerie && <a className="ap-btn" href={m.apres.galerie} target="_blank" rel="noopener noreferrer">La galerie du photographe</a>}
-                {m.photos_soir && <a className="ap-btn ap-btn-clair" href={m.photos_soir} target="_blank" rel="noopener noreferrer">L&apos;album des invités</a>}
+                {m.apres.galerie && <a className="ap-btn" href={m.apres.galerie} target="_blank" rel="noopener noreferrer">La galerie du photographe <Dest lien={m.apres.galerie} /></a>}
+                {m.photos_soir && <a className="ap-btn ap-btn-clair" href={m.photos_soir} target="_blank" rel="noopener noreferrer">L&apos;album des invités <Dest lien={m.photos_soir} /></a>}
               </div>
             </section>
           )}
-          {!m.apres.merci && !m.apres.teaser && !m.apres.film && !m.apres.galerie && phaseReelle !== "apres" && (
+          {!m.apres.merci && !m.apres.teaser && !m.apres.film && !m.apres.galerie && (
             <section className="ap-carte">
               <h2>Après le mariage</h2>
-              <p className="ap-sous">Le mot des mariés, le film et les photos arriveront ici, au même endroit.</p>
+              <p className="ap-sous">Le mot des mariés, le film et les photos arriveront ici, au même endroit, dans les jours et les semaines qui suivent.</p>
             </section>
           )}
           <Prestataires m={m} />
           {m.apres.tirages && (
             <section className="ap-carte">
               <h2>Commander vos tirages</h2>
-              <p className="ap-sous">Directement chez le photographe du mariage. Le paiement se fait chez lui.</p>
-              <a className="ap-btn ap-btn-clair" href={m.apres.tirages} target="_blank" rel="noopener noreferrer">Commander</a>
+              <p className="ap-sous">Le lien donné par les mariés, vers le site de leur photographe. Pixie Mariage ne vend rien et n&apos;encaisse rien.</p>
+              <a className="ap-btn ap-btn-clair" href={m.apres.tirages} target="_blank" rel="noopener noreferrer">
+                Commander <Dest lien={m.apres.tirages} />
+              </a>
             </section>
           )}
         </div>
@@ -404,11 +442,28 @@ function Prestataires({ m }) {
         {m.prestataires.map((p, i) => {
           if (p.slug) {
             const f = prestataireBySlug(p.slug);
-            if (!f) return null;
+            if (!f)
+              return p.role ? (
+                <li key={i}>
+                  <div className="ap-prest-sans">
+                    <div>
+                      <b>{p.role}</b>
+                      <span>Prestataire qui n&apos;est plus au salon</span>
+                    </div>
+                  </div>
+                </li>
+              ) : null;
             const cat = catByKey(f.categorie);
             return (
               <li key={i}>
-                <Link href={`/prestataire/${f.slug}/?depuis=mariage`}>
+                <Link
+                  href={`/prestataire/${f.slug}/`}
+                  onClick={() => {
+                    try {
+                      sessionStorage.setItem("pm:depuis-mariage", f.slug);
+                    } catch {}
+                  }}
+                >
                   <div>
                     <b>{f.nom}</b>
                     <span>{p.role || (cat ? cat.nom : "")} · {f.ville}</span>
@@ -429,7 +484,7 @@ function Prestataires({ m }) {
               {p.lien ? (
                 <a href={p.lien} target="_blank" rel="noopener noreferrer">
                   {contenu}
-                  <i>Son site</i>
+                  <i>{site(p.lien) || "Son site"}</i>
                 </a>
               ) : (
                 <div className="ap-prest-sans">{contenu}</div>

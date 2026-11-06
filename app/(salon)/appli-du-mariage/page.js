@@ -10,12 +10,12 @@ const MOMENTS = [
   {
     ic: "map-pin",
     titre: "Avant",
-    texte: "Le lieu en un appui, l'itinéraire, le code du portail, la tenue, la navette. Le programme heure par heure. Le lien vers votre formulaire de réponse.",
+    texte: "Le lieu en un appui, l'itinéraire, l'accès, la tenue, la navette. Le programme heure par heure. Le lien vers votre formulaire de réponse.",
   },
   {
     ic: "speakerphone",
     titre: "Le jour J",
-    texte: "Le moment en cours s'allume tout seul. Un nuage approche ? Vous écrivez un mot, il s'affiche chez tous les invités en moins d'une minute.",
+    texte: "Le moment en cours s'allume tout seul. Un nuage approche ? Vous écrivez un mot, il s'affiche dans la minute chez les invités qui ont l'appli ouverte.",
   },
   {
     ic: "movie",

@@ -3,7 +3,6 @@
   "short_name": "Le mariage",
   "description": "Le lieu, le programme, le jour J et les souvenirs du mariage.",
   "lang": "fr",
-  "start_url": "./mariage/",
   "scope": "./mariage/",
   "display": "standalone",
   "background_color": "#FBF6F0",
