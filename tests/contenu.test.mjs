@@ -67,7 +67,7 @@ test("le fichier agenda part à la première heure du programme, en UTC", () => 
 test("le message aux invités : prénoms, date, lien avec le code", () => {
   const m = C.messageInvites(["Sarah", "Kévin"], "2026-12-19", "https://x/mariage/?m=s#c=ABC123");
   assert.match(m, /^Sarah & Kévin se marient le samedi 19 décembre 2026 !/);
-  assert.match(m, /sans appli à installer/);
+  assert.match(m, /les souvenirs : tout est ici, sans appli à installer/);
   assert.ok(m.endsWith("https://x/mariage/?m=s#c=ABC123"));
   assert.match(C.messageInvites(["A", "B"], "", "L"), /^A & B se marient ! /);
 });

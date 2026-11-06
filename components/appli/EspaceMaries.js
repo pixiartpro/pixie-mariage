@@ -164,7 +164,7 @@ export function CreerAppli() {
           stock.del(BROUILLON);
           setCree({ ...r, prenoms: c.prenoms, date: c.date });
           // On montre tout de suite le résultat (le bandeau d'en-tête reste au-dessus).
-          setTimeout(() => document.querySelector(".ed-bravo")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+          setTimeout(() => document.querySelector(".ed-partage")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
         } catch (er) {
           setErreur(er.message || "L'enregistrement n'a pas marché. Réessayez.");
         } finally {
@@ -175,14 +175,15 @@ export function CreerAppli() {
       {MODE === "essai" && <ModeEssai />}
       <p className="ed-aide">Votre brouillon se garde tout seul sur cet appareil. Seuls les champs marqués * sont obligatoires : le reste peut attendre.</p>
       <Formulaire valeur={m} onChange={setM} />
-      <div className="ed-final">
-        <label className="ed-accord">
-          <input type="checkbox" checked={accord} onChange={(e) => setAccord(e.target.checked)} />
-          <span>
-            Nous avons lu comment nos informations sont traitées : enregistrées chez l&apos;hébergeur de Pixie Mariage (Supabase) pour faire fonctionner l&apos;appli, visibles par les invités qui ont le code du faire-part (qui protège sans être un coffre-fort), et effacées 90 jours après le mariage.{" "}
-            <Link href="/appli-du-mariage/confidentialite/">Le détail</Link>
-          </span>
-        </label>
+      <label className="ed-accord">
+        <input type="checkbox" checked={accord} onChange={(e) => setAccord(e.target.checked)} />
+        <span>
+          Nous avons lu comment nos informations sont traitées : enregistrées chez l&apos;hébergeur de Pixie Mariage (Supabase) pour faire fonctionner l&apos;appli, visibles par les invités qui ont le code du faire-part (qui protège sans être un coffre-fort), et effacées 90 jours après le mariage.{" "}
+          <Link href="/appli-du-mariage/confidentialite/">Le détail</Link>
+        </span>
+      </label>
+      {/* Collé en bas de l'écran : le message d'erreur et le bouton restent visibles pendant qu'on remonte au champ manquant. */}
+      <div className="ed-final ed-collant">
         {erreur && <p className="ed-erreur" role="alert">{erreur}</p>}
         <button className="btn btn-rose" type="submit" disabled={envoi}>
           {envoi ? "Création…" : "Créer l'appli de notre mariage"}
@@ -274,10 +275,12 @@ function Partage({ slug, code, cle, prenoms, date, premiere, onNouveauCode }) {
                   if (e?.name === "AbortError") return;
                 }
               }
-              window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, "_blank", "noopener");
+              if (!navigator.share) window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, "_blank", "noopener");
+              // Si le partage du téléphone a échoué, le navigateur bloquerait une fenêtre : on copie le message à la place.
+              else fait("message", texte);
             }}
           >
-            <i className="ti ti-send" aria-hidden="true" /> Envoyer à nos invités
+            <i className="ti ti-send" aria-hidden="true" /> {copie === "message" ? "Message copié" : "Envoyer à nos invités"}
           </button>
           <a className="btn btn-ghost btn-sm" href={`https://wa.me/?text=${encodeURIComponent(messageInvites(prenoms, date, l.invites))}`} target="_blank" rel="noopener noreferrer">
             <i className="ti ti-brand-whatsapp" aria-hidden="true" /> Par WhatsApp

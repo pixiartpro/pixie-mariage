@@ -187,9 +187,11 @@ export default function Formulaire({ valeur, onChange }) {
 
 // replie : une partie facultative, encore vide, se montre fermée (le formulaire reste court sur un téléphone).
 function Bloc({ titre, sous, children, replie }) {
+  // L'état ouvert/fermé n'est décidé qu'à l'ouverture de la page : il ne bouge plus pendant la saisie.
+  const [ouvert, setOuvert] = useState(!replie);
   if (replie !== undefined)
     return (
-      <details className="ed-bloc ed-replie" open={!replie}>
+      <details className="ed-bloc ed-replie" open={ouvert} onToggle={(e) => setOuvert(e.currentTarget.open)}>
         <summary>
           <span>{titre}</span>
           <small>Facultatif, à compléter quand vous voulez</small>
