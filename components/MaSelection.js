@@ -1,7 +1,7 @@
 "use client";
 
 // « Ma sélection » : les stands mis de côté, une note par stand, et le partage à deux par un lien.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES, PRESTATAIRES, SALON, catByKey } from "../lib/data";
 import { lireSelection, ecouter, basculer, noter, ajouterPlusieurs, slugsDuLien } from "../lib/selection";
@@ -14,6 +14,7 @@ export default function MaSelection() {
   const [liste, setListe] = useState(null);
   const [partagee, setPartagee] = useState([]);
   const [msg, setMsg] = useState("");
+  const minuteur = useRef(null);
 
   useEffect(() => {
     const maj = () => setListe(lireSelection());
@@ -31,7 +32,8 @@ export default function MaSelection() {
 
   const dire = (t) => {
     setMsg(t);
-    setTimeout(() => setMsg(""), 3000);
+    clearTimeout(minuteur.current);
+    minuteur.current = setTimeout(() => setMsg(""), 3000);
   };
   const partager = async () => {
     const texte = "Notre sélection de prestataires sur Pixie Mariage";
@@ -39,8 +41,8 @@ export default function MaSelection() {
       try {
         await navigator.share({ title: texte, text: texte, url: lien });
         return;
-      } catch {
-        return;
+      } catch (e) {
+        if (e?.name === "AbortError") return; // la personne a fermé le partage
       }
     }
     try {
@@ -179,8 +181,12 @@ export default function MaSelection() {
           </section>
 
           <p className="ed-aide sel-pied">
-            Votre sélection et vos notes restent sur cet appareil : rien n&apos;est envoyé chez nous. Vos prestataires sont choisis ? Ils pourront apparaître dans{" "}
-            <Link href="/appli-du-mariage">l&apos;appli de votre mariage</Link>, pour que vos invités les retrouvent.
+            Votre sélection et vos notes restent sur cet appareil. Rien ne nous est envoyé, sauf si vous demandez un devis.
+            {liste.some((x) => !fiche(x.slug)?.exemple) && (
+              <>
+                {" "}Vos prestataires sont choisis ? Ils pourront apparaître dans <Link href="/appli-du-mariage">l&apos;appli de votre mariage</Link>, pour que vos invités les retrouvent.
+              </>
+            )}
           </p>
         </>
       )}

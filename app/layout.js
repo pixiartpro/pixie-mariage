@@ -25,6 +25,7 @@ export const metadata = {
     type: "website",
     locale: "fr_FR",
     siteName: "Pixie Mariage",
+    url: "https://pixiartpro.github.io/pixie-mariage/",
     title: "Pixie Mariage — le salon du mariage de La Réunion, ouvert toute l'année",
     description: "Les prestataires du mariage de l'île, en vidéo, au même endroit. Gratuit pour les couples.",
     images: [{ url: `${PREFIXE}/og/og-salon.png`, width: 1200, height: 630, alt: "Pixie Mariage, le salon du mariage de La Réunion" }],

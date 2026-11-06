@@ -4,7 +4,7 @@
 import { PRESTATAIRES, CATEGORIES, catByKey } from "../../lib/data";
 import { LIMITES } from "../../lib/appli/contenu";
 import { useEffect, useState } from "react";
-import { lireSelection } from "../../lib/selection";
+import { lireSelection, ecouter } from "../../lib/selection";
 
 const SUGGESTIONS_INFOS = ["Parking", "Accès", "Tenue", "Navette", "Hébergement", "Enfants", "Cadeaux"];
 
@@ -15,7 +15,11 @@ export default function Formulaire({ valeur, onChange }) {
   const m = valeur;
   // Les vrais stands mis de côté dans « Ma sélection », pas encore dans l'appli.
   const [selection, setSelection] = useState([]);
-  useEffect(() => setSelection(lireSelection().map((x) => x.slug)), []);
+  useEffect(() => {
+    const f = () => setSelection(lireSelection().map((x) => x.slug));
+    f();
+    return ecouter(f);
+  }, []);
   const aReprendre = selection.filter((s) => STANDS.some((x) => x.slug === s) && !m.prestataires.some((p) => p.slug === s));
   const maj = (fn) => {
     const copie = structuredClone(m);
@@ -156,7 +160,7 @@ export default function Formulaire({ valeur, onChange }) {
               })
             }
           >
-            <i className="ti ti-heart" aria-hidden="true" /> Reprendre ma sélection du salon ({aReprendre.length})
+            <i className="ti ti-heart" aria-hidden="true" /> Reprendre ma sélection du salon ({Math.min(aReprendre.length, LIMITES.prestataires - m.prestataires.length)})
           </button>
         )}
         {m.prestataires.length < LIMITES.prestataires && (

@@ -1,4 +1,5 @@
-// Le plan du site pour Google (sitemap.xml). Les pages privées (modifier, espace exposant, ma sélection) n'y sont pas.
+// Le plan du site pour Google (sitemap.xml). Sur pixiartpro.github.io, pas de robots.txt possible (il faudrait la racine du domaine) :
+// ce plan se déclare à la main dans Google Search Console (propriété « préfixe d'URL »), en attendant un vrai domaine. Les pages privées (modifier, espace exposant, ma sélection) n'y sont pas.
 import { PRESTATAIRES } from "../lib/data";
 import { SITE } from "../lib/chemin";
 

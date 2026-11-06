@@ -12,7 +12,7 @@ export default function Header() {
           <span className="sig hide-mobile">· {SALON.signature}</span>
         </Link>
         <nav className="nav">
-          <Link href="/annuaire">Les stands</Link>
+          <Link href="/annuaire" className="nav-stands">Les stands</Link>
           <Link href="/appli-du-mariage" className="hide-mobile">L&apos;appli du mariage</Link>
           <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="hide-mobile">
             Plan de table

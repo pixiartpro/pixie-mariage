@@ -10,7 +10,7 @@ import { catGrad } from "../../../../lib/theme";
 import PrestataireCard from "../../../../components/PrestataireCard";
 import { CompteurVue, LienContact } from "../../../../components/appli/Compteur";
 import Coeur from "../../../../components/Coeur";
-import { apercu } from "../../../../lib/chemin";
+import { apercu, SITE } from "../../../../lib/chemin";
 
 export const dynamicParams = false;
 
@@ -24,7 +24,10 @@ export async function generateMetadata({ params }) {
   return {
     title: p ? `${p.nom}${p.exemple ? " (exemple)" : ""} — Pixie Mariage` : "Prestataire — Pixie Mariage",
     description: p ? p.accroche : "",
-    openGraph: p ? apercu(`${p.nom}${p.exemple ? " (exemple)" : ""} — Pixie Mariage`, `${p.accroche}. ${p.ville}, La Réunion.`) : undefined,
+    openGraph: p ? apercu(`${p.nom}${p.exemple ? " (exemple)" : ""} — Pixie Mariage`, `${p.accroche}. ${p.ville}, La Réunion.`, "og-salon", `prestataire/${p.slug}/`) : undefined,
+    alternates: p ? { canonical: `${SITE}/prestataire/${p.slug}/` } : undefined,
+    // Les fiches d'exemple (prix inventés) ne vont pas dans Google.
+    robots: p?.exemple ? { index: false, follow: true } : undefined,
   };
 }
 
