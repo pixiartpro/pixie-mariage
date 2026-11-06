@@ -11,7 +11,7 @@ export const ENGAGEMENTS = [
   ["Vous promettre des chiffres", "Aucune audience garantie : vous voyez les chiffres bruts de votre stand dans votre espace."],
 ];
 
-export default function Charte({ titre = "Ce qu'on ne vous fera jamais", lien = true }) {
+export default function Charte({ titre = "Ce qu’on ne vous fera jamais", lien = true }) {
   return (
     <section className="charte" aria-labelledby="charte-titre">
       <h2 id="charte-titre">{titre}</h2>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import QrCode from "./QrCode";
 import { lireMariage } from "../../lib/appli/stockage";
 import { dateLisible } from "../../lib/appli/contenu";
-import { PREFIXE } from "../../lib/chemin";
+import { PREFIXE, SITE } from "../../lib/chemin";
 import BoutonImprimer from "../BoutonImprimer";
 
 export default function AfficheMariage() {
@@ -19,7 +19,8 @@ export default function AfficheMariage() {
     lireMariage(m, c)
       .then((r) => {
         if (!r) return setEtat({ ok: false });
-        const lien = `${window.location.origin}${PREFIXE}/mariage/?m=${m}${m === "demo" ? "" : `#c=${c.toUpperCase()}`}`;
+        // Toujours l'adresse publique : un QR imprimé depuis le Mac doit marcher chez les invités.
+        const lien = `${SITE}/mariage/?m=${m}${m === "demo" ? "" : `#c=${c.toUpperCase()}`}`;
         setEtat({ ok: true, m: r.contenu, code: m === "demo" ? "" : c.toUpperCase(), lien, demo: !!r.demo });
       })
       .catch(() => setEtat({ ok: false }));

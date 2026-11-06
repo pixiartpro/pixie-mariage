@@ -263,7 +263,7 @@
 .feuille-a5 .charte h2 { font-size: 19px; margin-bottom: 8px; }
 .feuille-a5 .charte ul { grid-template-columns: 1fr 1fr; gap: 6px 12px; }
 .feuille-a5 .charte b { font-size: 13px; }
-.feuille-a5 .charte span { font-size: 11.5px; }
+.feuille-a5 .charte span { display: block; font-size: 11.5px; line-height: 1.4; }
 .feuille-pied { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; margin-top: auto; }
 .feuille-pied p { font-size: 13px; display: flex; flex-direction: column; gap: 3px; }
 .feuille-pied p span { color: #6E5F56; font-size: 11.5px; }
@@ -286,4 +286,16 @@
   body { background: #fff !important; }
   body:has(.feuille-a5) .section, body:has(.feuille-a5) .container { padding: 0 !important; margin: 0 !important; max-width: none !important; }
   .feuille-a5 { width: 148mm; height: 210mm; min-height: 0; border: 0; border-radius: 0; box-shadow: none; padding: 12mm 11mm; break-inside: avoid; }
+  .feuille-a5 { gap: 7px; overflow: hidden; line-height: 1.35; }
+  .feuille-a5 h1 { font-size: 25px; }
+  .affiche-mariage h1 { font-size: 44px; }
+  .feuille-lead { font-size: 13px; }
+  .feuille-prix div { padding: 6px 8px; }
+  .feuille-prix b { font-size: 17px; }
+  .feuille-a5 .charte { padding: 9px 10px; }
+  .feuille-a5 .charte h2 { font-size: 16px; margin-bottom: 5px; }
+  .feuille-a5 .charte li { gap: 6px; grid-template-columns: 16px minmax(0, 1fr); }
+  .feuille-a5 .charte li .ti { font-size: 14px; }
+  .feuille-a5 .charte b { font-size: 11.5px; line-height: 1.3; }
+  .feuille-a5 .charte span { display: block; font-size: 10.5px; line-height: 1.3; }
 }

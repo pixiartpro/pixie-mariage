@@ -18,7 +18,7 @@ export default function Prospectus() {
         </p>
         <article className="feuille-a5">
           <p className="eyebrow">Pixie Mariage · La Réunion</p>
-          <h1>Votre stand filmé, en ligne toute l&apos;année</h1>
+          <h1>Votre stand filmé, en ligne toute l’année</h1>
           <p className="feuille-lead">Le salon du mariage qui ne ferme jamais. Un film tourné chez vous, que vous diffusez partout pour votre promotion, et votre stand au salon.</p>
           <div className="feuille-prix">
             <div><b>700 € HT</b><span>le stand filmé, 1ʳᵉ année comprise</span></div>
