@@ -1,5 +1,6 @@
 import { apercu, SITE } from "../../../lib/chemin";
 import Link from "next/link";
+import Charte from "../../../components/Charte";
 import { SALON, PARTENAIRES } from "../../../lib/data";
 
 // Grille publique décidée par Guillaume le jeudi 05/11/2026 (carnet d'idées, lignes du 05/11/2026).
@@ -87,6 +88,9 @@ export default function Partenaires() {
             Ce qui ne s&apos;achète jamais : une place dans le classement, un nombre de contacts, une mise en avant déguisée.
             Le détail est dans <Link href="/regles-du-salon">les règles du salon</Link>.
           </p>
+          <div style={{ marginTop: 30 }}>
+            <Charte />
+          </div>
           <div style={{ textAlign: "center", marginTop: 22 }}>
             <Link href="/partenaires/candidater/" className="btn btn-gold">
               <i className="ti ti-calculator" aria-hidden="true" /> Calculer mon prix

@@ -247,9 +247,14 @@ function Partage({ slug, code, cle, prenoms, date, premiere, onNouveauCode }) {
             {copie === "invites" ? "Copié" : "Copier"}
           </button>
         </div>
-        <a className="btn btn-ghost btn-sm" href={l.invites} target="_blank" rel="noopener noreferrer">
-          <i className="ti ti-eye" aria-hidden="true" /> Voir comme un invité
-        </a>
+        <div className="ed-puces">
+          <a className="btn btn-ghost btn-sm" href={l.invites} target="_blank" rel="noopener noreferrer">
+            <i className="ti ti-eye" aria-hidden="true" /> Voir comme un invité
+          </a>
+          <a className="btn btn-ghost btn-sm" href={`${PREFIXE}/appli-du-mariage/affiche/?m=${slug}#c=${code}`} target="_blank" rel="noopener noreferrer">
+            <i className="ti ti-printer" aria-hidden="true" /> Imprimer l&apos;affiche
+          </a>
+        </div>
         {onNouveauCode && (
           <p className="ed-aide">
             Le faire-part a circulé trop loin ?{" "}

@@ -6,7 +6,7 @@ import { LIMITES } from "../../lib/appli/contenu";
 import { useEffect, useState } from "react";
 import { lireSelection, ecouter } from "../../lib/selection";
 
-const SUGGESTIONS_INFOS = ["Parking", "Accès", "Tenue", "Navette", "Hébergement", "Enfants", "Cadeaux"];
+const SUGGESTIONS_INFOS = ["Tenue", "Parking", "Accès", "Navette", "Hébergement", "Enfants", "Fin de soirée", "Réseau sur place", "S'il pleut", "Venir de métropole", "Cadeaux"];
 
 // Seuls les vrais stands se choisissent ici : les fiches d'exemple ne sont pas des prestataires réels.
 const STANDS = PRESTATAIRES.filter((p) => !p.exemple);
@@ -45,7 +45,7 @@ export default function Formulaire({ valeur, onChange }) {
         </div>
       </Bloc>
 
-      <Bloc titre="Les infos pratiques" sous="Parking, accès, tenue, navette… Une ligne par information. Pas de code secret : le code du faire-part protège sans être un coffre-fort.">
+      <Bloc titre="Les infos pratiques" sous="Les questions que vos invités poseront. Une case laissée vide n'apparaît pas chez eux. Pas de code secret : le code du faire-part protège sans être un coffre-fort.">
         {m.infos.map((i, k) => (
           <div className="ed-rang" key={k}>
             <Champ label="Quoi" valeur={i.titre} max={40} onChange={(v) => maj((c) => (c.infos[k].titre = v))} />
@@ -72,7 +72,7 @@ export default function Formulaire({ valeur, onChange }) {
           <div className="ed-rang ed-rang-prog" key={k}>
             <Champ label="Heure" type="time" valeur={p.heure} onChange={(v) => maj((c) => (c.programme[k].heure = v))} />
             <Champ label="Moment" valeur={p.titre} max={LIMITES.court} onChange={(v) => maj((c) => (c.programme[k].titre = v))} />
-            <Champ label="Détail (facultatif)" valeur={p.detail} max={160} onChange={(v) => maj((c) => (c.programme[k].detail = v))} />
+            <Champ label="Détail (facultatif)" valeur={p.detail} max={160} placeholder={/c[ée]r[ée]monie/i.test(p.titre) ? "Ex. : téléphones rangés, notre photographe s'en occupe" : ""} onChange={(v) => maj((c) => (c.programme[k].detail = v))} />
             <Retirer onClick={() => maj((c) => c.programme.splice(k, 1))} quoi={p.titre || "ce moment"} />
           </div>
         ))}

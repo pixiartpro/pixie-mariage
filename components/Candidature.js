@@ -19,6 +19,8 @@ const vide = {
   contact: "",
   telephone: "",
   film: "",
+  prixMontant: "",
+  prixUnite: "forfait",
   pieces: { siret: false, assurance: false, metier: false },
   videaste: { mariages: false, references: false, droits: false },
 };
@@ -49,6 +51,8 @@ export default function Candidature() {
           contact: txt("contact"),
           telephone: txt("telephone"),
           film: txt("film"),
+          prixMontant: String(b.prixMontant ?? "").replace(/\D/g, "").slice(0, 6),
+          prixUnite: ["forfait", "convive", "heure"].includes(b.prixUnite) ? b.prixUnite : "forfait",
           pieces: { siret: coche(b.pieces, "siret"), assurance: coche(b.pieces, "assurance"), metier: coche(b.pieces, "metier") },
           videaste: { mariages: coche(b.videaste, "mariages"), references: coche(b.videaste, "references"), droits: coche(b.videaste, "droits") },
         });
@@ -95,6 +99,7 @@ export default function Candidature() {
     `Commune : ${c.commune}`,
     `SIRET : ${c.siret.replace(/\s/g, "")}`,
     `Site ou réseaux : ${c.web || "—"}`,
+    `Mon prix « à partir de », affiché sur mon stand : ${c.prixMontant} €${{ forfait: "", convive: " par convive", heure: " de l'heure" }[c.prixUnite]}`,
     `Contact : ${c.contact}${c.telephone ? " · " + c.telephone : ""}`,
     "",
     `Formule : ${d.formule.nom}${partenaire ? " + partenaire du mois souhaité (une fois, mois à fixer)" : ""}`,
@@ -124,6 +129,7 @@ export default function Candidature() {
     if (!cat) return "votre métier";
     if (!c.commune.trim()) return "votre commune";
     if (!siretValide(c.siret)) return "un SIRET valable (14 chiffres)";
+    if (!c.prixMontant) return "votre prix « à partir de »";
     if (!c.contact.trim()) return "votre nom";
     return "";
   };
@@ -287,6 +293,25 @@ export default function Candidature() {
           />
           <Champ label="Site ou réseaux (facultatif)" valeur={c.web} onChange={(v) => maj("web", v)} />
         </div>
+        <div className="ed-ligne2">
+          <Champ
+            label="Votre prix « à partir de », en euros"
+            valeur={c.prixMontant}
+            onChange={(v) => maj("prixMontant", v.replace(/\D/g, "").slice(0, 6))}
+            requis
+            inputMode="numeric"
+            note=""
+          />
+          <label className="ed-champ">
+            <span>Par</span>
+            <select value={c.prixUnite} onChange={(e) => maj("prixUnite", e.target.value)}>
+              <option value="forfait">Forfait (mariage complet)</option>
+              <option value="convive">Convive</option>
+              <option value="heure">Heure</option>
+            </select>
+          </label>
+        </div>
+        <p className="ed-aide">Il s&apos;affiche sur votre stand : les couples choisissent d&apos;abord ceux qui montrent un prix. Vous le changez quand vous voulez.</p>
         <div className="ed-ligne2">
           <Champ label="Votre nom" valeur={c.contact} onChange={(v) => maj("contact", v)} requis />
           <Champ label="Téléphone (facultatif)" valeur={c.telephone} onChange={(v) => maj("telephone", v)} inputMode="tel" />

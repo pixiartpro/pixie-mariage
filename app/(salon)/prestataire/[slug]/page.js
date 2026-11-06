@@ -8,7 +8,8 @@ import {
 } from "../../../../lib/data";
 import { catGrad } from "../../../../lib/theme";
 import PrestataireCard from "../../../../components/PrestataireCard";
-import { CompteurVue, LienContact } from "../../../../components/appli/Compteur";
+import { CompteurVue } from "../../../../components/appli/Compteur";
+import ContactPrecis from "../../../../components/ContactPrecis";
 import Coeur from "../../../../components/Coeur";
 import { apercu, SITE } from "../../../../lib/chemin";
 
@@ -119,9 +120,7 @@ export default async function Fiche({ params }) {
                   <h3>Intéressé·e&nbsp;?</h3>
                   <p>Contactez directement {p.nom} pour une disponibilité ou un devis. Sans intermédiaire, sans frais.</p>
                   <div className="prix-big">{p.prix}</div>
-                  <LienContact slug={p.slug} href={mailto} className="btn btn-rose">
-                    <i className="ti ti-mail" aria-hidden="true" /> Demander un devis
-                  </LienContact>
+                  <ContactPrecis email={SALON.email} slug={p.slug} nom={p.nom} metier={cat ? cat.nom : ""} ville={p.ville} />
                 </>
               )}
               <Coeur slug={p.slug} nom={p.nom} grand />

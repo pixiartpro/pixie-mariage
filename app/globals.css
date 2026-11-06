@@ -291,3 +291,7 @@ img { max-width: 100%; display: block; }
 @media (max-width: 520px) { .nav .cta-long { display: none; } .nav .cta-court { display: inline; } .nav-selection .ti { font-size: 21px; } }
 @media (max-width: 374px) { .site-header .container { padding: 0 14px; } .logo .name { font-size: 19px; } .logo .dot { display: none; } .nav { gap: 8px; } }
 @media (max-width: 340px) { .nav .nav-stands { display: none; } }
+
+/* Le menu a grandi (appli, sélection) : le slogan du logo se retire avant de se replier. */
+@media (max-width: 1100px) { .logo .sig { display: none; } }
+@media (min-width: 761px) and (max-width: 940px) { .nav { gap: 16px; } .nav a { font-size: 14.5px; } }

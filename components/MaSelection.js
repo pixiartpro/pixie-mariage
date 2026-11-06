@@ -7,6 +7,7 @@ import { CATEGORIES, PRESTATAIRES, SALON, catByKey } from "../lib/data";
 import { lireSelection, ecouter, basculer, noter, ajouterPlusieurs, slugsDuLien } from "../lib/selection";
 import { compter } from "../lib/appli/stockage";
 import { PREFIXE } from "../lib/chemin";
+import { lireProjet, mailDevis } from "../lib/projet";
 
 const fiche = (slug) => PRESTATAIRES.find((p) => p.slug === slug);
 
@@ -14,12 +15,14 @@ export default function MaSelection() {
   const [liste, setListe] = useState(null);
   const [partagee, setPartagee] = useState([]);
   const [msg, setMsg] = useState("");
+  const [projet, setProjet] = useState({ date: "", commune: "", invites: "" });
   const minuteur = useRef(null);
 
   useEffect(() => {
     const maj = () => setListe(lireSelection());
     maj();
     setPartagee(slugsDuLien(new URLSearchParams(window.location.search).get("s")));
+    setProjet(lireProjet());
     return ecouter(maj);
   }, []);
 
@@ -123,9 +126,7 @@ export default function MaSelection() {
                 <ul className="sel-liste">
                   {ici.map((x) => {
                     const f = fiche(x.slug);
-                    const mailto = `mailto:${SALON.email}?subject=${encodeURIComponent("Demande de contact — " + f.nom)}&body=${encodeURIComponent(
-                      `Bonjour,\n\nJ'aimerais être mis·e en relation avec ${f.nom} (${cat.nom}, ${f.ville}), vu sur Pixie Mariage.\n\nMerci !`
-                    )}`;
+                    const mailto = mailDevis(SALON.email, f.nom, cat.nom, f.ville, projet);
                     return (
                       <li key={x.slug} className="sel-ligne">
                         <div className="sel-quoi">

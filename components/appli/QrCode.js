@@ -14,7 +14,7 @@ function matrice(texte) {
   return { n, cases };
 }
 
-export default function QrCode({ texte, taille = 180, nomFichier = "qr-code-mariage.png" }) {
+export default function QrCode({ texte, taille = 180, nomFichier = "qr-code-mariage.png", sansBouton = false, label = "QR code du lien des invités" }) {
   const { n, cases } = useMemo(() => matrice(texte), [texte]);
   const marge = 4;
   const total = n + marge * 2;
@@ -39,13 +39,15 @@ export default function QrCode({ texte, taille = 180, nomFichier = "qr-code-mari
 
   return (
     <div className="qr">
-      <svg viewBox={`0 0 ${total} ${total}`} width={taille} height={taille} role="img" aria-label="QR code du lien des invités" shapeRendering="crispEdges">
+      <svg viewBox={`0 0 ${total} ${total}`} width={taille} height={taille} role="img" aria-label={label} shapeRendering="crispEdges">
         <rect width={total} height={total} fill="#fff" />
         <path d={chemin} fill="#000" />
       </svg>
-      <button type="button" className="btn btn-ghost btn-sm" onClick={telecharger}>
-        <i className="ti ti-download" aria-hidden="true" /> Télécharger le QR code
-      </button>
+      {!sansBouton && (
+        <button type="button" className="btn btn-ghost btn-sm" onClick={telecharger}>
+          <i className="ti ti-download" aria-hidden="true" /> Télécharger le QR code
+        </button>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import Candidature from "../../../../components/Candidature";
+import Charte from "../../../../components/Charte";
 import { apercu, SITE } from "../../../../lib/chemin";
 
 export const metadata = {
@@ -15,6 +16,7 @@ export default function Candidater() {
         <p className="eyebrow">Devenir exposant</p>
         <h1 className="section-title">Votre stand, votre prix, en trois étapes</h1>
         <p className="section-sub">La grille est la même pour tous, et publique, tarif fondateur compris. Une candidature n&apos;engage à rien.</p>
+        <Charte />
         <Candidature />
       </div>
     </section>

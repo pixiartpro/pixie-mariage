@@ -79,6 +79,7 @@ export default function AppliDuMariage() {
             <div className="studio-actions">
               <Link href="/appli-du-mariage/creer/" className="btn btn-rose">Créer la nôtre, c&apos;est gratuit</Link>
               <Link href="/appli-du-mariage/confidentialite/" className="btn btn-ghost">Vos données, en détail</Link>
+              <Link href="/appli-du-mariage/affiche/?m=demo" className="btn btn-ghost">L&apos;affiche à imprimer</Link>
             </div>
           </div>
         </div>
