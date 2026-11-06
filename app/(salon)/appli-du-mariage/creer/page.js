@@ -11,7 +11,7 @@ export default function Creer() {
       <div className="container ed-conteneur">
         <p className="eyebrow">L&apos;appli du mariage</p>
         <h1 className="section-title">Créer l&apos;appli de notre mariage</h1>
-        <p className="section-sub">Quelques minutes suffisent. Vous pourrez tout compléter plus tard, jusqu&apos;au jour J.</p>
+        <p className="section-sub">Gratuite, pour vos invités : avant, le jour J et après.</p>
         <CreerAppli />
       </div>
     </section>

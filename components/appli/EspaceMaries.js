@@ -10,6 +10,7 @@ import QrCode from "./QrCode";
 import { mariageVide, nettoyer, manques, liensRefuses, LIMITES, dateLisible } from "../../lib/appli/contenu";
 import { creerMariage, ouvrirMariage, modifierMariage, annoncer, supprimerMariage, nouveauCode, MODE } from "../../lib/appli/stockage";
 import { PREFIXE } from "../../lib/chemin";
+import { SALON } from "../../lib/data";
 
 const BROUILLON = "pm:brouillon";
 const stock = {
@@ -110,8 +111,10 @@ export function CreerAppli() {
   const [envoi, setEnvoi] = useState(false);
   const [erreur, setErreur] = useState("");
   const [cree, setCree] = useState(null);
+  const [essaiDemande, setEssaiDemande] = useState(false);
 
   useEffect(() => {
+    setEssaiDemande(new URLSearchParams(window.location.search).get("essai") === "1");
     let b = null;
     try {
       b = JSON.parse(stock.get(BROUILLON) || "null");
@@ -124,6 +127,10 @@ export function CreerAppli() {
   }, [m, cree]);
 
   if (!m) return <p className="ed-attente">Ouverture…</p>;
+
+  // Tant que la base n'est pas branchée, la création est fermée au public (sinon l'appli ne vivrait que sur un téléphone).
+  // Pour l'essayer quand même : ajouter ?essai=1 à l'adresse.
+  if (MODE === "essai" && !essaiDemande) return <OuvertureProchaine />;
 
   if (cree) return <Partage {...cree} premiere />;
 
@@ -169,6 +176,27 @@ export function CreerAppli() {
         </button>
       </div>
     </form>
+  );
+}
+
+function OuvertureProchaine() {
+  const sujet = encodeURIComponent("L'appli de notre mariage");
+  const corps = encodeURIComponent("Bonjour,\n\nNous nous marions le … à … et l'appli du mariage nous intéresse.\n\nMerci !");
+  return (
+    <div className="ed-bloc ed-centre">
+      <h2>Ouverture très prochaine</h2>
+      <p className="ed-aide">
+        L&apos;appli du mariage ouvre avec ses premiers couples. Vous vous mariez bientôt ? Écrivez-nous : nous vous l&apos;ouvrons en priorité, gratuitement.
+      </p>
+      <div className="cta-row">
+        <a className="btn btn-rose" href={`mailto:${SALON.email}?subject=${sujet}&body=${corps}`}>
+          <i className="ti ti-mail" aria-hidden="true" /> Nous écrire
+        </a>
+        <a className="btn btn-ghost" href={`${PREFIXE}/mariage/?m=demo`}>
+          Voir la démonstration
+        </a>
+      </div>
+    </div>
   );
 }
 
