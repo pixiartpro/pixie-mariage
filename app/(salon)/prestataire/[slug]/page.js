@@ -5,9 +5,10 @@ import {
   catByKey,
   prestatairesByCat,
   SALON,
-} from "../../../lib/data";
-import { catGrad } from "../../../lib/theme";
-import PrestataireCard from "../../../components/PrestataireCard";
+} from "../../../../lib/data";
+import { catGrad } from "../../../../lib/theme";
+import PrestataireCard from "../../../../components/PrestataireCard";
+import { CompteurVue, LienContact } from "../../../../components/appli/Compteur";
 
 export const dynamicParams = false;
 
@@ -51,6 +52,7 @@ export default async function Fiche({ params }) {
 
   return (
     <>
+      <CompteurVue slug={p.slug} />
       <div className="container">
         <div className="breadcrumb">
           <Link href="/">Accueil</Link> &nbsp;/&nbsp; <Link href="/annuaire">Les stands</Link> &nbsp;/&nbsp;{" "}
@@ -111,9 +113,9 @@ export default async function Fiche({ params }) {
                   <h3>Intéressé·e&nbsp;?</h3>
                   <p>Contactez directement {p.nom} pour une disponibilité ou un devis. Sans intermédiaire, sans frais.</p>
                   <div className="prix-big">{p.prix}</div>
-                  <a href={mailto} className="btn btn-rose">
+                  <LienContact slug={p.slug} href={mailto} className="btn btn-rose">
                     <i className="ti ti-mail" aria-hidden="true" /> Demander un devis
-                  </a>
+                  </LienContact>
                 </>
               )}
               <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">

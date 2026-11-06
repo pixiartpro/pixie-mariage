@@ -2,8 +2,7 @@ import { Cormorant_Garamond, Jost } from "next/font/google";
 // Icônes Tabler servies par le site lui-même (paquet npm, version figée), plus de CDN tiers.
 import "@tabler/icons-webfont/dist/tabler-icons.min.css";
 import "./globals.css";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import "./appli.css";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -27,11 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr" className={`${cormorant.variable} ${jost.variable}`}>
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

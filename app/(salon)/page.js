@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { SALON, CATEGORIES, PRESTATAIRES, COPY, prestataireBySlug } from "../lib/data";
-import { catGrad } from "../lib/theme";
-import PrestataireCard from "../components/PrestataireCard";
-import StudioOrganisateur from "../components/StudioOrganisateur";
+import { SALON, CATEGORIES, PRESTATAIRES, COPY, prestataireBySlug } from "../../lib/data";
+import { catGrad } from "../../lib/theme";
+import PrestataireCard from "../../components/PrestataireCard";
+import StudioOrganisateur from "../../components/StudioOrganisateur";
 
 const FEATURED = [
   "domaine-des-flamboyants",
@@ -114,6 +114,22 @@ export default function Home() {
                 <p>{e.texte}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="pixtable-band">
+        <div className="container pixtable-inner">
+          <div className="txt">
+            <span className="badge-offert">Offert</span>
+            <h2>L&apos;appli de votre mariage, pour vos invités</h2>
+            <p>Un QR code sur le faire-part : le lieu et le programme avant, le moment en cours le jour J, le film et les photos après. Sans magasin d&apos;applis, effacée 90 jours après.</p>
+          </div>
+          <div className="cta-row">
+            <Link href="/appli-du-mariage/" className="btn btn-gold">
+              Créer la nôtre <i className="ti ti-arrow-right" aria-hidden="true" />
+            </Link>
+            <Link href="/mariage/?m=demo" className="btn btn-ghost">Voir la démo</Link>
           </div>
         </div>
       </section>

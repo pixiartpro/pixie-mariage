@@ -1,4 +1,4 @@
-import { SALON } from "../../lib/data";
+import { SALON } from "../../../lib/data";
 
 export const metadata = {
   title: "Les règles du salon — Pixie Mariage",

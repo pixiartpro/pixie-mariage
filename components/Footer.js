@@ -18,7 +18,9 @@ export default function Footer() {
             <Link href="/annuaire">Les stands du salon</Link>
             <Link href="/partenaires">Devenir exposant</Link>
             <Link href="/regles-du-salon">Les règles du salon</Link>
+            <Link href="/appli-du-mariage">L&apos;appli du mariage (gratuite)</Link>
             <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer">Plan de table (gratuit)</a>
+            <Link href="/espace-exposant">Espace exposant</Link>
             <a href={`mailto:${SALON.email}`}>Nous contacter</a>
           </div>
           <div>

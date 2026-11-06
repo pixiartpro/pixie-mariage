@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SALON, PARTENAIRES } from "../../lib/data";
+import { SALON, PARTENAIRES } from "../../../lib/data";
 
 // Grille publique décidée par Guillaume le jeudi 05/11/2026 (carnet d'idées, lignes du 05/11/2026).
 const PRIX = [
