@@ -92,7 +92,7 @@ export default function EspaceExposant() {
           <Tuile n={res.mois?.vue} label="fiches vues" />
           <Tuile n={res.mois?.contact} label="clics sur « Demander un devis »" />
           <Tuile n={res.mois?.depuis_mariage} label="visites venues d'une appli de mariage" />
-          <Tuile n={res.mariages} label={res.mariages > 1 ? "mariages vous citent dans leur appli" : "mariage vous cite dans son appli"} />
+          <Tuile n={res.mariages} label={res.mariages > 1 ? "mariages vous citent dans leur appli, depuis l'ouverture" : "mariage vous cite dans son appli, depuis l'ouverture"} />
         </div>
 
         {jours.length > 0 && (
@@ -110,7 +110,7 @@ export default function EspaceExposant() {
         )}
 
         <p className="ed-aide">
-          Depuis l&apos;ouverture : {nombre(res.totaux?.vue)} fiches vues, {nombre(res.totaux?.contact)} clics sur le contact. Ce sont des chiffres indicatifs, bruts : une même personne peut revenir plusieurs fois, et nous ne savons pas qui regarde, c&apos;est voulu. Les mariages comptés sont ceux dont l&apos;appli a été ouverte par au moins un invité.
+          Depuis l&apos;ouverture : {nombre(res.totaux?.vue)} fiches vues, {nombre(res.totaux?.contact)} clics sur le contact. Ce sont des chiffres indicatifs, bruts : une même personne peut revenir plusieurs fois, et nous ne savons pas qui regarde, c&apos;est voulu. Les mariages comptés sont ceux dont l&apos;appli a été ouverte par au moins un invité. Ils restent comptés après l&apos;effacement de l&apos;appli, 90 jours après la fête.
         </p>
 
         <div className="ex-actions">

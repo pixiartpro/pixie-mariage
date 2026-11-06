@@ -39,13 +39,23 @@ create table if not exists public.compteurs (
   primary key (slug, type, jour)
 );
 
+-- Ce qui survit à l'effacement des mariages : pour chaque stand, le nombre de mariages qui l'ont cité, par année.
+-- Ni prénoms, ni date, ni lieu : la preuve pour le renouvellement annuel, sans rien garder des mariés.
+create table if not exists public.mariages_cites (
+  slug  text not null references public.exposants(slug) on delete cascade,
+  annee integer not null,
+  n     integer not null default 0,
+  primary key (slug, annee)
+);
+
 alter table public.mariages  enable row level security;
 alter table public.exposants enable row level security;
 alter table public.compteurs enable row level security;
+alter table public.mariages_cites enable row level security;
 create index if not exists mariages_cree_le on public.mariages (cree_le);
 create index if not exists mariages_date on public.mariages (date_mariage);
 -- Aucune règle d'accès (policy) : sans fonction, personne ne lit ni n'écrit.
-revoke all on public.mariages, public.exposants, public.compteurs from anon, authenticated;
+revoke all on public.mariages, public.exposants, public.compteurs, public.mariages_cites from anon, authenticated;
 
 -- ---------- Outils internes ----------
 create or replace function public.pm_hasard(n int, alphabet text)
@@ -186,6 +196,26 @@ returns integer language sql security definer set search_path = '' as $$
   ) select count(*)::int from x
 $$;
 
+-- Quand un mariage quitte la base (effacement à 90 jours, ou par les mariés), on garde +1 pour chaque stand signé
+-- qu'il citait. Seulement si la fête a eu lieu et qu'un invité a ouvert l'appli : un mariage annulé ou jamais
+-- ouvert ne compte pas. Un stand cité deux fois dans le même mariage compte une fois.
+create or replace function public.pm_garder_citations()
+returns trigger language plpgsql security definer set search_path = '' as $$
+begin
+  if old.lu_le is not null and old.date_mariage <= (now() at time zone 'Indian/Reunion')::date then
+    insert into public.mariages_cites (slug, annee, n)
+    select distinct e.slug, extract(year from old.date_mariage)::int, 1
+    from jsonb_array_elements(case when jsonb_typeof(old.contenu->'prestataires') = 'array' then old.contenu->'prestataires' else '[]'::jsonb end) x
+    join public.exposants e on e.slug = x->>'slug'
+    on conflict (slug, annee) do update set n = public.mariages_cites.n + 1;
+  end if;
+  return old;
+end $$;
+
+drop trigger if exists pm_garder_citations on public.mariages;
+create trigger pm_garder_citations after delete on public.mariages
+  for each row execute function public.pm_garder_citations();
+
 -- ---------- Les exposants ----------
 -- +1 au total du jour. Ne compte que les stands enregistrés (signés) : rien pour les fiches d'exemple.
 create or replace function public.compter(p_slug text, p_type text)
@@ -218,9 +248,19 @@ begin
         'contact', coalesce(sum(n) filter (where type = 'contact'), 0),
         'depuis_mariage', coalesce(sum(n) filter (where type = 'depuis_mariage'), 0))
       from public.compteurs where slug = p_slug and jour > aujourdhui - 30),
+    -- Les mariages qui citent le stand : ceux encore en ligne (ouverts par un invité), plus ceux déjà effacés.
     'mariages', (select count(*) from public.mariages
       where lu_le is not null
-        and contenu->'prestataires' @> jsonb_build_array(jsonb_build_object('slug', p_slug))),
+        and contenu->'prestataires' @> jsonb_build_array(jsonb_build_object('slug', p_slug)))
+      + (select coalesce(sum(n), 0) from public.mariages_cites where slug = p_slug),
+    'mariages_par_annee', (select coalesce(json_object_agg(annee, n order by annee), '{}'::json) from (
+        select annee, sum(n)::int as n from (
+          select extract(year from date_mariage)::int as annee, 1 as n from public.mariages
+          where lu_le is not null
+            and contenu->'prestataires' @> jsonb_build_array(jsonb_build_object('slug', p_slug))
+          union all
+          select annee, n from public.mariages_cites where slug = p_slug) u
+        group by annee) a),
     'jours', (select coalesce(json_agg(j order by j.jour), '[]'::json) from (
         select g::date as jour,
           coalesce(sum(c.n) filter (where c.type = 'vue'), 0) as vue,

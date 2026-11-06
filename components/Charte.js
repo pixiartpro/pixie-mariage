@@ -5,7 +5,7 @@ import Link from "next/link";
 export const ENGAGEMENTS = [
   ["Vendre une place dans le classement", "L'ordre des stands ne s'achète pas, ni pour vous ni pour un autre."],
   ["Prendre une commission sur vos contrats", "Ce que vous signez avec un couple reste entre vous et lui."],
-  ["Revendre ou trier vos contacts", "Les demandes des couples vous sont transmises sans délai, sans tri."],
+  ["Lire ou revendre vos demandes", "Les demandes des couples partent de leur messagerie, directement chez vous. Nous n'en voyons que le nombre de clics, comme vous."],
   ["Vous reconduire en silence", "Une proposition écrite 30 jours avant l'échéance. Sans paiement, votre stand est mis en pause, jamais effacé."],
   ["Vous garder captif de votre film", "Une fois réglé, vous l'utilisez partout pour votre promotion, y compris sur les autres annuaires."],
   ["Vous promettre des chiffres", "Aucune audience garantie : vous voyez les chiffres bruts de votre stand dans votre espace."],

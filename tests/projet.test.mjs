@@ -13,15 +13,19 @@ test("le projet abîmé ou vide ne casse rien", () => {
   assert.deepEqual(P.lireProjet(), { date: "", commune: "", invites: "120" });
 });
 
-test("le mail de devis contient la date en français, la commune et les invités", () => {
-  const m = decodeURIComponent(P.mailDevis("contact@pix-i-art.re", "Fleurs de Corail", "Fleuristes", "Saint-Leu", { date: "2026-12-12", commune: "Saint-Paul", invites: "120" }));
-  assert.match(m, /^mailto:contact@pix-i-art\.re\?subject=Demande de contact — Fleurs de Corail/);
+test("le mail de devis part chez le pro, avec la date en français, la commune et les invités", () => {
+  const m = decodeURIComponent(P.mailDevis("bonjour@fleurs-de-corail.re", { date: "2026-12-12", commune: "Saint-Paul", invites: "120" }));
+  assert.match(m, /^mailto:bonjour@fleurs-de-corail\.re\?subject=Demande via Pixie Mariage — mariage le 12\/12\/2026&/);
+  assert.match(m, /J'ai découvert votre stand sur Pixie Mariage/);
   assert.match(m, /Date du mariage : 12\/12\/2026/);
   assert.match(m, /Commune : Saint-Paul/);
   assert.match(m, /environ 120/);
+  assert.doesNotMatch(m, /mis·e en relation|contact@pix-i-art/);
 });
 
-test("sans projet, le mail le dit simplement", () => {
-  const m = decodeURIComponent(P.mailDevis("a@b.re", "X", "Y", "Z", { date: "", commune: "", invites: "" }));
+test("sans projet, le mail le dit simplement et l'objet reste reconnaissable", () => {
+  const m = decodeURIComponent(P.mailDevis("a@b.re", { date: "", commune: "", invites: "" }));
+  assert.match(m, /subject=Demande via Pixie Mariage&/);
   assert.doesNotMatch(m, /Date du mariage|Commune :|invités/);
+  assert.doesNotMatch(m, /\n\n\n/);
 });

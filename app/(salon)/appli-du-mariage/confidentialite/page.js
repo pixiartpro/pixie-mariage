@@ -39,7 +39,7 @@ export default function Confidentialite() {
 
         <h2>Les chiffres des stands</h2>
         <p>
-          Quand la fiche d&apos;un prestataire exposant est ouverte, le salon ajoute 1 à un total du jour : fiche vue, contact cliqué, venue depuis l&apos;appli d&apos;un mariage. Ces totaux ne contiennent ni adresse IP, ni identifiant, ni cookie : nous ne pouvons pas savoir qui a regardé quoi. Pour ne pas compter deux fois la même visite, l&apos;onglet garde une marque jusqu&apos;à sa fermeture. Cette mesure sert à rendre compte aux exposants de ce que leur stand produit (base légale : notre intérêt légitime, article 6.1.f du RGPD).
+          Quand la fiche d&apos;un prestataire exposant est ouverte, le salon ajoute 1 à un total du jour : fiche vue, contact cliqué, venue depuis l&apos;appli d&apos;un mariage. Ces totaux ne contiennent ni adresse IP, ni identifiant, ni cookie : nous ne pouvons pas savoir qui a regardé quoi. Pour ne pas compter deux fois la même visite, l&apos;onglet garde une marque jusqu&apos;à sa fermeture. Cette mesure sert à rendre compte aux exposants de ce que leur stand produit (base légale : notre intérêt légitime, article 6.1.f du RGPD). Quand l&apos;appli d&apos;un mariage est effacée, le salon garde seulement, pour chaque stand qu&apos;elle citait, le nombre de mariages de l&apos;année : ni prénoms, ni date, ni lieu.
         </p>
 
         <h2>Où et combien de temps</h2>
@@ -56,6 +56,11 @@ export default function Confidentialite() {
         <h2>Le code du faire-part</h2>
         <p>
           Le code évite que l&apos;appli s&apos;ouvre pour n&apos;importe qui, mais ce n&apos;est pas un coffre-fort : il est imprimé sur des faire-part. N&apos;y écrivez rien que vous ne mettriez pas sur une invitation (pas de code d&apos;alarme, pas de digicode). Si le code a circulé trop loin, les mariés peuvent le changer depuis leur lien privé.
+        </p>
+
+        <h2>Signaler un contenu</h2>
+        <p>
+          Un texte de l&apos;appli d&apos;un mariage vous semble illicite ? Utilisez le lien « Signaler un contenu » en bas de l&apos;appli, ou écrivez à {mail} avec l&apos;adresse de la page et ce qui pose problème. Nous regardons chaque signalement et vous répondons par écrit.
         </p>
 
         <h2>Vos droits</h2>

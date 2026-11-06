@@ -7,6 +7,8 @@ begin
 exception when others then null;
 end $$;
 
+drop trigger if exists pm_garder_citations on public.mariages;
+drop function if exists public.pm_garder_citations();
 drop function if exists public.mariage_creer(jsonb);
 drop function if exists public.mariage_lire(text, text);
 drop function if exists public.mariage_ouvrir(text, text);
@@ -21,6 +23,7 @@ drop function if exists public.exposant_creer(text);
 drop function if exists public.pm_verifier(jsonb, date);
 drop function if exists public.pm_hash(text);
 drop function if exists public.pm_hasard(int, text);
+drop table if exists public.mariages_cites;
 drop table if exists public.compteurs;
 drop table if exists public.exposants;
 drop table if exists public.mariages;

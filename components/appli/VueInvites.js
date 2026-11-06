@@ -14,10 +14,11 @@ import {
   dateLisible,
   lienItineraire,
   fichierAgenda,
+  lienSignalement,
 } from "../../lib/appli/contenu";
-import { prestataireBySlug, catByKey } from "../../lib/data";
+import { prestataireBySlug, catByKey, SALON } from "../../lib/data";
 import Installer from "./Installer";
-import { PREFIXE } from "../../lib/chemin";
+import { PREFIXE, SITE } from "../../lib/chemin";
 
 // Le site vers lequel part un bouton : affiché à côté, pour que personne ne soit envoyé ailleurs sans le voir.
 const site = (u) => {
@@ -366,6 +367,12 @@ export default function VueInvites() {
         L&apos;appli du mariage · <Link href="/">Pixie Mariage</Link>, un Monde Pixie
         {" · "}
         <Link href="/appli-du-mariage/confidentialite/">Vos données</Link>
+        {slug && slug !== "demo" && (
+          <>
+            {" · "}
+            <a href={lienSignalement(SALON.email, `${SITE}/mariage/?m=${slug}`)}>Signaler un contenu</a>
+          </>
+        )}
       </p>
     </Coque>
   );

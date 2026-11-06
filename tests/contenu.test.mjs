@@ -75,3 +75,11 @@ test("le message aux invités : prénoms, date, lien avec le code", () => {
 test("chaque question pratique préremplie a son exemple", () => {
   for (const i of C.mariageVide().infos) assert.ok(C.EXEMPLES_INFOS[i.titre], `exemple manquant : ${i.titre}`);
 });
+
+test("le signalement d'un contenu : un mail prérempli, sans jamais le code du faire-part", () => {
+  const l = decodeURIComponent(C.lienSignalement("contact@pix-i-art.re", "https://exemple.re/mariage/?m=lea-mathis-abc123"));
+  assert.match(l, /^mailto:contact@pix-i-art\.re\?subject=Signalement d'un contenu — Pixie Mariage&body=/);
+  assert.match(l, /Adresse de la page : https:\/\/exemple\.re\/mariage\/\?m=lea-mathis-abc123/);
+  assert.match(l, /de bonne foi/);
+  assert.doesNotMatch(l, /#c=/);
+});

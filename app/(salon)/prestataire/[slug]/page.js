@@ -51,11 +51,6 @@ export default async function Fiche({ params }) {
 
   const cat = catByKey(p.categorie);
   const similaires = prestatairesByCat(p.categorie).filter((x) => x.slug !== p.slug).slice(0, 3);
-  const mailto = `mailto:${SALON.email}?subject=${encodeURIComponent(
-    "Demande de contact — " + p.nom
-  )}&body=${encodeURIComponent(
-    `Bonjour,\n\nJ'aimerais être mis·e en relation avec ${p.nom} (${cat ? cat.nom : ""}, ${p.ville}), vu sur Pixie Mariage.\n\nMerci !`
-  )}`;
 
   return (
     <>
@@ -118,9 +113,9 @@ export default async function Fiche({ params }) {
               ) : (
                 <>
                   <h3>Intéressé·e&nbsp;?</h3>
-                  <p>Écrivez-nous : nous transmettons votre demande à {p.nom} sans délai, sans tri ni frais.</p>
+                  <p>Votre demande part de votre messagerie, directement chez {p.nom}. Sans intermédiaire, sans frais.</p>
                   <div className="prix-big">{p.prix}</div>
-                  <ContactPrecis email={SALON.email} slug={p.slug} nom={p.nom} metier={cat ? cat.nom : ""} ville={p.ville} />
+                  <ContactPrecis email={p.email} slug={p.slug} />
                 </>
               )}
               <Coeur slug={p.slug} nom={p.nom} grand />

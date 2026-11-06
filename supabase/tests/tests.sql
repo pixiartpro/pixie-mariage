@@ -69,3 +69,27 @@ select pg_temp.doit(public.exposant_chiffres('fleurs-de-corail', 'mauvaise') is 
 insert into public.mariages (slug, code, cle_hash, contenu, date_mariage) values ('vieux-aaaaaa', 'ABCDEF', public.pm_hash('k'), '{}', current_date - 100);
 select pg_temp.doit(public.mariage_lire('vieux-aaaaaa', 'ABCDEF') is null, 'mariage de plus de 90 jours fermé');
 select pg_temp.doit(public.mariages_purger() = 1, 'la purge efface le vieux mariage');
+
+-- Le compteur des mariages survit à l'effacement à 90 jours : la preuve pour le renouvellement du stand.
+update public.mariages set date_mariage = current_date - 100 where slug = (select j->>'slug' from r);
+select pg_temp.doit(public.mariages_purger() = 1, 'le mariage de Léa et Mathis est effacé à son tour');
+select pg_temp.doit((select count(*) from public.mariages) = 0, 'plus aucun mariage gardé');
+create temp table ch2 as select public.exposant_chiffres('fleurs-de-corail', (select x from ke))::jsonb as j;
+select pg_temp.doit((select (j->>'mariages')::int from ch2) = 1, 'le mariage effacé compte encore pour le stand');
+select pg_temp.doit((select (j->'mariages_par_annee'->>extract(year from current_date - 100)::int::text)::int from ch2) = 1, 'compté dans l''année du mariage');
+select pg_temp.doit((select count(*) from public.mariages_cites where slug = 'fleurs-de-corail') = 1, 'une seule ligne gardée : le stand, l''année, le nombre');
+-- Ne comptent pas : un mariage jamais ouvert, un mariage effacé par les mariés avant la fête.
+-- Comptent une fois : un stand cité deux fois ; un mariage effacé par les mariés après la fête. Un stand non signé est ignoré.
+insert into public.mariages (slug, code, cle_hash, contenu, date_mariage, lu_le) values
+  ('jamais-ouvert', 'ABCDEF', public.pm_hash('k1'), '{"prestataires":[{"slug":"fleurs-de-corail"}]}', current_date - 100, null),
+  ('annule-avant', 'ABCDEF', public.pm_hash('k2'), '{"prestataires":[{"slug":"fleurs-de-corail"}]}', current_date + 20, now()),
+  ('double', 'ABCDEF', public.pm_hash('k3'), '{"prestataires":[{"slug":"fleurs-de-corail"},{"slug":"fleurs-de-corail"},{"slug":"stand-inconnu"},{"nom":"Sans stand"}]}', current_date - 100, now()),
+  ('efface-apres', 'ABCDEF', public.pm_hash('k4'), '{"prestataires":[{"slug":"fleurs-de-corail"}]}', current_date - 10, now()),
+  ('sans-liste', 'ABCDEF', public.pm_hash('k5'), '{"prestataires":"pas une liste"}', current_date - 100, now());
+select public.mariage_supprimer('annule-avant', 'k2');
+select public.mariage_supprimer('efface-apres', 'k4');
+select pg_temp.doit(public.mariages_purger() = 3, 'les trois vieux mariages effacés, sans erreur sur une liste abîmée');
+create temp table ch3 as select public.exposant_chiffres('fleurs-de-corail', (select x from ke))::jsonb as j;
+select pg_temp.doit((select (j->>'mariages')::int from ch3) = 3, 'Léa et Mathis, le doublon et l''effacé après la fête : 3 mariages');
+select pg_temp.doit(not has_table_privilege('anon', 'public.mariages_cites', 'select'), 'le compteur des mariages reste fermé au public');
+select pg_temp.doit(not has_function_privilege('anon', 'public.pm_garder_citations()', 'execute'), 'le déclencheur n''est pas appelable');
