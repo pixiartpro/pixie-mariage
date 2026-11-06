@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+<loc>https://pixiartpro.github.io/pixie-mariage/</loc>
+<changefreq>monthly</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://pixiartpro.github.io/pixie-mariage/annuaire/</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://pixiartpro.github.io/pixie-mariage/partenaires/</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://pixiartpro.github.io/pixie-mariage/regles-du-salon/</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://pixiartpro.github.io/pixie-mariage/appli-du-mariage/</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+<url>
+<loc>https://pixiartpro.github.io/pixie-mariage/appli-du-mariage/confidentialite/</loc>
+<changefreq>monthly</changefreq>
+<priority>0.7</priority>
+</url>
+</urlset>
