@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Formulaire from "./Formulaire";
 import QrCode from "./QrCode";
-import { mariageVide, nettoyer, manques, liensRefuses, LIMITES, dateLisible } from "../../lib/appli/contenu";
+import { mariageVide, nettoyer, manques, liensRefuses, LIMITES, dateLisible, messageInvites } from "../../lib/appli/contenu";
 import { creerMariage, ouvrirMariage, modifierMariage, annoncer, supprimerMariage, nouveauCode, MODE } from "../../lib/appli/stockage";
 import { PREFIXE } from "../../lib/chemin";
 import { SALON } from "../../lib/data";
@@ -88,6 +88,15 @@ function controler(m) {
   return "";
 }
 
+// Sur un téléphone, le message d'erreur est en bas : on remonte au premier champ obligatoire encore vide.
+function allerAuChampManquant() {
+  const champ = document.querySelector(".ed-form input:invalid, .ed-form select:invalid");
+  if (!champ) return;
+  champ.closest("details")?.setAttribute("open", "");
+  champ.scrollIntoView({ behavior: "smooth", block: "center" });
+  champ.focus({ preventScroll: true });
+}
+
 const liens = (slug, code, cle) => {
   const base = `${window.location.origin}${PREFIXE}`;
   return {
@@ -142,7 +151,10 @@ export function CreerAppli() {
         e.preventDefault();
         setErreur("");
         const probleme = controler(m);
-        if (probleme) return setErreur(probleme);
+        if (probleme) {
+          allerAuChampManquant();
+          return setErreur(probleme);
+        }
         if (!accord) return setErreur("Cochez la case sur vos données pour continuer.");
         setEnvoi(true);
         try {
@@ -151,7 +163,8 @@ export function CreerAppli() {
           stock.set(`pm:cle:${r.slug}`, r.cle);
           stock.del(BROUILLON);
           setCree({ ...r, prenoms: c.prenoms, date: c.date });
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          // On montre tout de suite le résultat (le bandeau d'en-tête reste au-dessus).
+          setTimeout(() => document.querySelector(".ed-bravo")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
         } catch (er) {
           setErreur(er.message || "L'enregistrement n'a pas marché. Réessayez.");
         } finally {
@@ -248,6 +261,27 @@ function Partage({ slug, code, cle, prenoms, date, premiere, onNouveauCode }) {
           </button>
         </div>
         <div className="ed-puces">
+          <button
+            type="button"
+            className="btn btn-rose btn-sm"
+            onClick={async () => {
+              const texte = messageInvites(prenoms, date, l.invites);
+              if (navigator.share) {
+                try {
+                  await navigator.share({ text: texte });
+                  return;
+                } catch (e) {
+                  if (e?.name === "AbortError") return;
+                }
+              }
+              window.open(`https://wa.me/?text=${encodeURIComponent(texte)}`, "_blank", "noopener");
+            }}
+          >
+            <i className="ti ti-send" aria-hidden="true" /> Envoyer à nos invités
+          </button>
+          <a className="btn btn-ghost btn-sm" href={`https://wa.me/?text=${encodeURIComponent(messageInvites(prenoms, date, l.invites))}`} target="_blank" rel="noopener noreferrer">
+            <i className="ti ti-brand-whatsapp" aria-hidden="true" /> Par WhatsApp
+          </a>
           <a className="btn btn-ghost btn-sm" href={l.invites} target="_blank" rel="noopener noreferrer">
             <i className="ti ti-eye" aria-hidden="true" /> Voir comme un invité
           </a>
@@ -443,7 +477,10 @@ export function ModifierAppli() {
         onSubmit={async (e) => {
           e.preventDefault();
           const probleme = controler(m);
-          if (probleme) return dire(probleme, "erreur");
+          if (probleme) {
+            allerAuChampManquant();
+            return dire(probleme, "erreur");
+          }
           setOccupe(true);
           try {
             const c = ranger(m);

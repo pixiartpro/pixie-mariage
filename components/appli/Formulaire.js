@@ -2,7 +2,7 @@
 
 // Le formulaire des mariés : tout ce que verront les invités, rangé dans l'ordre de l'appli.
 import { PRESTATAIRES, CATEGORIES, catByKey } from "../../lib/data";
-import { LIMITES } from "../../lib/appli/contenu";
+import { LIMITES, EXEMPLES_INFOS } from "../../lib/appli/contenu";
 import { useEffect, useState } from "react";
 import { lireSelection, ecouter } from "../../lib/selection";
 
@@ -47,9 +47,9 @@ export default function Formulaire({ valeur, onChange }) {
 
       <Bloc titre="Les infos pratiques" sous="Les questions que vos invités poseront. Une case laissée vide n'apparaît pas chez eux. Pas de code secret : le code du faire-part protège sans être un coffre-fort.">
         {m.infos.map((i, k) => (
-          <div className="ed-rang" key={k}>
+          <div className="ed-rang ed-rang-info" key={k}>
             <Champ label="Quoi" valeur={i.titre} max={40} onChange={(v) => maj((c) => (c.infos[k].titre = v))} />
-            <Champ label="L'information" valeur={i.texte} max={120} onChange={(v) => maj((c) => (c.infos[k].texte = v))} />
+            <Champ label="L'information" valeur={i.texte} max={120} placeholder={EXEMPLES_INFOS[i.titre] ? `Ex. : ${EXEMPLES_INFOS[i.titre]}` : ""} onChange={(v) => maj((c) => (c.infos[k].texte = v))} />
             <Retirer onClick={() => maj((c) => c.infos.splice(k, 1))} quoi={i.titre || "cette ligne"} />
           </div>
         ))}
@@ -83,22 +83,22 @@ export default function Formulaire({ valeur, onChange }) {
         )}
       </Bloc>
 
-      <Bloc titre="La réponse des invités" sous="Gardez votre formulaire habituel (Google Forms, Typeform…) : l'appli y mène en un appui. Pixie Mariage ne gère pas la liste des invités.">
+      <Bloc replie={!m.reponse.lien && !m.reponse.avant_le} titre="La réponse des invités" sous="Gardez votre formulaire habituel (Google Forms, Typeform…) : l'appli y mène en un appui. Pixie Mariage ne gère pas la liste des invités.">
         <div className="ed-ligne2">
           <Champ label="Lien de votre formulaire de réponse" type="url" valeur={m.reponse.lien} placeholder="https://…" onChange={(v) => maj((c) => (c.reponse.lien = v))} />
           <Champ label="Réponse attendue avant le" type="date" valeur={m.reponse.avant_le} onChange={(v) => maj((c) => (c.reponse.avant_le = v))} />
         </div>
       </Bloc>
 
-      <Bloc titre="Un conseil pour vos invités" sous="Le meilleur moment pour la photo de groupe, la crème solaire, la route du retour…">
+      <Bloc replie={!m.conseil} titre="Un conseil pour vos invités" sous="Le meilleur moment pour la photo de groupe, la crème solaire, la route du retour…">
         <Zone valeur={m.conseil} max={LIMITES.texte} onChange={(v) => maj((c) => (c.conseil = v))} label="Votre conseil (facultatif)" />
       </Bloc>
 
-      <Bloc titre="Le jour J" sous="Un album partagé que vous ouvrez vous-mêmes (Google Photos, iCloud…). Les photos restent chez ce service, pas chez Pixie Mariage.">
+      <Bloc replie={!m.photos_soir} titre="Le jour J : l'album partagé" sous="Un album partagé que vous ouvrez vous-mêmes (Google Photos, iCloud…). Les photos restent chez ce service, pas chez Pixie Mariage.">
         <Champ label="Lien de l'album partagé (facultatif)" type="url" valeur={m.photos_soir} placeholder="https://…" onChange={(v) => maj((c) => (c.photos_soir = v))} />
       </Bloc>
 
-      <Bloc titre="Après le mariage" sous="À remplir plus tard : le mot de remerciement, et les liens que vous donnent votre vidéaste et votre photographe.">
+      <Bloc replie={!Object.values(m.apres).some(Boolean)} titre="Après le mariage" sous="À remplir plus tard : le mot de remerciement, et les liens que vous donnent votre vidéaste et votre photographe.">
         <Zone label="Votre mot de remerciement" valeur={m.apres.merci} max={LIMITES.texte} onChange={(v) => maj((c) => (c.apres.merci = v))} />
         <div className="ed-ligne2">
           <Champ label="Lien du teaser" type="url" valeur={m.apres.teaser} placeholder="https://…" onChange={(v) => maj((c) => (c.apres.teaser = v))} />
@@ -110,7 +110,7 @@ export default function Formulaire({ valeur, onChange }) {
         </div>
       </Bloc>
 
-      <Bloc titre="Vos prestataires" sous="Ceux qui font votre mariage. Vos invités les retrouvent après la fête : c'est votre façon de les remercier.">
+      <Bloc replie={!m.prestataires.length} titre="Vos prestataires" sous="Ceux qui font votre mariage. Vos invités les retrouvent après la fête : c'est votre façon de les remercier.">
         {m.prestataires.map((p, k) => (
           <div className="ed-rang" key={k}>
             {p.slug !== undefined ? (
@@ -185,7 +185,19 @@ export default function Formulaire({ valeur, onChange }) {
   );
 }
 
-function Bloc({ titre, sous, children }) {
+// replie : une partie facultative, encore vide, se montre fermée (le formulaire reste court sur un téléphone).
+function Bloc({ titre, sous, children, replie }) {
+  if (replie !== undefined)
+    return (
+      <details className="ed-bloc ed-replie" open={!replie}>
+        <summary>
+          <span>{titre}</span>
+          <small>Facultatif, à compléter quand vous voulez</small>
+        </summary>
+        {sous && <p className="ed-aide">{sous}</p>}
+        {children}
+      </details>
+    );
   return (
     <fieldset className="ed-bloc">
       <legend>{titre}</legend>
