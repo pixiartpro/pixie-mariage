@@ -1,6 +1,6 @@
 "use client";
 
-// Le bouton « Demander un devis » avec trois cases facultatives : la demande arrive précise chez le prestataire.
+// Le bouton « Demander un devis » avec trois cases facultatives : la demande arrive précise au salon, qui la transmet au prestataire.
 import { useEffect, useState } from "react";
 import { lireProjet, ecrireProjet, mailDevis } from "../lib/projet";
 import { compter } from "../lib/appli/stockage";

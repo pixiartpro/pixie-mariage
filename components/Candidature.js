@@ -129,7 +129,7 @@ export default function Candidature() {
     if (!cat) return "votre métier";
     if (!c.commune.trim()) return "votre commune";
     if (!siretValide(c.siret)) return "un SIRET valable (14 chiffres)";
-    if (!c.prixMontant) return "votre prix « à partir de »";
+    if (!(Number(c.prixMontant) > 0)) return "votre prix « à partir de »";
     if (!c.contact.trim()) return "votre nom";
     return "";
   };
@@ -297,7 +297,7 @@ export default function Candidature() {
           <Champ
             label="Votre prix « à partir de », en euros"
             valeur={c.prixMontant}
-            onChange={(v) => maj("prixMontant", v.replace(/\D/g, "").slice(0, 6))}
+            onChange={(v) => maj("prixMontant", v.replace(/\D/g, "").replace(/^0+/, "").slice(0, 6))}
             requis
             inputMode="numeric"
             note=""

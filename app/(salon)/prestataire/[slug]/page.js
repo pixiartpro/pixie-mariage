@@ -118,7 +118,7 @@ export default async function Fiche({ params }) {
               ) : (
                 <>
                   <h3>Intéressé·e&nbsp;?</h3>
-                  <p>Contactez directement {p.nom} pour une disponibilité ou un devis. Sans intermédiaire, sans frais.</p>
+                  <p>Écrivez-nous : nous transmettons votre demande à {p.nom} sans délai, sans tri ni frais.</p>
                   <div className="prix-big">{p.prix}</div>
                   <ContactPrecis email={SALON.email} slug={p.slug} nom={p.nom} metier={cat ? cat.nom : ""} ville={p.ville} />
                 </>

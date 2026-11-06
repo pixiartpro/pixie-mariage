@@ -79,7 +79,7 @@ begin
   end;
   if (jsonb_typeof(p_contenu->'programme') = 'array' and jsonb_array_length(p_contenu->'programme') > 20)
      or (jsonb_typeof(p_contenu->'prestataires') = 'array' and jsonb_array_length(p_contenu->'prestataires') > 20)
-     or (jsonb_typeof(p_contenu->'infos') = 'array' and jsonb_array_length(p_contenu->'infos') > 8) then
+     or (jsonb_typeof(p_contenu->'infos') = 'array' and jsonb_array_length(p_contenu->'infos') > 12) then
     raise exception 'PM: Trop de lignes.';
   end if;
   if p_ancienne is distinct from d and (d < aujourdhui - 1 or d > aujourdhui + 800) then

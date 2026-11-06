@@ -275,7 +275,7 @@ img { max-width: 100%; display: block; }
 .sel-quoi a:hover b { color: var(--rose-fonce); }
 .sel-quoi > span { font-size: 14px; color: var(--doux); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 .sel-tag { margin: 0; }
-.sel-note input { margin-top: 6px; font: inherit; font-size: 15px; width: 100%; border: 1px dashed var(--ligne); background: var(--surface2); border-radius: 10px; padding: 8px 11px; color: var(--texte); }
+.sel-note input { margin-top: 6px; font: inherit; font-size: 16px; width: 100%; border: 1px dashed var(--ligne); background: var(--surface2); border-radius: 10px; padding: 8px 11px; color: var(--texte); }
 .sel-note input:focus { outline: 2px solid var(--or); outline-offset: 1px; border-style: solid; }
 .sel-actions { display: flex; gap: 8px; align-items: center; }
 .sel-etat { font-size: 13px; color: var(--vert); }
@@ -294,4 +294,4 @@ img { max-width: 100%; display: block; }
 
 /* Le menu a grandi (appli, sélection) : le slogan du logo se retire avant de se replier. */
 @media (max-width: 1100px) { .logo .sig { display: none; } }
-@media (min-width: 761px) and (max-width: 940px) { .nav { gap: 16px; } .nav a { font-size: 14.5px; } }
+@media (min-width: 761px) and (max-width: 940px) { .nav { gap: 12px; } .nav a { font-size: 14px; } }

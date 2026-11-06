@@ -7,8 +7,8 @@ export const ENGAGEMENTS = [
   ["Prendre une commission sur vos contrats", "Ce que vous signez avec un couple reste entre vous et lui."],
   ["Revendre ou trier vos contacts", "Les demandes des couples vous sont transmises sans délai, sans tri."],
   ["Vous reconduire en silence", "Une proposition écrite 30 jours avant l'échéance. Sans paiement, votre stand est mis en pause, jamais effacé."],
-  ["Vous garder captif de votre film", "Il est à vous pour votre promotion, partout, y compris sur les autres annuaires."],
-  ["Vous promettre des chiffres", "Aucune audience garantie : vous voyez les vrais chiffres de votre stand dans votre espace."],
+  ["Vous garder captif de votre film", "Une fois réglé, vous l'utilisez partout pour votre promotion, y compris sur les autres annuaires."],
+  ["Vous promettre des chiffres", "Aucune audience garantie : vous voyez les chiffres bruts de votre stand dans votre espace."],
 ];
 
 export default function Charte({ titre = "Ce qu'on ne vous fera jamais", lien = true }) {

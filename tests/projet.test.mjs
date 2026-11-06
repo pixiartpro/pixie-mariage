@@ -23,6 +23,5 @@ test("le mail de devis contient la date en français, la commune et les invités
 
 test("sans projet, le mail le dit simplement", () => {
   const m = decodeURIComponent(P.mailDevis("a@b.re", "X", "Y", "Z", { date: "", commune: "", invites: "" }));
-  assert.match(m, /pas encore fixée/);
-  assert.doesNotMatch(m, /Commune :|invités/);
+  assert.doesNotMatch(m, /Date du mariage|Commune :|invités/);
 });

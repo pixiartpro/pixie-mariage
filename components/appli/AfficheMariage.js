@@ -31,7 +31,7 @@ export default function AfficheMariage() {
       <div className="ed-bloc ed-centre">
         <h2>Cette affiche ne s&apos;ouvre pas</h2>
         <p className="ed-aide">Ouvrez-la depuis votre espace des mariés, bouton « Imprimer l&apos;affiche ».</p>
-        <Link className="btn btn-ghost" href="/appli-du-mariage/affiche/?m=demo">Voir l&apos;affiche de la démo</Link>
+        <a className="btn btn-ghost" href={`${PREFIXE}/appli-du-mariage/affiche/?m=demo`}>Voir l&apos;affiche de la démo</a>
       </div>
     );
   const { m } = etat;
