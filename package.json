@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "node --no-warnings --import ./tests/chargeur.mjs --test tests/*.test.mjs",
+    "test:sql": "sh supabase/tests/lancer.sh"
   },
   "dependencies": {
     "@tabler/icons-webfont": "3.24.0",
