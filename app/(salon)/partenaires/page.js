@@ -71,7 +71,7 @@ export default function Partenaires() {
         <div className="container" style={{ maxWidth: 860 }}>
           <div className="eyebrow">les prix</div>
           <h2 className="section-title">Les mêmes pour tous, affichés</h2>
-          <p className="section-sub">Pas de prix négocié au téléphone : chaque exposant paie la même chose. Prix hors taxes, TVA de La Réunion (8,5 %) en sus.</p>
+          <p className="section-sub">Pas de prix négocié au téléphone : chaque exposant paie selon la même grille. Prix hors taxes, TVA de La Réunion (8,5 %) en sus.</p>
           <div className="prix-grille">
             {PRIX.map((l) => (
               <div className="prix-ligne" key={l.nom}>

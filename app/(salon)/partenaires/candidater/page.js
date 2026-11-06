@@ -14,7 +14,7 @@ export default function Candidater() {
       <div className="container ed-conteneur">
         <p className="eyebrow">Devenir exposant</p>
         <h1 className="section-title">Votre stand, votre prix, en trois étapes</h1>
-        <p className="section-sub">Les prix sont les mêmes pour tous. Une candidature n&apos;engage à rien.</p>
+        <p className="section-sub">La grille est la même pour tous, et publique, tarif fondateur compris. Une candidature n&apos;engage à rien.</p>
         <Candidature />
       </div>
     </section>

@@ -2,7 +2,7 @@
 
 // La candidature exposant, en 3 étapes : la formule et son prix, les 3 pièces, la demande prête à envoyer.
 // Rien n'est enregistré sur un serveur : la demande part depuis la messagerie de l'exposant.
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES, SALON } from "../lib/data";
 import { FORMULES, PLACES_FONDATEUR, TARIFS, devis, euros, ttc, siretValide } from "../lib/tarifs";
@@ -33,7 +33,26 @@ export default function Candidature() {
   useEffect(() => {
     try {
       const b = JSON.parse(localStorage.getItem(BROUILLON) || "null");
-      if (b && typeof b === "object") setC({ ...vide, ...b, pieces: { ...vide.pieces, ...b.pieces }, videaste: { ...vide.videaste, ...b.videaste } });
+      if (b && typeof b === "object") {
+        // Un brouillon ancien ou abîmé ne doit jamais faire planter la page : chaque champ est remis en forme.
+        const txt = (k) => String(b[k] ?? "").slice(0, 200);
+        const coche = (o, k) => !!(o && typeof o === "object" && o[k]);
+        setC({
+          ...vide,
+          formule: FORMULES.some((f) => f.key === b.formule) ? b.formule : vide.formule,
+          partenaire: !!b.partenaire,
+          entreprise: txt("entreprise"),
+          categorie: CATEGORIES.some((x) => x.key === b.categorie) ? b.categorie : "",
+          commune: txt("commune"),
+          siret: String(b.siret ?? "").replace(/\D/g, "").slice(0, 14),
+          web: txt("web"),
+          contact: txt("contact"),
+          telephone: txt("telephone"),
+          film: txt("film"),
+          pieces: { siret: coche(b.pieces, "siret"), assurance: coche(b.pieces, "assurance"), metier: coche(b.pieces, "metier") },
+          videaste: { mariages: coche(b.videaste, "mariages"), references: coche(b.videaste, "references"), droits: coche(b.videaste, "droits") },
+        });
+      }
     } catch {}
     // Lien direct depuis la grille : ?formule=mesure
     const f = new URLSearchParams(window.location.search).get("formule");
@@ -51,8 +70,19 @@ export default function Candidature() {
   // Un vidéaste ne prend pas de film tourné par le studio : sa formule est imposée.
   const formule = estVideaste ? "videaste" : c.formule === "videaste" ? "stand" : c.formule;
   const fondateur = PLACES_FONDATEUR > 0;
-  const d = useMemo(() => devis({ formule, fondateur, partenaire: c.partenaire }), [formule, fondateur, c.partenaire]);
-  const maj = (k, v) => setC((x) => ({ ...x, [k]: v }));
+  // Le partenaire du mois comprend un portrait tourné par le studio : pas pour un vidéaste.
+  const partenaire = c.partenaire && !estVideaste;
+  const d = useMemo(() => devis({ formule, fondateur, partenaire }), [formule, fondateur, partenaire]);
+  const maj = (k, v) => {
+    setErreur("");
+    setC((x) => ({ ...x, [k]: v }));
+  };
+  const titreFin = useRef(null);
+  const zoneTexte = useRef(null);
+  const [essai, setEssai] = useState(0);
+  useEffect(() => {
+    if (envoye) titreFin.current?.focus();
+  }, [envoye]);
 
   const cat = CATEGORIES.find((x) => x.key === c.categorie);
   const texte = [
@@ -67,8 +97,9 @@ export default function Candidature() {
     `Site ou réseaux : ${c.web || "—"}`,
     `Contact : ${c.contact}${c.telephone ? " · " + c.telephone : ""}`,
     "",
-    `Formule : ${d.formule.nom}${c.partenaire ? " + partenaire du mois" : ""}`,
-    `Prix affiché : ${euros(d.premiere)} HT la première année (${euros(ttc(d.premiere))} TTC), puis ${euros(d.ensuite)} HT par an${fondateur ? ` (tarif fondateur pour mes trois premières années, puis ${euros(d.apresFondateur)} HT)` : ""}.`,
+    `Formule : ${d.formule.nom}${partenaire ? " + partenaire du mois souhaité (une fois, mois à fixer)" : ""}`,
+    `Prix indiqué par le calculateur : ${euros(d.premiere) + " HT"} la première année (${euros(ttc(d.premiere))} TTC), puis ${euros(d.ensuite) + " HT"} par an${fondateur ? " les années 2 et 3" : ""}, puis la grille publique en vigueur (${euros(d.apresFondateur) + " HT"} à ce jour).`,
+    ...(fondateur ? ["Tarif fondateur : réservé aux 10 premiers exposants signataires, il ne me sera acquis qu'à la signature s'il reste une place."] : []),
     "",
     "Mes pièces, que je montrerai à la visite :",
     `- SIRET actif : ${c.pieces.siret ? "oui" : "à vérifier"}`,
@@ -90,7 +121,7 @@ export default function Candidature() {
 
   const verifier = () => {
     if (!c.entreprise.trim()) return "le nom de votre entreprise";
-    if (!c.categorie) return "votre métier";
+    if (!cat) return "votre métier";
     if (!c.commune.trim()) return "votre commune";
     if (!siretValide(c.siret)) return "un SIRET valable (14 chiffres)";
     if (!c.contact.trim()) return "votre nom";
@@ -101,13 +132,14 @@ export default function Candidature() {
     return (
       <div className="ed-bloc ed-centre cand-fin">
         <i className="ti ti-mail-check" aria-hidden="true" />
-        <h2>Votre messagerie a dû s&apos;ouvrir</h2>
+        <h2 ref={titreFin} tabIndex={-1}>Votre messagerie a dû s&apos;ouvrir</h2>
         <p className="ed-aide">
           Envoyez le mail préparé : nous vous répondons par écrit pour fixer la visite. Rien n&apos;est signé ni payé à ce stade.
         </p>
         <p className="ed-aide">
-          Rien ne s&apos;est ouvert ? Copiez votre demande et envoyez-la à <a href={`mailto:${SALON.email}`}>{SALON.email}</a>.
+          Rien ne s&apos;est ouvert ? Copiez votre demande ci-dessous et envoyez-la à <a href={`mailto:${SALON.email}`}>{SALON.email}</a>, objet « Candidature exposant ».
         </p>
+        <textarea ref={zoneTexte} className="cand-texte" readOnly rows={12} value={texte} aria-label="Votre demande" onFocus={(e) => e.target.select()} />
         <div className="cta-row">
           <button
             type="button"
@@ -116,7 +148,9 @@ export default function Candidature() {
               try {
                 await navigator.clipboard.writeText(texte);
                 setCopie(true);
-              } catch {}
+              } catch {
+                zoneTexte.current?.select();
+              }
             }}
           >
             <i className="ti ti-copy" aria-hidden="true" /> {copie ? "Demande copiée" : "Copier ma demande"}
@@ -135,7 +169,10 @@ export default function Candidature() {
       onSubmit={(e) => {
         e.preventDefault();
         const manque = verifier();
-        if (manque) return setErreur(`Il manque ${manque}.`);
+        if (manque) {
+          setEssai((n) => n + 1);
+          return setErreur(`Il manque ${manque}.`);
+        }
         setErreur("");
         window.location.href = mailto;
         setEnvoye(true);
@@ -163,29 +200,31 @@ export default function Candidature() {
             </label>
           ))}
         </div>
-        <label className="ed-accord">
-          <input type="checkbox" checked={c.partenaire} onChange={(e) => maj("partenaire", e.target.checked)} />
-          <span>
-            J&apos;ajoute le partenaire du mois ({euros(TARIFS.partenaireMois)} HT) : un portrait monté et l&apos;encart du mois sur l&apos;accueil, signalé « sponsorisé ».
-          </span>
-        </label>
+        {!estVideaste && (
+          <label className="ed-accord">
+            <input type="checkbox" checked={c.partenaire} onChange={(e) => maj("partenaire", e.target.checked)} />
+            <span>
+              Je souhaite être partenaire du mois, une fois ({euros(TARIFS.partenaireMois) + " HT"}) : un portrait monté et l&apos;encart d&apos;un mois sur l&apos;accueil, signalé « sponsorisé ». 12 places par an : le mois se fixe ensemble.
+            </span>
+          </label>
+        )}
 
         <div className="cand-prix" aria-live="polite">
           <div className="cand-prix-ligne">
             <span>La première année</span>
-            <b>{euros(d.premiere)} HT</b>
+            <b>{euros(d.premiere) + " HT"}</b>
           </div>
           <p className="cand-detail">
             {d.film > 0 && <>Film {euros(d.film)} · </>}présence {euros(d.presence)}
             {d.partenaire > 0 && <> · partenaire du mois {euros(d.partenaire)}</>} · soit {euros(ttc(d.premiere))} TTC
           </p>
           <div className="cand-prix-ligne">
-            <span>Les années suivantes</span>
-            <b>{euros(d.ensuite)} HT / an</b>
+            <span>{fondateur ? "Les années 2 et 3" : "Chaque année suivante"}</span>
+            <b>{euros(d.ensuite) + " HT"} / an</b>
           </div>
           {fondateur ? (
             <p className="cand-detail">
-              <i className="ti ti-star" aria-hidden="true" /> Tarif fondateur : il reste {PLACES_FONDATEUR} place{PLACES_FONDATEUR > 1 ? "s" : ""} sur 10. Présence à {euros(TARIFS.presenceFondateur)} HT pour vos trois premières années, la première comprise, puis {euros(d.apresFondateur)} HT. La place est réservée à la signature, pas à la candidature.
+              <i className="ti ti-star" aria-hidden="true" /> Tarif fondateur, réservé aux 10 premiers exposants signataires, vidéastes compris : présence à {euros(TARIFS.presenceFondateur) + " HT"} pour vos trois premières années, la première comprise, puis la grille publique en vigueur ({euros(d.apresFondateur) + " HT"} aujourd&apos;hui). La place se réserve à la signature, pas à la candidature.
             </p>
           ) : (
             <p className="cand-detail">Les 10 places fondateur sont prises : grille publique.</p>
@@ -241,7 +280,7 @@ export default function Candidature() {
           <Champ
             label="SIRET (14 chiffres)"
             valeur={c.siret}
-            onChange={(v) => maj("siret", v.replace(/[^\d\s]/g, "").slice(0, 17))}
+            onChange={(v) => maj("siret", v.replace(/\D/g, "").slice(0, 14))}
             requis
             inputMode="numeric"
             note={c.siret.replace(/\s/g, "").length === 14 && !siretValide(c.siret) ? "Ce numéro ne semble pas exact : vérifiez-le." : ""}
@@ -253,13 +292,29 @@ export default function Candidature() {
           <Champ label="Téléphone (facultatif)" valeur={c.telephone} onChange={(v) => maj("telephone", v)} inputMode="tel" />
         </div>
         <p className="ed-aide">
-          La demande part depuis votre propre messagerie, vers {SALON.email}. Nous nous en servons seulement pour vous répondre et préparer la visite. Ce formulaire n&apos;enregistre rien chez nous ; votre brouillon reste sur cet appareil.
+          Votre demande part de votre propre messagerie vers {SALON.email}. PIX-I-ART (SASU, Sainte-Clotilde, RCS Saint-Denis 980 951 065), responsable de ces données, s&apos;en sert seulement pour vous répondre et préparer la visite, et l&apos;efface au bout de 12 mois sans suite. Vous pouvez la consulter, la corriger ou la faire effacer à cette adresse, et saisir la CNIL. Ce formulaire n&apos;envoie rien à nos serveurs : votre brouillon reste sur cet appareil.{" "}
+          <button
+            type="button"
+            className="ed-lien"
+            onClick={() => {
+              try {
+                localStorage.removeItem(BROUILLON);
+              } catch {}
+              setC(vide);
+            }}
+          >
+            Effacer mon brouillon
+          </button>
         </p>
-        {erreur && <p className="ed-erreur" role="alert">{erreur}</p>}
+        {erreur && (
+          <p className="ed-erreur" role="alert" key={essai}>
+            {erreur}
+          </p>
+        )}
         <button className="btn btn-rose" type="submit">
           <i className="ti ti-send" aria-hidden="true" /> Préparer ma demande
         </button>
-        <p className="ed-aide">Une candidature n&apos;engage à rien : on se voit, on vérifie les pièces, puis vous décidez.</p>
+        <p className="ed-aide">Une candidature n&apos;engage ni vous ni nous : on se voit, on vérifie les pièces et les critères, puis chacun décide. Rien n&apos;est signé ni payé avant le contrat.</p>
       </fieldset>
     </form>
   );

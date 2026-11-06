@@ -227,3 +227,4 @@
 .cand-videaste { border-top: 1px dashed var(--ligne); padding-top: 14px; display: flex; flex-direction: column; gap: 12px; }
 .cand-fin > .ti { font-size: 40px; color: var(--vert); }
 .ed-champ small.ed-erreur { font-size: 13px; }
+.cand-texte { width: 100%; font: 14px/1.5 var(--font-jost), system-ui, sans-serif; border: 1px solid var(--ligne); border-radius: 12px; padding: 12px; background: var(--surface2); color: var(--texte); text-align: left; }
