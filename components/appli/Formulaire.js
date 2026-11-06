@@ -3,6 +3,8 @@
 // Le formulaire des mariés : tout ce que verront les invités, rangé dans l'ordre de l'appli.
 import { PRESTATAIRES, CATEGORIES, catByKey } from "../../lib/data";
 import { LIMITES } from "../../lib/appli/contenu";
+import { useEffect, useState } from "react";
+import { lireSelection } from "../../lib/selection";
 
 const SUGGESTIONS_INFOS = ["Parking", "Accès", "Tenue", "Navette", "Hébergement", "Enfants", "Cadeaux"];
 
@@ -11,6 +13,10 @@ const STANDS = PRESTATAIRES.filter((p) => !p.exemple);
 
 export default function Formulaire({ valeur, onChange }) {
   const m = valeur;
+  // Les vrais stands mis de côté dans « Ma sélection », pas encore dans l'appli.
+  const [selection, setSelection] = useState([]);
+  useEffect(() => setSelection(lireSelection().map((x) => x.slug)), []);
+  const aReprendre = selection.filter((s) => STANDS.some((x) => x.slug === s) && !m.prestataires.some((p) => p.slug === s));
   const maj = (fn) => {
     const copie = structuredClone(m);
     fn(copie);
@@ -137,6 +143,22 @@ export default function Formulaire({ valeur, onChange }) {
             <Retirer onClick={() => maj((c) => c.prestataires.splice(k, 1))} quoi={p.nom || "ce prestataire"} />
           </div>
         ))}
+        {aReprendre.length > 0 && m.prestataires.length < LIMITES.prestataires && (
+          <button
+            type="button"
+            className="btn btn-gold btn-sm"
+            onClick={() =>
+              maj((c) => {
+                aReprendre.slice(0, LIMITES.prestataires - c.prestataires.length).forEach((slug) => {
+                  const f = STANDS.find((x) => x.slug === slug);
+                  c.prestataires.push({ slug, role: catByKey(f.categorie)?.nom || "" });
+                });
+              })
+            }
+          >
+            <i className="ti ti-heart" aria-hidden="true" /> Reprendre ma sélection du salon ({aReprendre.length})
+          </button>
+        )}
         {m.prestataires.length < LIMITES.prestataires && (
           <div className="ed-puces">
             {STANDS.length > 0 && (

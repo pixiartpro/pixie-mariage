@@ -1,3 +1,4 @@
+import { apercu } from "../../../lib/chemin";
 import Link from "next/link";
 import { SALON, PARTENAIRES } from "../../../lib/data";
 
@@ -18,6 +19,7 @@ const ETAPES = [
 ];
 
 export const metadata = {
+  openGraph: apercu("Devenir exposant — Pixie Mariage", "Votre stand filmé, en ligne toute l'année sur le salon du mariage de La Réunion. Grille de prix publique."),
   title: "Devenir exposant — Pixie Mariage",
   description: PARTENAIRES.heroTexte.slice(0, 150),
 };

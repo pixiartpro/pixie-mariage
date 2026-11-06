@@ -1,6 +1,8 @@
+import { apercu } from "../../../lib/chemin";
 import { SALON } from "../../../lib/data";
 
 export const metadata = {
+  openGraph: apercu("Les règles du salon — Pixie Mariage", "Le classement ne s'achète pas. Comment on entre au salon, et dans quels cas un stand est retiré."),
   title: "Les règles du salon — Pixie Mariage",
   description:
     "Comment les stands sont classés, comment on entre au salon, et dans quels cas un stand peut être suspendu ou retiré. La position ne se vend jamais.",

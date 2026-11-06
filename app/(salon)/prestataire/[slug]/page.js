@@ -9,6 +9,8 @@ import {
 import { catGrad } from "../../../../lib/theme";
 import PrestataireCard from "../../../../components/PrestataireCard";
 import { CompteurVue, LienContact } from "../../../../components/appli/Compteur";
+import Coeur from "../../../../components/Coeur";
+import { apercu } from "../../../../lib/chemin";
 
 export const dynamicParams = false;
 
@@ -22,6 +24,7 @@ export async function generateMetadata({ params }) {
   return {
     title: p ? `${p.nom}${p.exemple ? " (exemple)" : ""} — Pixie Mariage` : "Prestataire — Pixie Mariage",
     description: p ? p.accroche : "",
+    openGraph: p ? apercu(`${p.nom}${p.exemple ? " (exemple)" : ""} — Pixie Mariage`, `${p.accroche}. ${p.ville}, La Réunion.`) : undefined,
   };
 }
 
@@ -118,6 +121,7 @@ export default async function Fiche({ params }) {
                   </LienContact>
                 </>
               )}
+              <Coeur slug={p.slug} nom={p.nom} grand />
               <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
                 Préparer mon plan de table
               </a>

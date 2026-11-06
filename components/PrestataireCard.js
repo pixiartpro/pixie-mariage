@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { catByKey } from "../lib/data";
 import { catGrad } from "../lib/theme";
+import Coeur from "./Coeur";
 
 export default function PrestataireCard({ p }) {
   const cat = catByKey(p.categorie);
   return (
+    <div className="presta-wrap">
     <Link href={`/prestataire/${p.slug}`} className="presta-card">
       <div className="thumb" style={{ background: catGrad(p.categorie) }}>
         <i className={`ti ti-${cat ? cat.icon : "heart"} ic`} aria-hidden="true" />
@@ -26,5 +28,7 @@ export default function PrestataireCard({ p }) {
         </div>
       </div>
     </Link>
+    <Coeur slug={p.slug} nom={p.nom} />
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SALON } from "../lib/data";
+import CompteSelection from "./CompteSelection";
 
 export default function Header() {
   return (
@@ -16,8 +17,10 @@ export default function Header() {
           <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="hide-mobile">
             Plan de table
           </a>
+          <CompteSelection />
           <Link href="/partenaires" className="nav-cta">
-            Devenir exposant
+            <span className="cta-long">Devenir exposant</span>
+            <span className="cta-court">Exposer</span>
           </Link>
         </nav>
       </div>

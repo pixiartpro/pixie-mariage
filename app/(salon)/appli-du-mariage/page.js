@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { PREFIXE } from "../../../lib/chemin";
 
 export const metadata = {
+  openGraph: {
+    title: "L'appli du mariage, offerte — Pixie Mariage",
+    description: "Le lieu et le programme avant, le moment en cours le jour J, le film et les photos après. Pour vos invités, sans magasin d'applis.",
+    images: [{ url: `${PREFIXE}/og/og-appli.png`, width: 1200, height: 630, alt: "L'appli du mariage : avant, le jour J, et après" }],
+  },
   title: "L'appli du mariage, offerte — Pixie Mariage",
   description:
     "Une appli pour vos invités, gratuite : le lieu et le programme avant, le moment en cours le jour J, le film et les photos après. Sans App Store, sans liste d'invités, effacée 90 jours après.",
