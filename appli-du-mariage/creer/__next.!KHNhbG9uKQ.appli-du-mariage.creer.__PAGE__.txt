@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[11264,["/pixie-mariage/_next/static/chunks/05-c3ty_6dwfk.js","/pixie-mariage/_next/static/chunks/14mrh2-p_w84d.js","/pixie-mariage/_next/static/chunks/1rxncug86bump.js","/pixie-mariage/_next/static/chunks/2xwjyn1oa__63.js","/pixie-mariage/_next/static/chunks/2k87e-w1w_zzp.js"],"CreerAppli"]
+3:I[97367,["/pixie-mariage/_next/static/chunks/05-c3ty_6dwfk.js","/pixie-mariage/_next/static/chunks/14mrh2-p_w84d.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","section",null,{"className":"section tight","children":["$","div",null,{"className":"container ed-conteneur","children":[["$","p",null,{"className":"eyebrow","children":"L'appli du mariage"}],["$","h1",null,{"className":"section-title","children":"Créer l'appli de notre mariage"}],["$","p",null,{"className":"section-sub","children":"Gratuite, pour vos invités : avant, le jour J et après."}],["$","$L2",null,{}]]}]}],[["$","script","script-0",{"src":"/pixie-mariage/_next/static/chunks/2xwjyn1oa__63.js","async":true}],["$","script","script-1",{"src":"/pixie-mariage/_next/static/chunks/2k87e-w1w_zzp.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"XgpyiSRXwM_E_IfgYLIUo"}
+5:null
