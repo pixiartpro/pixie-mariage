@@ -12,7 +12,7 @@ const PRIX = [
 ];
 
 const ETAPES = [
-  { titre: "Vous nous écrivez", texte: "Le nom de votre entreprise, votre SIRET, votre commune et vos réseaux. Nous vous répondons par écrit." },
+  { titre: "Vous candidatez", texte: "En trois étapes : votre formule et votre prix, vos pièces, votre demande prête à envoyer. Nous vous répondons par écrit." },
   { titre: "On vient vous voir", texte: "Nous vérifions vos trois pièces (SIRET, assurance professionnelle, pièce de votre métier) et vous signez la charte exposant." },
   { titre: "Le tournage", texte: "De mai à septembre, hors saison cyclonique, le même jour que d'autres exposants de votre coin de l'île." },
   { titre: "Votre stand ouvre", texte: "Le film est monté, votre stand est publié avec le badge « Visité par PIX-I-ART », et le film vous est remis." },
@@ -41,9 +41,9 @@ export default function Partenaires() {
           <span className="kicker">Prestataires événementiels · La Réunion</span>
           <h1>{PARTENAIRES.heroTitre}</h1>
           <p>{PARTENAIRES.heroTexte}</p>
-          <a href={mailto} className="btn btn-gold">
+          <Link href="/partenaires/candidater/" className="btn btn-gold">
             {PARTENAIRES.cta} <i className="ti ti-arrow-right" aria-hidden="true" />
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -87,6 +87,11 @@ export default function Partenaires() {
             Ce qui ne s&apos;achète jamais : une place dans le classement, un nombre de contacts, une mise en avant déguisée.
             Le détail est dans <Link href="/regles-du-salon">les règles du salon</Link>.
           </p>
+          <div style={{ textAlign: "center", marginTop: 22 }}>
+            <Link href="/partenaires/candidater/" className="btn btn-gold">
+              <i className="ti ti-calculator" aria-hidden="true" /> Calculer mon prix
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -105,9 +110,12 @@ export default function Partenaires() {
           </div>
 
           <div style={{ textAlign: "center", marginTop: 34 }}>
-            <a href={mailto} className="btn btn-rose">
-              <i className="ti ti-mail" aria-hidden="true" /> {PARTENAIRES.cta}
-            </a>
+            <Link href="/partenaires/candidater/" className="btn btn-rose">
+              <i className="ti ti-calculator" aria-hidden="true" /> Calculer mon prix et candidater
+            </Link>
+            <p className="prix-note">
+              Une question avant ? <a href={mailto}>Écrivez-nous</a>.
+            </p>
           </div>
         </div>
       </section>

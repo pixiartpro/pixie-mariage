@@ -209,3 +209,21 @@
 .ap-champ { font: inherit; font-size: 16px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--a-line); background: var(--a-bg); color: var(--a-fg); width: 100%; }
 .ap-champ:focus { outline: 2px solid var(--a-or-vif); outline-offset: 1px; }
 .appli-maj { color: var(--doux); font-size: 14px; margin-top: 26px; }
+
+/* ---------- La candidature exposant ---------- */
+.cand { display: flex; flex-direction: column; gap: 18px; }
+.cand-formules { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.cand-formule { display: flex; flex-direction: column; gap: 4px; border: 1px solid var(--ligne); border-radius: 14px; padding: 14px 16px; cursor: pointer; background: var(--surface2); transition: border-color 0.15s ease-out, background 0.15s ease-out; position: relative; }
+.cand-formule input { position: absolute; opacity: 0; pointer-events: none; }
+.cand-formule b { font-weight: 500; }
+.cand-formule span { font-size: 14px; color: var(--doux); line-height: 1.45; }
+.cand-formule.on { border-color: var(--rose-fonce); background: var(--rose-clair); }
+.cand-formule:has(input:focus-visible) { outline: 2px solid var(--or); outline-offset: 2px; }
+.cand-prix { background: var(--sombre); color: #F5EEE6; border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 6px; }
+.cand-prix-ligne { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.cand-prix-ligne b { font-family: var(--font-cormorant), Georgia, serif; font-size: 30px; font-weight: 600; color: #fff; font-variant-numeric: lining-nums tabular-nums; }
+.cand-detail { font-size: 14px; color: #cdbfb4; line-height: 1.5; margin-bottom: 8px; }
+.cand-detail .ti { color: var(--or); }
+.cand-videaste { border-top: 1px dashed var(--ligne); padding-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+.cand-fin > .ti { font-size: 40px; color: var(--vert); }
+.ed-champ small.ed-erreur { font-size: 13px; }
