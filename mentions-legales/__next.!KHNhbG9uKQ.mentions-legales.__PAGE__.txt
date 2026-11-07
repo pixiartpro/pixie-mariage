@@ -52,6 +52,6 @@
 
   <h2 id="cookies">Cookies et mesure d'audience</h2>
   <p>Ce site ne dépose aucun cookie publicitaire ni traceur. Il ne vous demande donc pas de consentement. Votre navigateur garde le code du faire-part, votre sélection de stands, vos brouillons et vos notes. C&#x27;est nécessaire au service que vous utilisez, donc exempté de consentement ; rien de cela n&#x27;est envoyé chez nous. Nous ne mesurons pas la fréquentation de ce site.</p>
-0:{"rsc":["$","$1","c",{"children":[["$","section",null,{"className":"section tight","children":["$","div",null,{"className":"container appli-texte socle-mentions","dangerouslySetInnerHTML":{"__html":"$2"}}]}],null,"$L3"]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"Eg5mOV3FB0plGemk4Zk0c"}
+0:{"rsc":["$","$1","c",{"children":[["$","section",null,{"className":"section tight","children":["$","div",null,{"className":"container appli-texte socle-mentions","dangerouslySetInnerHTML":{"__html":"$2"}}]}],null,"$L3"]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"fwlat9UxEnc4Tay3a54xP"}
 3:["$","$L4",null,{"children":["$","$5",null,{"name":"Next.MetadataOutlet","children":"$@6"}]}]
 6:null
