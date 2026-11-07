@@ -2,6 +2,7 @@ import Link from "next/link";
 import Charte from "../../../../components/Charte";
 import ImprimerQr from "../../../../components/ImprimerQr";
 import BoutonImprimer from "../../../../components/BoutonImprimer";
+import { SALON } from "../../../../lib/data";
 
 export const metadata = {
   title: "Prospectus exposants — Pixie Mariage",
@@ -17,7 +18,8 @@ export default function Prospectus() {
           Format A5. <BoutonImprimer /> · <Link href="/partenaires/">Retour</Link>
         </p>
         <article className="feuille-a5">
-          <p className="eyebrow">Pixie Mariage · La Réunion</p>
+          <p className="eyebrow">Pixie Mariage · {SALON.lieu}</p>
+          <p className="feuille-phrase" lang="rcf">{SALON.phrase}</p>
           <h1>Votre stand filmé, en ligne toute l’année</h1>
           <p className="feuille-lead">Le salon du mariage qui ne ferme jamais. Un film tourné chez vous, que vous diffusez partout pour votre promotion, et votre stand au salon.</p>
           <div className="feuille-prix">

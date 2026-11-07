@@ -227,6 +227,7 @@ img { max-width: 100%; display: block; }
 .site-footer { background: var(--sombre2); color: #cdbfb4; padding: 46px 0 34px; margin-top: 40px; }
 .site-footer .cols { display: flex; gap: 40px; flex-wrap: wrap; justify-content: space-between; margin-bottom: 28px; }
 .site-footer .name { font-family: var(--font-cormorant), serif; font-size: 26px; color: #fff; }
+.site-footer .phrase { font-family: var(--font-cormorant), serif; font-size: 20px; font-weight: 600; color: var(--or); line-height: 1.2; margin: 1px 0 5px; }
 .site-footer .sig { font-size: 13px; color: #b8a99d; }
 .site-footer h4 { color: #fff; font-size: 17px; margin-bottom: 10px; font-family: var(--font-jost), sans-serif; font-weight: 500; }
 .site-footer a { display: block; font-size: 14px; padding: 3px 0; color: #cdbfb4; }

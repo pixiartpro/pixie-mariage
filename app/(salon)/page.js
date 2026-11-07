@@ -27,7 +27,7 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="container">
-          <span className="kicker">Salon du mariage en ligne · {SALON.lieu}</span>
+          <span className="kicker"><span lang="rcf">{SALON.phrase}</span> · {SALON.lieu}</span>
           <h1>Tout votre mariage, réuni au <em>même endroit</em>.</h1>
           <p className="lead">{COPY.heroSousTitre}</p>
           <div className="cta-row">

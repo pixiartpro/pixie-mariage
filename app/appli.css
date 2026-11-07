@@ -254,6 +254,7 @@
 .feuille-a5 { width: 148mm; max-width: 100%; min-height: 200mm; margin: 0 auto; background: #fff; border: 1px solid var(--ligne); border-radius: 6px; padding: 12mm 11mm; box-shadow: var(--ombre); display: flex; flex-direction: column; gap: 10px; color: #3C322E; }
 .feuille-a5 h1 { font-size: 30px; line-height: 1.1; letter-spacing: -0.01em; }
 .feuille-a5 .eyebrow { text-align: left; margin: 0; }
+.feuille-phrase { font-family: var(--font-cormorant), serif; font-size: 19px; font-weight: 600; color: #7C6B24; line-height: 1.1; margin: -8px 0 0; }
 .feuille-lead { color: #6E5F56; font-size: 15px; }
 .feuille-prix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 .feuille-prix div { border: 1px solid var(--ligne); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 2px; }

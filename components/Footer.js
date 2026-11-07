@@ -8,6 +8,7 @@ export default function Footer() {
         <div className="cols">
           <div style={{ maxWidth: 300 }}>
             <div className="name">Pixie Mariage</div>
+            <div className="phrase" lang="rcf">{SALON.phrase}</div>
             <div className="sig">{SALON.signature} — {SALON.lieu}</div>
             <p style={{ marginTop: 10, fontSize: 14 }}>
               Le salon du mariage 100 % en ligne, ouvert toute l&apos;année.
