@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import "./icones.css";
 import "./globals.css";
 import "./appli.css";
-import { PREFIXE } from "../lib/chemin";
+import { PREFIXE, SITE } from "../lib/chemin";
 import donneesStructurees from "../contenu/donnees-structurees.json";
 
 // Les deux polices du site sont rangées dans le dépôt (app/polices/, licence SIL OFL 1.1, voir LICENCES.txt) :
@@ -31,12 +31,12 @@ export const viewport = { themeColor: "#FBF6F0" };
 
 // Les aperçus de partage (WhatsApp, Facebook, Messenger) : titre, texte et image de chaque page.
 export const metadata = {
-  metadataBase: new URL("https://pixiartpro.github.io"),
+  metadataBase: new URL(SITE),
   openGraph: {
     type: "website",
     locale: "fr_FR",
     siteName: "Pixie Mariage",
-    url: "https://pixiartpro.github.io/pixie-mariage/",
+    url: `${SITE}/`,
     title: "Pixie Mariage — le salon du mariage de La Réunion, ouvert toute l'année",
     description: "Les prestataires du mariage de l'île, en vidéo, au même endroit. Gratuit pour les couples.",
     images: [{ url: `${PREFIXE}/og/og-salon.png`, width: 1200, height: 630, alt: "Pixie Mariage, le salon du mariage de La Réunion" }],

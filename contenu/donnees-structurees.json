@@ -23,13 +23,13 @@
     {
       "@type": "WebSite",
       "name": "Pixie Mariage",
-      "url": "https://pixiartpro.github.io/pixie-mariage/",
+      "url": "https://pixie-mariage.re/",
       "inLanguage": "fr"
     },
     {
       "@type": "SoftwareApplication",
       "name": "Pixie Mariage",
-      "url": "https://pixiartpro.github.io/pixie-mariage/",
+      "url": "https://pixie-mariage.re/",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Web, iOS, Android",
       "publisher": {
