@@ -60,7 +60,7 @@ export default function Confidentialite() {
 
         <h2>Signaler un contenu</h2>
         <p>
-          Un texte de l&apos;appli d&apos;un mariage vous semble illicite ? Utilisez le lien « Signaler un contenu » en bas de l&apos;appli, ou écrivez à {mail} avec l&apos;adresse de la page et ce qui pose problème. Nous regardons chaque signalement et vous répondons par écrit.
+          Un texte de l&apos;appli d&apos;un mariage vous semble illicite ? Utilisez le lien « Signaler un contenu » en bas de l&apos;appli, ou écrivez à {mail}{" "}avec l&apos;adresse de la page et ce qui pose problème. Nous regardons chaque signalement et vous répondons par écrit.
         </p>
 
         <h2>Vos droits</h2>

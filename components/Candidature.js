@@ -230,7 +230,7 @@ export default function Candidature() {
           </div>
           {fondateur ? (
             <p className="cand-detail">
-              <i className="ti ti-star" aria-hidden="true" /> Tarif fondateur, réservé aux 10 premiers exposants signataires, vidéastes compris : présence à {euros(TARIFS.presenceFondateur) + " HT"} pour vos trois premières années, la première comprise, puis la grille publique en vigueur ({euros(d.apresFondateur) + " HT"} aujourd&apos;hui). La place se réserve à la signature, pas à la candidature.
+              <i className="ti ti-star" aria-hidden="true" /> Tarif fondateur, réservé aux 10 premiers exposants signataires, vidéastes compris : présence à {euros(TARIFS.presenceFondateur) + " HT"} pour vos trois premières années, la première comprise, puis la grille publique en vigueur ({euros(d.apresFondateur) + " HT"}{" "}aujourd&apos;hui). La place se réserve à la signature, pas à la candidature.
             </p>
           ) : (
             <p className="cand-detail">Les 10 places fondateur sont prises : grille publique.</p>

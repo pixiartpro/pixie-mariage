@@ -110,7 +110,7 @@ export default function EspaceExposant() {
         )}
 
         <p className="ed-aide">
-          Depuis l&apos;ouverture : {nombre(res.totaux?.vue)} fiches vues, {nombre(res.totaux?.contact)} clics sur le contact. Ce sont des chiffres indicatifs, bruts : une même personne peut revenir plusieurs fois, et nous ne savons pas qui regarde, c&apos;est voulu. Les mariages comptés sont ceux dont l&apos;appli a été ouverte par au moins un invité. Ils restent comptés après l&apos;effacement de l&apos;appli, 90 jours après la fête.
+          Depuis l&apos;ouverture : {nombre(res.totaux?.vue)} fiches vues, {nombre(res.totaux?.contact)}{" "}clics sur le contact. Ce sont des chiffres indicatifs, bruts : une même personne peut revenir plusieurs fois, et nous ne savons pas qui regarde, c&apos;est voulu. Les mariages comptés sont ceux dont l&apos;appli a été ouverte par au moins un invité. Ils restent comptés après l&apos;effacement de l&apos;appli, 90 jours après la fête.
         </p>
 
         <div className="ex-actions">
