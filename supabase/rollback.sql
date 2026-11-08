@@ -37,6 +37,8 @@ begin
 exception when others then null;
 end $$;
 drop function if exists public.visiteurs_purger();
+drop function if exists public.pm_plafond_global(integer);
+drop table if exists public.creations_par_heure;
 drop function if exists public.pm_plafond_visiteur(text, integer);
 drop function if exists public.pm_empreinte_visiteur();
 drop table if exists public.visiteurs;

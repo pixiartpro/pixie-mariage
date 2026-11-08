@@ -101,7 +101,7 @@ end $$;
 -- ---------- Contre les robots : un plafond de créations par visiteur et par jour ----------
 -- Un visiteur n'est connu que par une EMPREINTE de son adresse internet : un HMAC-SHA256 calculé avec une clé tirée
 -- au hasard dans le coffre de Supabase (Vault), que personne ne voit ni ne tape. L'adresse elle-même n'est jamais
--- enregistrée, et l'empreinte est effacée la nuit suivante (48 h au plus, page « vos données »). Modèle : Maquette auto.
+-- enregistrée, et l'empreinte est effacée dans l'heure qui suit la fin de son jour (48 h au plus, page « vos données »).
 -- L'adresse lue : celle que pose Cloudflare (cf-connecting-ip, qu'un visiteur ne peut pas imposer), sinon la première
 -- de x-forwarded-for (méthode de la documentation de Supabase). Le plafond global de 200 créations par heure reste
 -- le dernier filet contre un robot qui changerait d'adresse.
@@ -147,10 +147,37 @@ begin
   end if;
 end $$;
 
--- Chaque nuit, on efface les empreintes des jours passés : aucune ne vit plus de 48 h.
+-- Le dernier filet : 200 créations par heure pour tout le site, comptées dans UN compteur par heure.
+-- Relecture Codex du 08/11/2026, deux défauts rejoués sur le banc : l'ancien comptage (les applis créées depuis une
+-- heure) laissait passer deux demandes simultanées (201) et rendait une place quand une appli était effacée.
+-- Ici, la ligne de l'heure est verrouillée le temps de la création : les demandes simultanées passent l'une après
+-- l'autre, et une appli effacée ne rend pas sa place. Aucune donnée personnelle : un nombre par heure.
+create table if not exists public.creations_par_heure (
+  heure timestamptz primary key,
+  n     integer not null default 0
+);
+alter table public.creations_par_heure enable row level security;
+revoke all on public.creations_par_heure from anon, authenticated;
+
+create or replace function public.pm_plafond_global(p_par_heure integer)
+returns void language plpgsql security definer set search_path = '' as $$
+declare v_n integer;
+begin
+  insert into public.creations_par_heure as c (heure, n) values (date_trunc('hour', now()), 1)
+  on conflict (heure) do update set n = c.n + 1
+  returning c.n into v_n;
+  if v_n > p_par_heure then
+    raise exception 'PM: Trop de créations en ce moment. Réessayez dans une heure.';
+  end if;
+end $$;
+
+-- Chaque heure, on efface les empreintes des jours passés : aucune ne vit plus de 48 h, même si un passage échoue
+-- (relecture Codex du 08/11/2026 : avec un seul passage par nuit, une panne repoussait l'effacement à 51 h).
+-- Les compteurs horaires de plus de deux jours partent aussi.
 create or replace function public.visiteurs_purger()
 returns integer language sql security definer set search_path = '' as $$
-  with x as (delete from public.visiteurs where jour < (now() at time zone 'Indian/Reunion')::date returning 1)
+  with x as (delete from public.visiteurs where jour < (now() at time zone 'Indian/Reunion')::date returning 1),
+       y as (delete from public.creations_par_heure where heure < now() - interval '2 days' returning 1)
   select count(*)::int from x
 $$;
 
@@ -165,9 +192,7 @@ declare
   v_cle  text := public.pm_hasard(24, 'abcdefghjkmnpqrstuvwxyz23456789');
 begin
   -- Garde-fou contre un remplissage automatique : pas plus de 200 créations par heure, pour tout le site.
-  if (select count(*) from public.mariages where cree_le > now() - interval '1 hour') >= 200 then
-    raise exception 'PM: Trop de créations en ce moment. Réessayez dans une heure.';
-  end if;
+  perform public.pm_plafond_global(200);
   -- Et 10 créations par jour au plus pour un même visiteur (un couple en crée une, un organisateur quelques-unes).
   perform public.pm_plafond_visiteur('creer_mariage', 10);
   base := lower(coalesce(p_contenu->'prenoms'->>0, '') || '-' || coalesce(p_contenu->'prenoms'->>1, ''));
@@ -357,8 +382,8 @@ to anon;
 
 -- ---------- Le ménage de chaque nuit (23 h 17 UTC = 3 h 17 à La Réunion) ----------
 select cron.schedule('pm-purge-mariages', '17 23 * * *', 'select public.mariages_purger()');
--- Les empreintes des visiteurs (plafond anti-robots), dix minutes après (23 h 27 UTC = 3 h 27 à La Réunion).
-select cron.schedule('pm-purge-visiteurs', '27 23 * * *', 'select public.visiteurs_purger()');
+-- Les empreintes des visiteurs (plafond anti-robots) : chaque heure, à la 27e minute, pour tenir les 48 h promises.
+select cron.schedule('pm-purge-visiteurs', '27 * * * *', 'select public.visiteurs_purger()');
 
 -- ---------- Ce qui sera ajouté plus tard reste fermé par défaut ----------
 -- (le droit EXECUTE donné à tout le monde est un réglage global de Postgres : on le retire globalement, puis schéma par schéma pour les rôles de Supabase)

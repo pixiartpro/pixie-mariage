@@ -125,3 +125,25 @@ select pg_temp.doit((select count(*) from public.visiteurs) = 2, 'celles du jour
 delete from vault.secrets where name = 'pm_cle_visiteurs';
 select pg_temp.refuse($$select public.mariage_creer(('{"prenoms":["Sans","Cle"],"date":"' || (current_date + 30) || '"}')::jsonb)$$, 'pas de clé, pas de création');
 select set_config('request.headers', '', false);
+
+-- ---------- Le plafond global de l'heure (relecture Codex du dimanche 08/11/2026, défauts rejoués avant correction) ----------
+-- La clé revient au coffre (le test précédent l'a retirée).
+insert into vault.secrets (name, secret) values ('pm_cle_visiteurs', encode(extensions.gen_random_bytes(32), 'hex'));
+delete from public.visiteurs; delete from public.creations_par_heure;
+select pg_temp.doit(not has_table_privilege('anon', 'public.creations_par_heure', 'select'), 'le compteur de l''heure est fermé au public');
+select pg_temp.doit(not has_function_privilege('anon', 'public.pm_plafond_global(integer)', 'execute'), 'le plafond global n''est pas appelable par le public');
+insert into public.creations_par_heure values (date_trunc('hour', now()), 199);
+select set_config('request.headers', '{"x-forwarded-for": "192.0.2.10"}', false);
+create temp table g as select public.mariage_creer(('{"prenoms":["Kim","Noa"],"date":"' || (current_date + 30) || '"}')::jsonb)::jsonb as j;
+select pg_temp.doit((select n from public.creations_par_heure) = 200, '200e création de l''heure acceptée');
+-- Avant : effacer une appli rendait sa place, et la 201e passait.
+select public.mariage_supprimer((select j->>'slug' from g), (select j->>'cle' from g));
+select set_config('request.headers', '{"x-forwarded-for": "192.0.2.11"}', false);
+select pg_temp.refuse($$select public.mariage_creer(('{"prenoms":["Robot","Apres"],"date":"' || (current_date + 30) || '"}')::jsonb)$$, '201e création de l''heure, même après l''effacement d''une appli');
+select pg_temp.doit((select n from public.creations_par_heure) = 200, 'le refus ne fait pas grimper le compte de l''heure');
+-- Avant : une seule purge par nuit ; si elle échouait, une empreinte vivait 51 h. Maintenant chaque heure.
+select pg_temp.doit((select schedule from cron.job where jobname = 'pm-purge-visiteurs') = '27 * * * *', 'effacement des empreintes chaque heure (48 h tenues même si un passage échoue)');
+insert into public.creations_par_heure values (date_trunc('hour', now()) - interval '3 days', 5);
+select public.visiteurs_purger();
+select pg_temp.doit((select count(*) from public.creations_par_heure) = 1, 'les compteurs de plus de deux jours sont effacés');
+select set_config('request.headers', '', false);

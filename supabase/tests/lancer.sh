@@ -26,4 +26,15 @@ create function vault.create_secret(new_secret text, new_name text default null,
 SQL
 sed 's/^create extension if not exists pg_cron;/-- pg_cron simulé pour le test/' "$ICI/../schema.sql" | $P
 $P -f "$ICI/tests.sql"
+# Deux créations au même instant, à 199 dans l'heure : une seule doit passer (relecture Codex du 08/11/2026 :
+# avec l'ancien comptage, les deux passaient, soit 201). Deux sessions Postgres, chacune garde sa transaction ouverte 1 s.
+$P -c "delete from public.creations_par_heure; insert into public.creations_par_heure values (date_trunc('hour', now()), 199);"
+DATE=$(date -v+30d +%Y-%m-%d)
+for ip in 198.51.100.21 198.51.100.22; do
+  $P -c "begin; select set_config('request.headers', '{\"x-forwarded-for\": \"$ip\"}', true); select public.mariage_creer('{\"prenoms\":[\"Simul\",\"Tane\"],\"date\":\"$DATE\"}'::jsonb); select pg_sleep(1); commit;" >/dev/null 2>&1 &
+done
+wait
+N=$($P -tAc "select n from public.creations_par_heure")
+[ "$N" = "200" ] || { echo "ÉCHEC : deux créations simultanées à 199 ont donné $N créations dans l'heure (au plus 200)"; exit 1; }
+echo "ok : deux créations simultanées à 199, une seule passe ($N dans l'heure)"
 echo "BASE : TOUS LES TESTS PASSENT"
