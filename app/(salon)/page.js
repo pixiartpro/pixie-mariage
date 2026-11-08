@@ -66,7 +66,6 @@ export default function Home() {
                 <i className="ti ti-gift" aria-hidden="true" /> Les outils offerts
               </a>
             </div>
-            <p className="accueil-ouverture">Les premiers stands sont en tournage : en attendant, des exemples vous montrent à quoi ils ressembleront.</p>
           </div>
         </div>
       </section>
