@@ -98,6 +98,62 @@ begin
   return d;
 end $$;
 
+-- ---------- Contre les robots : un plafond de créations par visiteur et par jour ----------
+-- Un visiteur n'est connu que par une EMPREINTE de son adresse internet : un HMAC-SHA256 calculé avec une clé tirée
+-- au hasard dans le coffre de Supabase (Vault), que personne ne voit ni ne tape. L'adresse elle-même n'est jamais
+-- enregistrée, et l'empreinte est effacée la nuit suivante (48 h au plus, page « vos données »). Modèle : Maquette auto.
+-- L'adresse lue : celle que pose Cloudflare (cf-connecting-ip, qu'un visiteur ne peut pas imposer), sinon la première
+-- de x-forwarded-for (méthode de la documentation de Supabase). Le plafond global de 200 créations par heure reste
+-- le dernier filet contre un robot qui changerait d'adresse.
+-- À vérifier le jour de la création de la base : quels en-têtes le projet reçoit vraiment (cf-connecting-ip ou non).
+create table if not exists public.visiteurs (
+  empreinte text not null check (empreinte ~ '^[0-9a-f]{64}$'),
+  action    text not null check (action in ('creer_mariage')),
+  jour      date not null default (now() at time zone 'Indian/Reunion')::date,
+  n         integer not null default 0,
+  primary key (empreinte, action, jour)
+);
+alter table public.visiteurs enable row level security;
+revoke all on public.visiteurs from anon, authenticated;
+
+-- La clé, tirée UNE fois dans le coffre. Sans le coffre (supabase_vault), le script s'arrête ici.
+select vault.create_secret(encode(extensions.gen_random_bytes(32), 'hex'), 'pm_cle_visiteurs',
+  'Pixie Mariage : clé des empreintes de visiteurs (plafond anti-robots)')
+where not exists (select 1 from vault.secrets where name = 'pm_cle_visiteurs');
+
+create or replace function public.pm_empreinte_visiteur()
+returns text language plpgsql stable security definer set search_path = '' as $$
+declare
+  e   jsonb := coalesce(nullif(current_setting('request.headers', true), ''), '{}')::jsonb;
+  ip  text := btrim(coalesce(nullif(btrim(e->>'cf-connecting-ip'), ''), split_part(coalesce(e->>'x-forwarded-for', ''), ',', 1)));
+  cle text := (select decrypted_secret from vault.decrypted_secrets where name = 'pm_cle_visiteurs' limit 1);
+begin
+  -- Sans clé, pas de plafond possible : on préfère ne rien créer.
+  if cle is null then raise exception 'PM: La création est fermée pour le moment. Écrivez-nous.'; end if;
+  return encode(extensions.hmac('visiteur:' || left(coalesce(nullif(ip, ''), 'inconnue'), 64), cle, 'sha256'), 'hex');
+end $$;
+
+-- +1 pour ce visiteur aujourd'hui. Au-delà du plafond : refus, et le +1 s'annule avec le reste de la transaction.
+create or replace function public.pm_plafond_visiteur(p_action text, p_par_jour integer)
+returns void language plpgsql security definer set search_path = '' as $$
+declare v_n integer;
+begin
+  insert into public.visiteurs as v (empreinte, action, jour, n)
+  values (public.pm_empreinte_visiteur(), p_action, (now() at time zone 'Indian/Reunion')::date, 1)
+  on conflict (empreinte, action, jour) do update set n = v.n + 1
+  returning v.n into v_n;
+  if v_n > p_par_jour then
+    raise exception 'PM: Vous avez déjà créé plusieurs applis aujourd''hui. Réessayez demain, ou écrivez-nous.';
+  end if;
+end $$;
+
+-- Chaque nuit, on efface les empreintes des jours passés : aucune ne vit plus de 48 h.
+create or replace function public.visiteurs_purger()
+returns integer language sql security definer set search_path = '' as $$
+  with x as (delete from public.visiteurs where jour < (now() at time zone 'Indian/Reunion')::date returning 1)
+  select count(*)::int from x
+$$;
+
 -- ---------- Les mariés ----------
 create or replace function public.mariage_creer(p_contenu jsonb)
 returns json language plpgsql security definer set search_path = '' as $$
@@ -112,6 +168,8 @@ begin
   if (select count(*) from public.mariages where cree_le > now() - interval '1 hour') >= 200 then
     raise exception 'PM: Trop de créations en ce moment. Réessayez dans une heure.';
   end if;
+  -- Et 10 créations par jour au plus pour un même visiteur (un couple en crée une, un organisateur quelques-unes).
+  perform public.pm_plafond_visiteur('creer_mariage', 10);
   base := lower(coalesce(p_contenu->'prenoms'->>0, '') || '-' || coalesce(p_contenu->'prenoms'->>1, ''));
   base := translate(base, 'àâäáãåçéèêëíìîïñóòôöõúùûüýÿœæ', 'aaaaaaceeeeiiiinooooouuuuyyoa');
   base := trim(both '-' from regexp_replace(base, '[^a-z0-9]+', '-', 'g'));
@@ -299,6 +357,8 @@ to anon;
 
 -- ---------- Le ménage de chaque nuit (23 h 17 UTC = 3 h 17 à La Réunion) ----------
 select cron.schedule('pm-purge-mariages', '17 23 * * *', 'select public.mariages_purger()');
+-- Les empreintes des visiteurs (plafond anti-robots), dix minutes après (23 h 27 UTC = 3 h 27 à La Réunion).
+select cron.schedule('pm-purge-visiteurs', '27 23 * * *', 'select public.visiteurs_purger()');
 
 -- ---------- Ce qui sera ajouté plus tard reste fermé par défaut ----------
 -- (le droit EXECUTE donné à tout le monde est un réglage global de Postgres : on le retire globalement, puis schéma par schéma pour les rôles de Supabase)

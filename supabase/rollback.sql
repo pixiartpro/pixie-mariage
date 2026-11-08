@@ -27,3 +27,17 @@ drop table if exists public.mariages_cites;
 drop table if exists public.compteurs;
 drop table if exists public.exposants;
 drop table if exists public.mariages;
+
+-- Le plafond anti-robots (empreintes des visiteurs) et sa clé dans le coffre.
+do $$
+begin
+  if exists (select 1 from pg_extension where extname = 'pg_cron') then
+    perform cron.unschedule('pm-purge-visiteurs');
+  end if;
+exception when others then null;
+end $$;
+drop function if exists public.visiteurs_purger();
+drop function if exists public.pm_plafond_visiteur(text, integer);
+drop function if exists public.pm_empreinte_visiteur();
+drop table if exists public.visiteurs;
+delete from vault.secrets where name = 'pm_cle_visiteurs';

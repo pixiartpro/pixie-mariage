@@ -8,6 +8,7 @@
     "start": "next start",
     "test": "node --no-warnings --import ./tests/chargeur.mjs --test tests/*.test.mjs",
     "test:sql": "sh supabase/tests/lancer.sh",
+    "test:hostinger": "sh hebergement/hostinger/tester.sh",
     "prebuild": "rm -rf .next",
     "publier": "sh scripts/publier.sh",
     "icones": "node scripts/icones.mjs"

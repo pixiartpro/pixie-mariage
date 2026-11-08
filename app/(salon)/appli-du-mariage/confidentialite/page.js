@@ -44,13 +44,18 @@ export default function Confidentialite() {
 
         <h2>Où et combien de temps</h2>
         <p>
-          Les informations des mariés sont enregistrées chez Supabase, sur des serveurs situés en Union européenne (Paris). Le site lui-même est servi par GitHub Pages. Comme tout hébergeur, Supabase et GitHub gardent quelques jours l&apos;adresse technique (IP) des visites dans leurs journaux ; nous ne nous en servons pas.
+          Les informations des mariés sont enregistrées chez Supabase, sur des serveurs situés en Union européenne (Paris). Le site lui-même est servi par GitHub Pages. Comme tout hébergeur, Supabase et GitHub gardent quelques jours l&apos;adresse technique (IP) des visites dans leurs journaux ; nous ne les lisons pas.
         </p>
         <p>
           GitHub (GitHub, Inc.) est une société américaine : un accès depuis les États-Unis reste possible, encadré par le cadre de protection des données UE–États-Unis et par les clauses contractuelles types. Supabase (Supabase Pte. Ltd.) est une société de Singapour : les transferts éventuels hors de l&apos;Union européenne sont encadrés par les clauses contractuelles types de la Commission européenne.
         </p>
         <p>
           <b>L&apos;appli et tout son contenu sont effacés 90 jours après la date du mariage.</b> Les mariés peuvent aussi tout effacer avant, d&apos;un bouton, depuis leur lien privé. Les sauvegardes techniques de l&apos;hébergeur disparaissent ensuite d&apos;elles-mêmes, en quelques jours.
+        </p>
+
+        <h2>Contre les robots</h2>
+        <p>
+          Pour empêcher qu&apos;un robot crée des applis à la chaîne, la base calcule, au moment où vous créez l&apos;appli de votre mariage, une empreinte de votre adresse internet (IP) : un code fabriqué avec une clé secrète, qui ne permet pas de retrouver l&apos;adresse. Nous n&apos;enregistrons jamais l&apos;adresse elle-même. L&apos;empreinte sert seulement à limiter le nombre de créations par jour, et elle est effacée au plus tard 48 heures après (base légale : notre intérêt légitime, article 6.1.f du RGPD).
         </p>
 
         <h2>Le code du faire-part</h2>
@@ -68,7 +73,7 @@ export default function Confidentialite() {
           Les mariés corrigent tout eux-mêmes avec leur lien privé, et l&apos;effacent quand ils veulent. Pour toute autre demande (accès, rectification, effacement, limitation, portabilité, opposition), y compris si vous êtes cité dans l&apos;appli d&apos;un mariage, écrivez à {mail} en joignant le lien des invités : réponse sous un mois. Vous pouvez aussi saisir la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener noreferrer">cnil.fr</a>).
         </p>
 
-        <p className="appli-maj">Page mise à jour le vendredi 6 novembre 2026.</p>
+        <p className="appli-maj">Page mise à jour le dimanche 8 novembre 2026.</p>
         <p style={{ marginTop: 20 }}>
           <Link href="/appli-du-mariage/" className="btn btn-ghost">Retour à l&apos;appli du mariage</Link>
         </p>

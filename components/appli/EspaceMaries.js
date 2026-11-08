@@ -150,6 +150,10 @@ export function CreerAppli() {
       onSubmit={async (e) => {
         e.preventDefault();
         setErreur("");
+        // Champ piège : une personne ne le voit pas ; un robot qui remplit tout le remplit, et rien n'est créé.
+        if (String(new FormData(e.currentTarget).get("site_web") || "").trim()) {
+          return setErreur("L'enregistrement n'a pas marché. Réessayez.");
+        }
         const probleme = controler(m);
         if (probleme) {
           allerAuChampManquant();
@@ -175,6 +179,11 @@ export function CreerAppli() {
       {MODE === "essai" && <ModeEssai />}
       <p className="ed-aide">Votre brouillon se garde tout seul sur cet appareil. Seuls les champs marqués * sont obligatoires : le reste peut attendre.</p>
       <Formulaire valeur={m} onChange={setM} />
+      {/* Contre les robots (modèle : formulaire du site du studio) : hors de l'écran, sans tabulation, ignoré des lecteurs d'écran. */}
+      <div className="ed-piege" aria-hidden="true">
+        <label htmlFor="site_web">Ne pas remplir</label>
+        <input id="site_web" name="site_web" type="text" tabIndex={-1} autoComplete="off" defaultValue="" />
+      </div>
       <label className="ed-accord">
         <input type="checkbox" checked={accord} onChange={(e) => setAccord(e.target.checked)} />
         <span>

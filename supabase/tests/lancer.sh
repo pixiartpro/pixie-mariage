@@ -17,6 +17,12 @@ create schema extensions; grant usage on schema public, extensions to anon, auth
 alter default privileges in schema public grant execute on functions to anon, authenticated;
 create schema cron; create table cron.job(jobname text, schedule text, command text);
 create function cron.schedule(a text, b text, c text) returns bigint language sql as $$ insert into cron.job values (a, b, c) returning 1::bigint $$;
+-- Le coffre de Supabase (Vault), simulé : des secrets que seul le propriétaire des fonctions lit.
+create schema vault;
+create table vault.secrets(id uuid primary key default gen_random_uuid(), name text unique, secret text not null, description text);
+create view vault.decrypted_secrets as select id, name, secret as decrypted_secret, description from vault.secrets;
+create function vault.create_secret(new_secret text, new_name text default null, new_description text default '') returns uuid language sql
+  as $$ insert into vault.secrets(name, secret, description) values (new_name, new_secret, new_description) returning id $$;
 SQL
 sed 's/^create extension if not exists pg_cron;/-- pg_cron simulé pour le test/' "$ICI/../schema.sql" | $P
 $P -f "$ICI/tests.sql"

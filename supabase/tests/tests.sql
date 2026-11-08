@@ -93,3 +93,35 @@ create temp table ch3 as select public.exposant_chiffres('fleurs-de-corail', (se
 select pg_temp.doit((select (j->>'mariages')::int from ch3) = 3, 'Léa et Mathis, le doublon et l''effacé après la fête : 3 mariages');
 select pg_temp.doit(not has_table_privilege('anon', 'public.mariages_cites', 'select'), 'le compteur des mariages reste fermé au public');
 select pg_temp.doit(not has_function_privilege('anon', 'public.pm_garder_citations()', 'execute'), 'le déclencheur n''est pas appelable');
+
+-- ---------- Contre les robots : 10 créations par jour et par visiteur, connu par une empreinte de son adresse ----------
+select pg_temp.doit(not has_table_privilege('anon', 'public.visiteurs', 'select'), 'les empreintes sont fermées au public');
+select pg_temp.doit(not has_function_privilege('anon', f, 'execute'), 'réservée à la base : ' || f) from unnest(array[
+  'public.pm_empreinte_visiteur()', 'public.pm_plafond_visiteur(text,integer)', 'public.visiteurs_purger()']) f;
+select pg_temp.doit(not has_schema_privilege('anon', 'vault', 'usage'), 'le coffre est fermé au public');
+select pg_temp.doit((select count(*) from vault.secrets where name = 'pm_cle_visiteurs' and length(secret) = 64) = 1, 'une clé de 32 octets tirée au hasard, une seule fois');
+select pg_temp.doit(exists (select 1 from cron.job where jobname = 'pm-purge-visiteurs'), 'effacement des empreintes programmé chaque nuit');
+delete from public.visiteurs;
+-- Le même visiteur (sa première adresse de x-forwarded-for) : 10 créations passent, la 11e est refusée.
+select set_config('request.headers', '{"x-forwarded-for": "203.0.113.7, 10.0.0.1"}', false);
+select public.mariage_creer(('{"prenoms":["Robot","N' || i || '"],"date":"' || (current_date + 30) || '"}')::jsonb) from generate_series(1, 10) i;
+select pg_temp.refuse($$select public.mariage_creer(('{"prenoms":["Robot","Onze"],"date":"' || (current_date + 30) || '"}')::jsonb)$$, '11e création du même visiteur le même jour');
+select pg_temp.doit((select n from public.visiteurs) = 10, 'le refus ne fait pas grimper le compte');
+-- L'adresse posée par Cloudflare passe avant x-forwarded-for (qu'un robot peut écrire lui-même).
+select set_config('request.headers', '{"cf-connecting-ip": "203.0.113.7", "x-forwarded-for": "1.2.3.4"}', false);
+select pg_temp.refuse($$select public.mariage_creer(('{"prenoms":["Robot","Masque"],"date":"' || (current_date + 30) || '"}')::jsonb)$$, 'un faux x-forwarded-for ne contourne pas le plafond');
+-- Un autre visiteur crée sans gêne.
+select set_config('request.headers', '{"x-forwarded-for": "198.51.100.9"}', false);
+select pg_temp.doit(public.mariage_creer(('{"prenoms":["Nina","Teva"],"date":"' || (current_date + 40) || '"}')::jsonb) is not null, 'un autre visiteur crée sans gêne');
+-- Jamais l'adresse en clair : seulement des empreintes de 64 caractères, différentes d'un visiteur à l'autre.
+select pg_temp.doit((select count(*) from public.visiteurs) = 2, 'deux visiteurs, deux empreintes');
+select pg_temp.doit((select bool_and(empreinte ~ '^[0-9a-f]{64}$' and strpos(empreinte, '.') = 0) from public.visiteurs), 'aucune adresse en clair : 64 chiffres hexadécimaux, jamais de point');
+select pg_temp.doit(public.pm_empreinte_visiteur() = encode(extensions.hmac('visiteur:198.51.100.9', (select secret from vault.secrets where name = 'pm_cle_visiteurs'), 'sha256'), 'hex'), 'empreinte = HMAC-SHA256 avec la clé du coffre');
+-- Ménage : les jours passés sont effacés, aujourd'hui reste.
+insert into public.visiteurs values (repeat('a', 64), 'creer_mariage', (now() at time zone 'Indian/Reunion')::date - 1, 3);
+select pg_temp.doit(public.visiteurs_purger() = 1, 'les empreintes d''hier sont effacées la nuit');
+select pg_temp.doit((select count(*) from public.visiteurs) = 2, 'celles du jour restent pour tenir le plafond');
+-- Sans clé dans le coffre, on ne crée rien (jamais de création sans plafond).
+delete from vault.secrets where name = 'pm_cle_visiteurs';
+select pg_temp.refuse($$select public.mariage_creer(('{"prenoms":["Sans","Cle"],"date":"' || (current_date + 30) || '"}')::jsonb)$$, 'pas de clé, pas de création');
+select set_config('request.headers', '', false);

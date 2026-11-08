@@ -445,3 +445,6 @@
 
 .pro-resume button:focus-visible, .pro-fleche:focus-visible, .pro-jour:focus-visible, .pro-etapes button:focus-visible, .pro-mariage:focus-visible, .pro-retour:focus-visible, .pro-raz:focus-visible { outline: 2px solid var(--a-or); outline-offset: 2px; }
 .pro-demande-tete:focus-visible { outline: 2px solid var(--a-or); outline-offset: -3px; border-radius: 18px; }
+
+/* Champ piège du formulaire de création (contre les robots) : hors de l'écran, jamais vu ni atteint au clavier. */
+.ed-piege { position: absolute !important; left: -10000px !important; width: 1px; height: 1px; overflow: hidden; }

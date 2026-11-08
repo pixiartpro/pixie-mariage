@@ -1,0 +1,40 @@
+# Pixie Mariage — règles de l'hébergement web Hostinger (Apache ou LiteSpeed).
+# NE PAS COPIER À LA MAIN : « sh hebergement/hostinger/poser-htaccess.sh out » écrit out/.htaccess depuis ce modèle,
+# avec l'adresse du projet Supabase avec laquelle le site a été construit (NEXT_PUBLIC_SUPABASE_URL).
+# À poser le jour du passage sur Hostinger, pas avant : GitHub Pages ignore ce fichier.
+# Modèle : Cérémonaire (rituel-numerique/app/vercel.json), adapté à Next.js (analyse croisée du 08/11/2026, [11]).
+# Testé sur l'Apache du Mac : npm run test:hostinger. Le jour J, contrôler en ligne : curl -sI et verifier_socle.py (S1, S10).
+
+# La page d'erreur du site.
+ErrorDocument 404 /404.html
+
+# Toujours en https, et toujours sur l'adresse sans www.
+# (Un relais qui a déjà fait le https l'annonce par X-Forwarded-Proto : pas de boucle.)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://pixie-mariage.re%{REQUEST_URI} [L,R=301]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://pixie-mariage.re%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Le navigateur ne revient jamais en http pendant un an (HSTS).
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  # Ce que les pages ont le droit de charger : le site lui-même, et la base de Pixie Mariage. Rien d'autre.
+  # 'unsafe-inline' : Next.js range les données de chaque page dans des scripts en ligne, et React pose des styles en ligne.
+  # Ni cadre, ni vidéo intégrée, ni service worker aujourd'hui : s'il en vient un, l'ajouter ici ET dans le test.
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' __SUPABASE_URL__; manifest-src 'self'; worker-src 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  # Aucun autre site ne peut afficher Pixie Mariage dans un cadre (vieux navigateurs).
+  Header always set X-Frame-Options "DENY"
+  Header always set X-Content-Type-Options "nosniff"
+  # Les exposants voient que la visite vient de Pixie Mariage, sans le détail de la page.
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  # Les pages sont toujours redemandées : une mise en ligne se voit tout de suite.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
