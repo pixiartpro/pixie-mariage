@@ -94,13 +94,59 @@ img { max-width: 100%; display: block; }
 .section-title { text-align: center; font-size: 38px; margin-bottom: 12px; }
 .section-sub { text-align: center; color: var(--doux); max-width: 680px; margin: 0 auto 36px; font-size: 18px; }
 
-/* ---------- Category grid ---------- */
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; }
-.cat-card { background: var(--surface); border: 1px solid var(--ligne); border-radius: 16px; padding: 22px; box-shadow: var(--ombre-sm); transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; display: block; }
-.cat-card:hover { transform: translateY(-3px); box-shadow: var(--ombre); border-color: var(--or); }
-.cat-card .ic { width: 48px; height: 48px; border-radius: 12px; background: var(--or-clair); color: var(--or-fonce); display: grid; place-items: center; font-size: 26px; margin-bottom: 14px; }
-.cat-card h3 { font-size: 22px; margin-bottom: 6px; }
-.cat-card p { font-size: 14px; color: var(--doux); line-height: 1.5; }
+/* ---------- Accueil : le premier écran (une vraie image, une phrase, un bouton) ---------- */
+.accueil { position: relative; overflow: hidden; padding: 48px 0 56px; }
+.accueil::before { content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.7; background:
+    radial-gradient(circle at 10% 18%, var(--rose-clair) 0%, transparent 36%),
+    radial-gradient(circle at 90% 78%, var(--or-clair) 0%, transparent 40%); }
+.accueil-grille { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr); gap: 56px; align-items: center; }
+.accueil-texte { order: -1; }
+.accueil-texte h1 { font-size: 58px; line-height: 1.04; letter-spacing: -0.02em; margin-bottom: 18px; }
+.accueil-texte h1 em { font-style: normal; color: var(--rose-fonce); }
+.accueil-texte .lead { font-size: 19px; color: var(--doux); max-width: 520px; margin-bottom: 28px; }
+.accueil-texte .cta-row { justify-content: flex-start; }
+.accueil-photo { position: relative; border-radius: 22px; overflow: hidden; box-shadow: 0 22px 50px rgba(120, 90, 70, 0.22); }
+.accueil-photo img { width: 100%; height: auto; }
+.accueil-photo figcaption { position: absolute; left: 14px; bottom: 14px; background: rgba(251, 246, 240, 0.92); color: var(--texte); font-size: 13.5px; padding: 5px 13px; border-radius: 999px; }
+@media (max-width: 860px) {
+  .accueil { padding: 18px 0 40px; }
+  .accueil-grille { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .accueil-texte { order: 0; }
+  .accueil-texte h1 { font-size: 40px; }
+  .accueil-texte .lead { font-size: 17px; margin-bottom: 22px; }
+}
+
+/* ---------- Accueil : les deux outils offerts, juste sous le premier écran ---------- */
+#offert { scroll-margin-top: 80px; }
+.offerts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-top: 28px; }
+.offert { background: var(--surface); border: 1px solid var(--ligne); border-radius: 20px; overflow: hidden; box-shadow: var(--ombre-sm); display: flex; flex-direction: column; }
+.offert-visuel { height: 220px; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; background: linear-gradient(160deg, var(--rose-clair), var(--or-clair)); }
+.offert-visuel.centre { align-items: center; }
+.telephone { width: 190px; border: 7px solid var(--sombre); border-bottom: 0; border-radius: 28px 28px 0 0; overflow: hidden; background: var(--sombre); box-shadow: 0 12px 30px rgba(43, 36, 33, 0.28); transform: translateY(28px); }
+.telephone img { width: 100%; height: auto; }
+.tables { width: min(300px, 86%); height: auto; }
+.tables .ronde { fill: #fff; stroke: var(--rose); stroke-width: 2; }
+.tables .siege { fill: var(--or); }
+.tables text { font-family: var(--font-cormorant), Georgia, serif; font-size: 22px; font-weight: 600; fill: var(--rose-fonce); text-anchor: middle; dominant-baseline: central; }
+.offert-texte { padding: 22px 24px 26px; display: flex; flex-direction: column; align-items: flex-start; flex: 1; }
+.offert-texte h3 { font-size: 27px; margin-bottom: 6px; }
+.offert-texte p { color: var(--doux); font-size: 15px; margin-bottom: 18px; flex: 1; }
+.offert-texte .cta-row { justify-content: flex-start; }
+@media (max-width: 760px) { .offerts { grid-template-columns: minmax(0, 1fr); } .offert-visuel { height: 190px; } }
+
+/* ---------- Accueil : les métiers, en pastilles ---------- */
+.metiers { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 920px; margin: 26px auto 0; }
+.metier { display: inline-flex; align-items: center; gap: 9px; background: var(--surface); border: 1px solid var(--ligne); border-radius: 999px; padding: 8px 18px 8px 9px; font-size: 15px; box-shadow: var(--ombre-sm); transition: border-color 0.15s, color 0.15s, transform 0.15s; }
+.metier i { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--or-clair); color: var(--or-fonce); font-size: 17px; flex-shrink: 0; }
+.metier:hover { border-color: var(--or); color: var(--rose-fonce); }
+.metier:active { transform: scale(0.97); }
+
+/* ---------- Accueil : trois exemples de stands, côte à côte au téléphone ---------- */
+@media (max-width: 760px) {
+  .presta-grid.apercu { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -24px; padding: 6px 24px 14px; scrollbar-width: none; }
+  .presta-grid.apercu::-webkit-scrollbar { display: none; }
+  .presta-grid.apercu > * { flex: 0 0 82%; scroll-snap-align: center; }
+}
 
 /* ---------- Prestataire cards ---------- */
 .presta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
@@ -121,7 +167,7 @@ img { max-width: 100%; display: block; }
 .note { display: inline-flex; align-items: center; gap: 4px; color: var(--or-fonce); font-weight: 500; font-size: 14px; }
 .prix { font-size: 13px; color: var(--doux); }
 
-/* ---------- Dark video band ---------- */
+/* ---------- Grille de prix et studio organisateur ---------- */
 .prix-grille { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--ligne); border-radius: 18px; box-shadow: var(--ombre-sm); }
 .prix-ligne { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 18px; padding: 20px 24px; border-bottom: 1px solid var(--ligne); align-items: start; }
 .prix-ligne:last-child { border-bottom: 0; }
@@ -135,33 +181,16 @@ img { max-width: 100%; display: block; }
 .studio-panel .section-sub { margin-bottom: 24px; }
 .studio-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 .studio-note { text-align: center; color: var(--doux); font-size: 14px; max-width: 620px; margin: 20px auto 0; }
-.band-dark { background: var(--sombre); color: #F5EEE6; padding: 64px 0; }
-.band-dark .eyebrow { color: var(--or); }
-.band-dark .section-title { color: #fff; }
-.band-dark .section-sub { color: #cdbfb4; }
-.video-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
-.video-card { background: var(--sombre2); border: 1px solid rgba(255,255,255,0.10); border-radius: 16px; overflow: hidden; }
-.video-card .screen { aspect-ratio: 16 / 10; display: grid; place-items: center; position: relative; background: linear-gradient(135deg, #3a302b, #251f1c); }
-.video-card .screen .play { width: 54px; height: 54px; border-radius: 50%; background: rgba(191,155,48,0.92); color: #2b2421; display: grid; place-items: center; font-size: 24px; }
-.video-card .vinfo { padding: 14px 16px; }
-.video-card .vinfo h4 { font-family: var(--font-cormorant), serif; font-size: 19px; color: #fff; }
-.video-card .vinfo span { font-size: 13px; color: #b8a99d; }
-.video-note { text-align: center; color: #b8a99d; font-size: 14px; margin-top: 26px; }
 
 /* ---------- Étapes ---------- */
 .etapes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-@media (max-width: 760px) { .etapes { grid-template-columns: 1fr; } .cat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } .cat-card { padding: 16px; } .cat-card h3 { overflow-wrap: anywhere; hyphens: auto; } }
+@media (max-width: 760px) { .etapes { grid-template-columns: 1fr; } }
 .etape { text-align: center; padding: 10px; }
 .etape .num { width: 46px; height: 46px; margin: 0 auto 14px; border-radius: 50%; background: var(--rose-clair); color: var(--rose-fonce); display: grid; place-items: center; font-family: var(--font-cormorant), serif; font-size: 24px; font-weight: 700; }
 .etape h3 { font-size: 22px; margin-bottom: 6px; }
 .etape p { color: var(--doux); font-size: 15px; }
 
-/* ---------- PixTable highlight ---------- */
-.pixtable-band { background: var(--surface2); border-top: 1px solid var(--ligne); border-bottom: 1px solid var(--ligne); padding: 56px 0; }
-.pixtable-inner { display: flex; gap: 30px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
-.pixtable-inner .txt { flex: 1; min-width: 280px; }
-.pixtable-inner h2 { font-size: 32px; margin-bottom: 8px; }
-.pixtable-inner p { color: var(--doux); max-width: 520px; }
+/* ---------- Badge « Offert » ---------- */
 .badge-offert { display: inline-block; background: var(--vert); color: #fff; font-size: 12px; padding: 4px 12px; border-radius: 999px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
 
 /* ---------- FAQ ---------- */

@@ -1,51 +1,112 @@
 import Link from "next/link";
-import { SALON, CATEGORIES, PRESTATAIRES, COPY, prestataireBySlug } from "../../lib/data";
-import { catGrad } from "../../lib/theme";
+import Image from "next/image";
+import { SALON, CATEGORIES, COPY, prestataireBySlug } from "../../lib/data";
 import PrestataireCard from "../../components/PrestataireCard";
 import StudioOrganisateur from "../../components/StudioOrganisateur";
+import { SITE } from "../../lib/chemin";
+// Une vraie image dès l'arrivée (retour d’une première visiteuse, dimanche 08/11/2026 : « il manquait quelque chose
+// pour que, quand on arrive dessus, ça nous intéresse réellement »). L'échange des alliances vient d'un
+// mariage filmé par PIX-I-ART, sans visage, déjà publié sur le site du studio. Jamais d'image IA ici.
+import alliances from "../images/alliances.webp";
+// Capture de la démo de l'appli des mariés (Léa & Mathis, couple inventé).
+import appliDemo from "../images/appli-demo.webp";
 
-const FEATURED = [
-  "domaine-des-flamboyants",
-  "lumiere-australe-studio",
-  "fleurs-de-corail",
-  "saveurs-de-bourbon-traiteur",
-  "instant-precieux-wedding",
-  "douceurs-de-leila",
-].map(prestataireBySlug).filter(Boolean);
-
-const VIDEOS = ["domaine-des-flamboyants", "lumiere-australe-studio", "esprit-boheme-deco"]
+// Trois exemples suffisent pour montrer à quoi ressemblera un stand.
+const EXEMPLES = ["domaine-des-flamboyants", "lumiere-australe-studio", "saveurs-de-bourbon-traiteur"]
   .map(prestataireBySlug)
   .filter(Boolean);
-
-import { SITE } from "../../lib/chemin";
 
 // L'accueil : son adresse canonique (les autres pages ont la leur).
 export const metadata = { alternates: { canonical: `${SITE}/` } };
 
+// Trois tables rondes et leurs places, comme sur l'accueil de PixTable.
+function Tables() {
+  const tables = [50, 150, 250];
+  // Une place en haut, une en bas, deux de chaque côté : les chaises de deux tables ne se touchent pas.
+  const places = [30, 90, 150, 210, 270, 330].map((a) => (a * Math.PI) / 180);
+  return (
+    <svg className="tables" viewBox="0 0 300 130" aria-hidden="true">
+      {tables.map((x, i) => (
+        <g key={x}>
+          {places.map((a) => (
+            <circle key={a} className="siege" cx={x + 41 * Math.cos(a)} cy={65 + 41 * Math.sin(a)} r="7" />
+          ))}
+          <circle className="ronde" cx={x} cy="65" r="29" />
+          <text x={x} y="66">{i + 1}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 export default function Home() {
   return (
     <>
-      <section className="hero">
-        <div className="container">
-          <span className="kicker"><span lang="rcf">{SALON.phrase}</span> · {SALON.lieu}</span>
-          <h1>Tout votre mariage, réuni au <em>même endroit</em>.</h1>
-          <p className="lead">{COPY.heroSousTitre}</p>
-          <div className="cta-row">
-            <Link href="/annuaire" className="btn btn-gold">
-              Visiter les stands <i className="ti ti-arrow-right" aria-hidden="true" />
-            </Link>
-            <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-              <i className="ti ti-armchair-2" aria-hidden="true" /> Plan de table offert
-            </a>
+      <section className="accueil">
+        <div className="container accueil-grille">
+          <figure className="accueil-photo">
+            <Image
+              src={alliances}
+              alt="Échange des alliances lors d'un mariage filmé par PIX-I-ART"
+              loading="eager"
+              fetchPriority="high"
+              sizes="(max-width: 860px) 100vw, 520px"
+            />
+            <figcaption>Un vrai mariage, filmé par PIX-I-ART</figcaption>
+          </figure>
+          <div className="accueil-texte">
+            <span className="kicker"><span lang="rcf">{SALON.phrase}</span> · {SALON.lieu}</span>
+            <h1>Le salon du mariage qui ne <em>ferme jamais</em>.</h1>
+            <p className="lead">{COPY.heroSousTitre}</p>
+            <div className="cta-row">
+              <Link href="/annuaire" className="btn btn-gold">
+                Visiter les stands <i className="ti ti-arrow-right" aria-hidden="true" />
+              </Link>
+              <a href="#offert" className="btn btn-ghost">
+                <i className="ti ti-gift" aria-hidden="true" /> Les outils offerts
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="section tight">
+      <section className="section tight" id="offert">
         <div className="container">
-          <div className="eyebrow">le concept</div>
-          <h2 className="section-title">{COPY.conceptTitre}</h2>
-          <p className="section-sub">{COPY.conceptTexte}</p>
+          <div className="eyebrow">offert aux mariés</div>
+          <h2 className="section-title">Deux outils pour votre grand jour</h2>
+          <div className="offerts">
+            <article className="offert">
+              <div className="offert-visuel">
+                <div className="telephone">
+                  <Image src={appliDemo} alt="L'appli de démonstration du mariage de Léa et Mathis : la date, le lieu et l'itinéraire" sizes="190px" />
+                </div>
+              </div>
+              <div className="offert-texte">
+                <span className="badge-offert">Offert</span>
+                <h3>L&apos;appli de votre mariage</h3>
+                <p>Un QR code sur le faire-part : le lieu et le programme avant, le moment en cours le jour J, le film et les photos après. Effacée 90 jours après.</p>
+                <div className="cta-row">
+                  <Link href="/mariage/?m=demo" className="btn btn-gold btn-sm">
+                    Voir la démo <i className="ti ti-arrow-right" aria-hidden="true" />
+                  </Link>
+                  <Link href="/appli-du-mariage/" className="btn btn-ghost btn-sm">Comment ça marche</Link>
+                </div>
+              </div>
+            </article>
+            <article className="offert">
+              <div className="offert-visuel centre">
+                <Tables />
+              </div>
+              <div className="offert-texte">
+                <span className="badge-offert">Offert</span>
+                <h3>PixTable, le plan de table</h3>
+                <p>Il place vos invités tout seul selon vos règles : qui doit, ne peut pas ou aimerait être ensemble. À vous d&apos;ajuster d&apos;un glisser-déposer.</p>
+                <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-gold btn-sm">
+                  Ouvrir PixTable <i className="ti ti-arrow-right" aria-hidden="true" />
+                </a>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -53,13 +114,11 @@ export default function Home() {
         <div className="container">
           <div className="eyebrow">explorez</div>
           <h2 className="section-title">Tous les prestataires du mariage</h2>
-          <p className="section-sub">Choisissez une catégorie et découvrez les meilleurs professionnels de l&apos;île.</p>
-          <div className="cat-grid">
+          <div className="metiers">
             {CATEGORIES.map((c) => (
-              <Link key={c.key} href={`/annuaire?cat=${c.key}`} className="cat-card">
-                <div className="ic"><i className={`ti ti-${c.icon}`} aria-hidden="true" /></div>
-                <h3>{c.nom}</h3>
-                <p>{c.description}</p>
+              <Link key={c.key} href={`/annuaire?cat=${c.key}`} className="metier">
+                <i className={`ti ti-${c.icon}`} aria-hidden="true" />
+                <span>{c.nom}</span>
               </Link>
             ))}
           </div>
@@ -71,8 +130,8 @@ export default function Home() {
           <div className="eyebrow">aperçu</div>
           <h2 className="section-title">À quoi ressemblera un stand</h2>
           <p className="section-sub">Ces fiches sont des exemples inventés pour montrer le salon. Les premiers vrais stands arriveront après leur tournage.</p>
-          <div className="presta-grid">
-            {FEATURED.map((p) => (
+          <div className="presta-grid apercu">
+            {EXEMPLES.map((p) => (
               <PrestataireCard key={p.slug} p={p} />
             ))}
           </div>
@@ -83,29 +142,6 @@ export default function Home() {
       </section>
 
       <StudioOrganisateur />
-
-      <section className="band-dark">
-        <div className="container">
-          <div className="eyebrow">le salon vidéo</div>
-          <h2 className="section-title">Bientôt, découvrez-les en vidéo</h2>
-          <p className="section-sub">Chaque prestataire se présentera en vidéo : son lieu, son univers, son savoir-faire — comme sur un stand, pour ressentir l&apos;émotion avant même de le contacter.</p>
-          <div className="video-grid">
-            {VIDEOS.map((p) => (
-              <div className="video-card" key={p.slug}>
-                <div className="screen" style={{ background: catGrad(p.categorie) }}>
-                  <span style={{ position: "absolute", top: 12, left: 12, background: "rgba(255,255,255,0.16)", color: "#F5EEE6", fontSize: 12, padding: "3px 11px", borderRadius: 999 }}>Bientôt</span>
-                  <span className="play"><i className="ti ti-player-play-filled" aria-hidden="true" /></span>
-                </div>
-                <div className="vinfo">
-                  <h4>{p.nom}</h4>
-                  <span>{p.ville}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="video-note">Vidéos de présentation produites par le studio PIX-I-ART — à venir.</p>
-        </div>
-      </section>
 
       <section className="section">
         <div className="container">
@@ -120,35 +156,6 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="pixtable-band">
-        <div className="container pixtable-inner">
-          <div className="txt">
-            <span className="badge-offert">Offert</span>
-            <h2>L&apos;appli de votre mariage, pour vos invités</h2>
-            <p>Un QR code sur le faire-part : le lieu et le programme avant, le moment en cours le jour J, le film et les photos après. Sans magasin d&apos;applis, effacée 90 jours après.</p>
-          </div>
-          <div className="cta-row">
-            <Link href="/appli-du-mariage/" className="btn btn-gold">
-              Créer la nôtre <i className="ti ti-arrow-right" aria-hidden="true" />
-            </Link>
-            <Link href="/mariage/?m=demo" className="btn btn-ghost">Voir la démo</Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="pixtable-band">
-        <div className="container pixtable-inner">
-          <div className="txt">
-            <span className="badge-offert">Offert</span>
-            <h2>PixTable, votre plan de table sans prise de tête</h2>
-            <p>Notre outil gratuit place vos invités tout seul selon vos règles (qui doit, ne peut pas, aimerait être ensemble) — à vous d&apos;ajuster d&apos;un glisser-déposer.</p>
-          </div>
-          <a href={SALON.pixtable} target="_blank" rel="noopener noreferrer" className="btn btn-gold">
-            Ouvrir PixTable <i className="ti ti-arrow-right" aria-hidden="true" />
-          </a>
         </div>
       </section>
 
