@@ -28,3 +28,23 @@ test("après construction : aucune page ne dit « jamais effacé », et les règ
   assert.deepEqual(fautives, [], "une page promet encore « jamais effacé »");
   assert.match(readFileSync(join(OUT, "regles-du-salon/index.html"), "utf8"), /gardé 24 mois/);
 });
+
+// Le contrat de stand (article 11) renvoie aux mentions légales pour le détail des données : elles doivent dire
+// combien de temps on garde le stand, les pièces justificatives et les factures (ajouté le dimanche 08/11/2026).
+test("les mentions légales disent combien de temps on garde un stand, ses pièces et ses factures", () => {
+  const m = readFileSync(ICI("contenu/mentions-legales.html"), "utf8");
+  for (const [motif, quoi] of [
+    [/Publier le stand/, "la ligne du stand"],
+    [/gardé 24 mois après la fin de sa dernière période payée/, "les 24 mois du stand dépublié"],
+    [/Vérifier les conditions d/, "la ligne des pièces justificatives"],
+    [/10 ans \(article L123-22 du Code de commerce\)/, "les 10 ans des factures"],
+  ]) assert.match(m, motif, `mentions légales : il manque ${quoi}`);
+  // Les personnes filmées ne sont pas parties au contrat de l'exposant : leur image repose sur leur autorisation écrite.
+  assert.match(m, /pour chaque personne filmée ou photographiée, son autorisation écrite/);
+});
+
+test("après construction : la page des mentions légales publiée dit les mêmes durées", { skip: !existsSync(OUT) && "lancer npm run build d'abord" }, () => {
+  const page = readFileSync(join(OUT, "mentions-legales/index.html"), "utf8");
+  assert.match(page, /gardé 24 mois après la fin de sa dernière période payée/);
+  assert.match(page, /10 ans \(article L123-22 du Code de commerce\)/);
+});
