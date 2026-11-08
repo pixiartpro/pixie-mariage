@@ -1,4 +1,0 @@
-:HL["/pixie-mariage/_next/static/chunks/0ly3hz6tpqvsl.css","style"]
-:HL["/pixie-mariage/_next/static/media/cormorant_garamond_latin-s.p.3huc2loe0ie8a.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-:HL["/pixie-mariage/_next/static/media/jost_latin-s.p.2csanl8cs02r-.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"(salon)","param":null,"prefetchHints":0,"slots":{"children":{"name":"prestataire","param":null,"prefetchHints":0,"slots":{"children":{"name":"slug","param":{"type":"d","key":"esprit-boheme-deco","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}}}},"staleTime":300,"buildId":"A9JEq3uHaqvqjpVEDPNdd"}
