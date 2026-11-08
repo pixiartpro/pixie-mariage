@@ -4,6 +4,10 @@
 set -e
 export LANG=C LC_ALL=C PATH=/opt/homebrew/bin:/usr/bin:/bin
 ICI=$(cd "$(dirname "$0")" && pwd)
+# Les tests posent un compteur pour l'heure ou le jour en cours, puis créent : à cheval sur un changement d'heure (UTC,
+# qui est aussi celui du jour à La Réunion, UTC+4), un test échouerait alors que le code est juste (relecture ChatGPT du
+# 08/11/2026, tour 2). Le banc dure moins d'une minute : il attend donc que les minutes 58 et 59 soient passées.
+while [ "$(date -u +%M)" -ge 58 ]; do echo "(changement d'heure imminent : le banc attend)"; sleep 10; done
 D=$(mktemp -d /tmp/pm-sql.XXXXXX)
 PORT=55499
 trap 'pg_ctl -D "$D/data" stop -m fast >/dev/null 2>&1 || true; rm -rf "$D"' EXIT
@@ -32,27 +36,28 @@ $P -f "$ICI/tests.sql"
 # et qu'une seule appli de plus existe (relecture ChatGPT du 08/11/2026 : un simple compte n = 200 ne disait ni qui
 # avait réussi, ni pourquoi l'autre avait échoué).
 DATE=$(date -v+30d +%Y-%m-%d)
-deux_en_meme_temps() { # $1 = ce qu'on teste, $2 = adresse de la 1re, $3 = adresse de la 2e, $4 = début du motif de refus
-  AVANT=$($P -tAc "select count(*) from public.mariages")
-  $P -c "begin; select set_config('request.headers', '{\"x-forwarded-for\": \"$2\"}', true); select public.mariage_creer('{\"prenoms\":[\"Simul\",\"Tane\"],\"date\":\"$DATE\"}'::jsonb); select pg_sleep(2); commit;" > "$D/premier.out" 2>&1 &
+deux_en_meme_temps() { # $1 = ce qu'on teste, $2 = l'appel SQL, $3 = adresse de la 1re, $4 = adresse de la 2e, $5 = début du motif de refus
+  $P -c "begin; select set_config('request.headers', '{\"x-forwarded-for\": \"$3\"}', true); select $2; select pg_sleep(2); commit;" > "$D/premier.out" 2>&1 &
   sleep 0.5
-  $P -c "select set_config('request.headers', '{\"x-forwarded-for\": \"$3\"}', false); do \$\$ declare t0 timestamptz := clock_timestamp(); begin begin perform public.mariage_creer('{\"prenoms\":[\"Simul\",\"Deux\"],\"date\":\"$DATE\"}'::jsonb); raise notice 'RESULTAT accepte'; exception when others then raise notice 'RESULTAT refus : %', sqlerrm; end; raise notice 'ATTENTE %', round(extract(epoch from clock_timestamp() - t0)::numeric, 1); end \$\$;" > "$D/second.out" 2>&1
+  $P -c "select set_config('request.headers', '{\"x-forwarded-for\": \"$4\"}', false); do \$\$ declare t0 timestamptz := clock_timestamp(); begin begin perform $2; raise notice 'RESULTAT accepte'; exception when others then raise notice 'RESULTAT refus : %', sqlerrm; end; raise notice 'ATTENTE %', round(extract(epoch from clock_timestamp() - t0)::numeric, 1); end \$\$;" > "$D/second.out" 2>&1
   wait
-  APRES=$($P -tAc "select count(*) from public.mariages")
   ATTENTE=$(sed -n 's/.*ATTENTE \([0-9.]*\).*/\1/p' "$D/second.out")
-  grep -q '"slug"' "$D/premier.out" || { echo "ÉCHEC : $1 : la 1re création n'est pas passée"; cat "$D/premier.out"; exit 1; }
-  grep -q "RESULTAT refus : PM: $4" "$D/second.out" || { echo "ÉCHEC : $1 : la 2e n'a pas été refusée pour le motif attendu ($4…)"; cat "$D/second.out"; exit 1; }
-  [ $((APRES - AVANT)) = 1 ] || { echo "ÉCHEC : $1 : $((APRES - AVANT)) applis de plus (attendu 1)"; exit 1; }
+  if grep -q ERROR "$D/premier.out"; then echo "ÉCHEC : $1 : la 1re a échoué"; cat "$D/premier.out"; exit 1; fi
+  grep -q "RESULTAT refus : PM: $5" "$D/second.out" || { echo "ÉCHEC : $1 : la 2e n'a pas été refusée pour le motif attendu ($5…)"; cat "$D/second.out"; exit 1; }
   awk -v a="$ATTENTE" 'BEGIN { exit !(a >= 1.0) }' || { echo "ÉCHEC : $1 : la 2e n'a pas attendu la 1re (${ATTENTE:-?} s), elles ne se sont pas chevauchées"; exit 1; }
   echo "ok : $1 (une seule passe ; l'autre attend $ATTENTE s, puis est refusée)"
 }
+# Le site entier : deux créations au même instant, à 199 dans l'heure.
 $P -c "delete from public.creations_par_heure; delete from public.visiteurs; insert into public.creations_par_heure values (date_trunc('hour', now(), 'UTC'), 199);"
-deux_en_meme_temps "deux créations simultanées à 199 dans l'heure" 198.51.100.21 198.51.100.22 "Trop de cr"
-N=$($P -tAc "select n from public.creations_par_heure")
-[ "$N" = "200" ] || { echo "ÉCHEC : $N créations comptées dans l'heure (attendu 200)"; exit 1; }
-# Le MÊME visiteur, déjà à 9 aujourd'hui, crée deux fois au même instant : une seule passe (la 10e).
+AVANT=$($P -tAc "select count(*) from public.mariages")
+deux_en_meme_temps "deux créations simultanées à 199 dans l'heure" "public.mariage_creer('{\"prenoms\":[\"Simul\",\"Tane\"],\"date\":\"$DATE\"}'::jsonb)" 198.51.100.21 198.51.100.22 "Trop de cr"
+grep -q '"slug"' "$D/premier.out" || { echo "ÉCHEC : la 1re création n'a pas rendu son appli"; exit 1; }
+APRES=$($P -tAc "select count(*) from public.mariages"); N=$($P -tAc "select n from public.creations_par_heure")
+[ $((APRES - AVANT)) = 1 ] && [ "$N" = "200" ] || { echo "ÉCHEC : $((APRES - AVANT)) applis de plus et $N comptées dans l'heure (attendu 1 et 200)"; exit 1; }
+# Le plafond du visiteur SEUL (appelé directement) : sinon la 2e session attend déjà sur le compteur du site, et le test
+# ne prouverait rien sur celui du visiteur (relecture ChatGPT du 08/11/2026, tour 2). Le même visiteur, déjà à 9.
 $P -c "delete from public.creations_par_heure; delete from public.visiteurs; select set_config('request.headers', '{\"x-forwarded-for\": \"198.51.100.30\"}', false); insert into public.visiteurs values (public.pm_empreinte_visiteur(), 'creer_mariage', (now() at time zone 'Indian/Reunion')::date, 9);"
-deux_en_meme_temps "le même visiteur, deux créations simultanées à 9 dans la journée" 198.51.100.30 198.51.100.30 "Vous avez d"
+deux_en_meme_temps "le plafond du visiteur seul, deux appels simultanés à 9 dans la journée" "public.pm_plafond_visiteur('creer_mariage', 10)" 198.51.100.30 198.51.100.30 "Vous avez d"
 V=$($P -tAc "select n from public.visiteurs")
 [ "$V" = "10" ] || { echo "ÉCHEC : $V créations comptées pour ce visiteur (attendu 10)"; exit 1; }
 echo "BASE : TOUS LES TESTS PASSENT"

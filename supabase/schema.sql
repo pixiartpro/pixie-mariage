@@ -184,6 +184,10 @@ end $$;
 -- 25 h 27 si un passage échoue (relecture Codex du 08/11/2026 : avec un seul passage par nuit, une panne repoussait
 -- l'effacement à 51 h). Les 48 h promises tiennent tant que la tâche planifiée tourne : le jour de la création de la
 -- base, vérifier qu'elle a vraiment tourné (table cron.job_run_details), car le banc ne fait qu'enregistrer l'horaire.
+-- CONDITION D'OUVERTURE (relecture ChatGPT du 08/11/2026, classée bloquante) : la page publique dit « effacée au plus
+-- tard 48 heures après », sans condition. Avant d'ouvrir la création au public, un contrôle QUOTIDIEN doit alerter si
+-- une empreinte a plus de 24 h (select count(*) from public.visiteurs where jour < aujourd'hui à La Réunion), pour
+-- réparer avant les 48 h. Un seul contrôle le jour de l'ouverture ne suffit pas.
 -- Les compteurs horaires de plus de deux jours partent aussi.
 create or replace function public.visiteurs_purger()
 returns integer language sql security definer set search_path = '' as $$
