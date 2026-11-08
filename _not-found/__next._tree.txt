@@ -1,4 +1,2 @@
-:HL["/pixie-mariage/_next/static/chunks/33y22_xloq332.css","style"]
-:HL["/pixie-mariage/_next/static/chunks/3hw6o57nzwjc6.css","style"]
-:HL["/pixie-mariage/_next/static/chunks/22lpye-qf1cpf.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"xYVYh_MKTtsKXxYl1ICIw"}
+:HL["/pixie-mariage/_next/static/chunks/009-g6l_5mxkm.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"MoSuJo3KZPmsHxwy67Idb"}
