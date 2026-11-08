@@ -160,8 +160,8 @@ export default function ReglesDuSalon() {
             </li>
             <li>
               <strong>Le non-renouvellement de la présence annuelle</strong> :
-              le stand est dépublié — jamais effacé — et rouvre au retour de
-              l&apos;exposant ;
+              le stand est dépublié, puis gardé 24 mois : il rouvre si
+              l&apos;exposant revient dans ce délai, sinon il est effacé ;
             </li>
             <li>
               <strong>Une obligation légale ou une décision de justice</strong>{" "}
@@ -174,7 +174,9 @@ export default function ReglesDuSalon() {
             la suspension peut être immédiate ; pour une résiliation, un préavis
             de 30 jours s&apos;applique, sauf obligation légale contraire ou
             manquements graves répétés. Un stand dépublié n&apos;est pas
-            effacé : les éléments de l&apos;exposant lui restent restituables.
+            effacé tout de suite : il est gardé 24 mois après la fin de sa
+            dernière période payée, puis effacé. Pendant ce temps, les
+            éléments de l&apos;exposant lui restent restituables.
           </p>
           <p>
             Le salon ne publie pas d&apos;avis : les retours des couples et des
