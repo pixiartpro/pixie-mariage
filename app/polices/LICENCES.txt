@@ -1,0 +1,14 @@
+Polices du site Pixie Mariage, servies par le site lui-même (aucune demande à Google Fonts, ni à la construction ni à la visite).
+Ce sont les fichiers que la construction allait chercher chez Google Fonts jusqu'au dimanche 08/11/2026 : sous-ensemble « latin », polices variables.
+Les deux polices sont publiées sous la licence SIL Open Font License, version 1.1 (https://openfontlicense.org) :
+utilisation, copie et redistribution libres, y compris dans un site commercial ; vente seule interdite.
+
+Cormorant Garamond (cormorant-garamond-latin.woff2)
+  Copyright 2015 The Cormorant Project Authors (github.com/CatharsisFonts/Cormorant)
+  Licence : SIL Open Font License 1.1
+  https://openfontlicense.org
+
+Jost (jost-latin.woff2)
+  Copyright 2020 The Jost Project Authors (https://github.com/indestructible-type/Jost)
+  Licence : SIL Open Font License 1.1
+  http://scripts.sil.org/OFL

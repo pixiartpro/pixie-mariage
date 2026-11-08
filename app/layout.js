@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Jost } from "next/font/google";
+import localFont from "next/font/local";
 // Icônes Tabler servies par le site lui-même, et seulement celles qu'il utilise (15 Ko au lieu de 878 Ko).
 // Fabriquées par « npm run icones » à partir du paquet npm (version figée), sans CDN tiers.
 import "./icones.css";
@@ -7,17 +7,24 @@ import "./appli.css";
 import { PREFIXE } from "../lib/chemin";
 import donneesStructurees from "../contenu/donnees-structurees.json";
 
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
+// Les deux polices du site sont rangées dans le dépôt (app/polices/, licence SIL OFL 1.1, voir LICENCES.txt) :
+// la construction ne va plus les chercher chez Google Fonts (trois constructions ratées le dimanche 08/11/2026).
+// Ce sont les fichiers que Google fournissait : sous-ensemble « latin », polices variables (une plage de graisses).
+const cormorant = localFont({
+  src: "./polices/cormorant-garamond-latin.woff2",
+  weight: "300 700",
+  style: "normal",
   variable: "--font-cormorant",
   display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
-const jost = Jost({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const jost = localFont({
+  src: "./polices/jost-latin.woff2",
+  weight: "100 900",
+  style: "normal",
   variable: "--font-jost",
   display: "swap",
+  adjustFontFallback: "Arial",
 });
 
 export const viewport = { themeColor: "#FBF6F0" };
