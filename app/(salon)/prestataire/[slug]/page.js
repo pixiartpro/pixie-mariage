@@ -70,9 +70,12 @@ export default async function Fiche({ params }) {
         <div className="fiche-hero">
           <div className="fiche-thumb" style={{ background: catGrad(p.categorie) }}>
             <i className={`ti ti-${cat ? cat.icon : "heart"} ic`} aria-hidden="true" />
-            <span className="play" title="Vidéo de présentation">
-              <i className="ti ti-player-play-filled" aria-hidden="true" />
-            </span>
+            {/* Le bouton de lecture seulement quand le stand a son film : il ne promet pas une vidéo qui n'existe pas. */}
+            {p.video && (
+              <span className="play" title="Vidéo de présentation">
+                <i className="ti ti-player-play-filled" aria-hidden="true" />
+              </span>
+            )}
           </div>
           <div className="fiche-info">
             <span className="cat-tag">{cat ? cat.nom : ""}</span>

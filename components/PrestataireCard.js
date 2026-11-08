@@ -11,9 +11,12 @@ export default function PrestataireCard({ p }) {
       <div className="thumb" style={{ background: catGrad(p.categorie) }}>
         <i className={`ti ti-${cat ? cat.icon : "heart"} ic`} aria-hidden="true" />
         <span className="cat-tag">{cat ? cat.nom : ""}</span>
-        <span className="play" title="Vidéo de présentation">
-          <i className="ti ti-player-play" aria-hidden="true" />
-        </span>
+        {/* Le bouton de lecture seulement quand le stand a son film (relecture du 08/11/2026 : il promettait une vidéo absente). */}
+        {p.video && (
+          <span className="play" title="Vidéo de présentation">
+            <i className="ti ti-player-play" aria-hidden="true" />
+          </span>
+        )}
       </div>
       <div className="presta-body">
         {p.exemple && <span className="exemple-tag">Exemple</span>}

@@ -66,6 +66,7 @@ export default function Home() {
                 <i className="ti ti-gift" aria-hidden="true" /> Les outils offerts
               </a>
             </div>
+            <p className="accueil-ouverture">Les premiers stands sont en tournage : en attendant, des exemples vous montrent à quoi ils ressembleront.</p>
           </div>
         </div>
       </section>
@@ -146,7 +147,7 @@ export default function Home() {
       <section className="section">
         <div className="container">
           <div className="eyebrow">comment ça marche</div>
-          <h2 className="section-title">Votre mariage, en toute sérénité</h2>
+          <h2 className="section-title">Trois étapes, sans courir toute l&apos;île</h2>
           <div className="etapes" style={{ marginTop: 30 }}>
             {COPY.etapes.map((e, i) => (
               <div className="etape" key={i}>

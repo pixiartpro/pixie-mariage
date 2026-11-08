@@ -105,6 +105,7 @@ img { max-width: 100%; display: block; }
 .accueil-texte h1 em { font-style: normal; color: var(--rose-fonce); }
 .accueil-texte .lead { font-size: 19px; color: var(--doux); max-width: 520px; margin-bottom: 28px; }
 .accueil-texte .cta-row { justify-content: flex-start; }
+.accueil-ouverture { margin-top: 16px; font-size: 14px; color: var(--doux); max-width: 460px; }
 .accueil-photo { position: relative; border-radius: 22px; overflow: hidden; box-shadow: 0 22px 50px rgba(120, 90, 70, 0.22); }
 .accueil-photo img { width: 100%; height: auto; }
 .accueil-photo figcaption { position: absolute; left: 14px; bottom: 14px; background: rgba(251, 246, 240, 0.92); color: var(--texte); font-size: 13.5px; padding: 5px 13px; border-radius: 999px; }
@@ -114,6 +115,8 @@ img { max-width: 100%; display: block; }
   .accueil-texte { order: 0; }
   .accueil-texte h1 { font-size: 40px; }
   .accueil-texte .lead { font-size: 17px; margin-bottom: 22px; }
+  /* Photo moins haute : avec les barres de Safari (390 × 664), le bouton « Visiter les stands » reste visible. */
+  .accueil-photo img { aspect-ratio: 16 / 9; object-fit: cover; object-position: 50% 55%; }
 }
 
 /* ---------- Accueil : les deux outils offerts, juste sous le premier écran ---------- */
