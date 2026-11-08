@@ -20,17 +20,15 @@ npm test                     # tests du site, liens internes compris
 SHA=$(git rev-parse HEAD)
 git push -q origin main      # Vercel construit et met en ligne cet enregistrement
 echo "ENVOYÉ ($SITE). Attente de la mise en ligne par Vercel…"
-# Vercel annonce chaque mise en ligne à GitHub (déploiement « Production », état « success ») : on l'attend.
+# Vercel annonce chaque mise en ligne à GitHub par un statut « Vercel » posé sur l'enregistrement
+# (vu le dimanche 08/11/2026 : « pending », puis « success ») : on attend le plus récent.
 ETAT=""
 for i in $(seq 1 60); do       # 10 minutes au plus
-  ID=$(gh api "repos/$DEPOT/deployments?sha=$SHA&environment=Production" --jq '.[0].id // empty' 2>/dev/null || true)
-  if [ -n "$ID" ]; then
-    ETAT=$(gh api "repos/$DEPOT/deployments/$ID/statuses" --jq '.[0].state // empty' 2>/dev/null || true)
-    case "$ETAT" in
-      success) break ;;
-      failure|error) echo "ARRÊT : Vercel n'a pas pu mettre en ligne (état : $ETAT). Voir le projet sur vercel.com."; exit 1 ;;
-    esac
-  fi
+  ETAT=$(gh api "repos/$DEPOT/commits/$SHA/statuses" --jq '[.[] | select(.context == "Vercel")][0].state // empty' 2>/dev/null || true)
+  case "$ETAT" in
+    success) break ;;
+    failure|error) echo "ARRÊT : Vercel n'a pas pu mettre en ligne (état : $ETAT). Voir le projet sur vercel.com."; exit 1 ;;
+  esac
   sleep 10
 done
 [ "$ETAT" = "success" ] || echo "(Vercel n'a pas confirmé à temps : le contrôle attend lui-même)"
