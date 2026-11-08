@@ -102,6 +102,8 @@ end $$;
 -- Un visiteur n'est connu que par une EMPREINTE de son adresse internet : un HMAC-SHA256 calculé avec une clé tirée
 -- au hasard dans le coffre de Supabase (Vault), que personne ne voit ni ne tape. L'adresse elle-même n'est jamais
 -- enregistrée, et l'empreinte est effacée dans l'heure qui suit la fin de son jour (48 h au plus, page « vos données »).
+-- Elle change chaque jour : la date du jour entre dans le calcul, donc l'empreinte d'hier ne se relie pas à celle
+-- d'aujourd'hui (relecture ChatGPT du 08/11/2026 : sans la date, la même valeur revenait chaque jour pour la même adresse).
 -- L'adresse lue : celle que pose Cloudflare (cf-connecting-ip, qu'un visiteur ne peut pas imposer), sinon la première
 -- de x-forwarded-for (méthode de la documentation de Supabase). Le plafond global de 200 créations par heure reste
 -- le dernier filet contre un robot qui changerait d'adresse.
@@ -130,7 +132,9 @@ declare
 begin
   -- Sans clé, pas de plafond possible : on préfère ne rien créer.
   if cle is null then raise exception 'PM: La création est fermée pour le moment. Écrivez-nous.'; end if;
-  return encode(extensions.hmac('visiteur:' || left(coalesce(nullif(ip, ''), 'inconnue'), 64), cle, 'sha256'), 'hex');
+  -- to_char, pas date::text : le texte d'une date dépend du réglage DateStyle de la session.
+  return encode(extensions.hmac('visiteur:' || to_char((now() at time zone 'Indian/Reunion')::date, 'YYYY-MM-DD') || ':'
+    || left(coalesce(nullif(ip, ''), 'inconnue'), 64), cle, 'sha256'), 'hex');
 end $$;
 
 -- +1 pour ce visiteur aujourd'hui. Au-delà du plafond : refus, et le +1 s'annule avec le reste de la transaction.
@@ -152,6 +156,11 @@ end $$;
 -- heure) laissait passer deux demandes simultanées (201) et rendait une place quand une appli était effacée.
 -- Ici, la ligne de l'heure est verrouillée le temps de la création : les demandes simultanées passent l'une après
 -- l'autre, et une appli effacée ne rend pas sa place. Aucune donnée personnelle : un nombre par heure.
+-- L'heure est découpée en temps universel (UTC), jamais dans le fuseau de la requête : PostgREST laisse un visiteur
+-- choisir ce fuseau (« Prefer: timezone=… »), et un fuseau décalé d'une demi-heure ouvrait un deuxième compteur
+-- (défaut rejoué sur le banc le dimanche 08/11/2026, 201e création acceptée).
+-- Fenêtre FIXE, assumée : 200 par heure d'horloge, donc jusqu'à 400 à cheval sur deux heures (12 h 59 puis 13 h 00).
+-- Ce filet ne promet rien au public ; le plafond qui compte pour un robot est celui du visiteur (10 par jour).
 create table if not exists public.creations_par_heure (
   heure timestamptz primary key,
   n     integer not null default 0
@@ -163,7 +172,7 @@ create or replace function public.pm_plafond_global(p_par_heure integer)
 returns void language plpgsql security definer set search_path = '' as $$
 declare v_n integer;
 begin
-  insert into public.creations_par_heure as c (heure, n) values (date_trunc('hour', now()), 1)
+  insert into public.creations_par_heure as c (heure, n) values (date_trunc('hour', now(), 'UTC'), 1)
   on conflict (heure) do update set n = c.n + 1
   returning c.n into v_n;
   if v_n > p_par_heure then
@@ -171,8 +180,10 @@ begin
   end if;
 end $$;
 
--- Chaque heure, on efface les empreintes des jours passés : aucune ne vit plus de 48 h, même si un passage échoue
--- (relecture Codex du 08/11/2026 : avec un seul passage par nuit, une panne repoussait l'effacement à 51 h).
+-- Chaque heure, on efface les empreintes des jours passés : en marche normale, une empreinte vit 24 h 27 au plus, et
+-- 25 h 27 si un passage échoue (relecture Codex du 08/11/2026 : avec un seul passage par nuit, une panne repoussait
+-- l'effacement à 51 h). Les 48 h promises tiennent tant que la tâche planifiée tourne : le jour de la création de la
+-- base, vérifier qu'elle a vraiment tourné (table cron.job_run_details), car le banc ne fait qu'enregistrer l'horaire.
 -- Les compteurs horaires de plus de deux jours partent aussi.
 create or replace function public.visiteurs_purger()
 returns integer language sql security definer set search_path = '' as $$
