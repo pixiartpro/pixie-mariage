@@ -1,4 +1,4 @@
-// robots.txt : possible depuis que le site vit à la racine de pixie-mariage.re. Il annonce le plan du site à Google.
+// robots.txt : possible depuis que le site vit à la racine de sa propre adresse (SITE, lib/chemin.js). Il annonce le plan du site à Google.
 // Les pages privées portent déjà « noindex » dans leurs métadonnées : on ne les bloque pas ici, pour que Google lise cette consigne.
 import { SITE } from "../lib/chemin";
 

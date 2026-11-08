@@ -44,10 +44,10 @@ export default function Confidentialite() {
 
         <h2>Où et combien de temps</h2>
         <p>
-          Les informations des mariés sont enregistrées chez Supabase, sur des serveurs situés en Union européenne (Paris). Le site lui-même est servi par GitHub Pages. Comme tout hébergeur, Supabase et GitHub gardent quelques jours l&apos;adresse technique (IP) des visites dans leurs journaux ; nous ne les lisons pas.
+          Les informations des mariés sont enregistrées chez Supabase, sur des serveurs situés en Union européenne (Paris). Le site lui-même est servi par Vercel. Comme tout hébergeur, Supabase et Vercel gardent quelques jours l&apos;adresse technique (IP) des visites dans leurs journaux ; nous ne les lisons pas.
         </p>
         <p>
-          GitHub (GitHub, Inc.) est une société américaine : un accès depuis les États-Unis reste possible, encadré par le cadre de protection des données UE–États-Unis et par les clauses contractuelles types. Supabase (Supabase Pte. Ltd.) est une société de Singapour : les transferts éventuels hors de l&apos;Union européenne sont encadrés par les clauses contractuelles types de la Commission européenne.
+          Vercel (Vercel Inc.) est une société américaine : un accès depuis les États-Unis reste possible, encadré par les clauses contractuelles types de la Commission européenne et par le cadre de protection des données UE–États-Unis, auquel Vercel déclare adhérer. Supabase (Supabase Pte. Ltd.) est une société de Singapour : les transferts éventuels hors de l&apos;Union européenne sont encadrés par les clauses contractuelles types de la Commission européenne.
         </p>
         <p>
           <b>L&apos;appli et tout son contenu sont effacés 90 jours après la date du mariage.</b> Les mariés peuvent aussi tout effacer avant, d&apos;un bouton, depuis leur lien privé. Les sauvegardes techniques de l&apos;hébergeur disparaissent ensuite d&apos;elles-mêmes, en quelques jours.

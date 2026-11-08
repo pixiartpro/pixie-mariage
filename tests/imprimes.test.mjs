@@ -1,22 +1,16 @@
 // Le papier ne se corrige pas : chaque QR déjà imprimé doit toujours mener à une vraie page.
-// Le jour où le site passe sur sa propre adresse, GitHub renvoie l'ancienne vers la nouvelle en gardant la page et le « ?m= »
-// (vérifié le samedi 07/11/2026 sur Bootstrap, Jekyll et Mermaid). Il ne reste donc qu'une façon de casser un QR distribué :
-// renommer ou retirer la page qu'il vise. Ce test l'empêche. Un nouveau document imprimé avec un QR = une ligne de plus ici.
+// Deux façons de casser un QR distribué : renommer ou retirer la page qu'il vise (ce test l'empêche), ou déménager le site
+// sans renvoyer l'ancienne adresse (tests/renvoi.test.mjs l'empêche). La liste des QR : contenu/qr-imprimes.json.
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const OUT = new URL("../out/", import.meta.url).pathname;
-
-// Les QR prêts pour le salon de Nordev (samedi 21/11/2026), décodés un par un le samedi 07/11/2026.
-const IMPRIMES = [
-  { page: "/partenaires/candidater/", document: "prospectus exposants A5" },
-  { page: "/mariage/", document: "affiche de la démo de l'appli (?m=demo), et les faire-part des couples" },
-  { page: "/regles-du-salon/", document: "feuille Pixie Mariage (QR et adresse écrite)" },
-];
+export const IMPRIMES = JSON.parse(readFileSync(new URL("../contenu/qr-imprimes.json", import.meta.url), "utf8")).qr;
 
 test("chaque page visée par un QR imprimé existe toujours", { skip: !existsSync(OUT) && "lancer npm run build d'abord" }, () => {
+  assert.ok(IMPRIMES.length >= 3, "la liste des QR imprimés a été vidée");
   for (const { page, document } of IMPRIMES) {
     assert.ok(existsSync(join(OUT, page, "index.html")), `${page} a disparu : le QR du document « ${document} » mènerait à une page vide`);
   }

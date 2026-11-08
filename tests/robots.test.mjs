@@ -1,7 +1,7 @@
 // La sécurité d'avant l'ouverture (analyse croisée du dimanche 08/11/2026) :
 //  [13] contre les robots, avant d'ouvrir la création au public : un plafond par visiteur dans la base
 //       (supabase/schema.sql, rejoué par npm run test:sql), un champ piège dans le formulaire, et la page « vos données » qui le dit ;
-//  [11] les en-têtes de sécurité du jour du passage sur Hostinger (hebergement/hostinger, rejoués par npm run test:hostinger).
+//  [11] les en-têtes de sécurité envoyés par Vercel (vercel.json), que GitHub Pages ne pouvait pas envoyer.
 // Ces tests empêchent qu'une retouche affaiblisse l'un des deux sans qu'on le voie.
 import { test } from "node:test";
 import assert from "node:assert/strict";
@@ -28,12 +28,22 @@ test("la base plafonne les créations par visiteur, et la page « vos données �
   assert.match(page, /effacée au plus tard 48 heures après/);
 });
 
-test("les règles de Hostinger gardent tous leurs en-têtes de sécurité", () => {
-  const m = lire("hebergement/hostinger/htaccess.modele");
-  for (const e of ["Strict-Transport-Security", "Content-Security-Policy", "X-Frame-Options", "X-Content-Type-Options", "Referrer-Policy", "Permissions-Policy", "Cross-Origin-Opener-Policy"]) {
-    assert.match(m, new RegExp(`Header always set ${e} "`), `${e} manque`);
+test("Vercel envoie tous les en-têtes de sécurité, et la page ne parle qu'à sa propre base", () => {
+  const v = JSON.parse(lire("vercel.json"));
+  const entetes = Object.fromEntries(v.headers.find((r) => r.source === "/(.*)").headers.map((h) => [h.key, h.value]));
+  for (const e of ["Content-Security-Policy", "X-Frame-Options", "X-Content-Type-Options", "Referrer-Policy", "Permissions-Policy", "Cross-Origin-Opener-Policy"]) {
+    assert.ok(entetes[e], `${e} manque dans vercel.json`);
   }
-  assert.match(m, /connect-src 'self' __SUPABASE_URL__;/, "la page ne doit parler qu'à sa propre base");
-  assert.match(m, /frame-ancestors 'none'/);
-  assert.doesNotMatch(m, /\*\.supabase\.co|https?:\/\/\*/, "pas de joker dans la CSP");
+  const csp = entetes["Content-Security-Policy"];
+  assert.match(csp, /frame-ancestors 'none'/);
+  assert.match(csp, /default-src 'self'/);
+  assert.doesNotMatch(csp, /\*/, "pas de joker dans la CSP");
+  // La base : tant qu'elle n'existe pas, la page ne parle qu'au site. Le jour où l'adresse de la base est posée
+  // (NEXT_PUBLIC_SUPABASE_URL), elle doit être dans connect-src, sinon l'appli ne pourrait pas lui parler.
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const connect = csp.match(/connect-src ([^;]+)/)[1].trim();
+  assert.equal(connect, base ? `'self' ${base}` : "'self'", "connect-src doit être le site, plus la base de Pixie Mariage si elle existe");
+  // Vercel sert le dossier construit tel quel (comme GitHub Pages), avec les mêmes adresses à barre finale.
+  assert.equal(v.outputDirectory, "out");
+  assert.equal(v.trailingSlash, true);
 });

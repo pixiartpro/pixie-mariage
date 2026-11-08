@@ -23,13 +23,13 @@
     {
       "@type": "WebSite",
       "name": "Pixie Mariage",
-      "url": "https://pixie-mariage.re/",
+      "url": "https://pixie-mariage.vercel.app/",
       "inLanguage": "fr"
     },
     {
       "@type": "SoftwareApplication",
       "name": "Pixie Mariage",
-      "url": "https://pixie-mariage.re/",
+      "url": "https://pixie-mariage.vercel.app/",
       "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Web, iOS, Android",
       "publisher": {

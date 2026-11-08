@@ -1,5 +1,5 @@
-// Le plan du site pour Google (sitemap.xml), annoncé dans robots.txt depuis que le site vit à la racine de pixie-mariage.re.
-// À déclarer aussi dans Google Search Console (propriété « domaine » pixie-mariage.re). Les pages privées (modifier, espace exposant, ma sélection) n'y sont pas.
+// Le plan du site pour Google (sitemap.xml), annoncé dans robots.txt depuis que le site vit à la racine de sa propre adresse (SITE, lib/chemin.js).
+// À déclarer aussi dans Google Search Console (propriété de la nouvelle adresse). Les pages privées (modifier, espace exposant, ma sélection) n'y sont pas.
 import { PRESTATAIRES } from "../lib/data";
 import { SITE } from "../lib/chemin";
 

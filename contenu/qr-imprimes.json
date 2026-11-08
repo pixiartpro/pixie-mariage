@@ -1,0 +1,8 @@
+{
+  "explication": "Les pages visées par un QR déjà imprimé (décodés un par un le samedi 07/11/2026). Le papier ne se corrige pas : ces pages ne se renomment pas, et leurs anciennes adresses doivent toujours renvoyer vers elles. Un nouveau document imprimé avec un QR = une ligne de plus ici.",
+  "qr": [
+    { "page": "/partenaires/candidater/", "recherche": "", "document": "prospectus exposants A5" },
+    { "page": "/mariage/", "recherche": "?m=demo", "document": "affiche de la démo de l'appli, et les faire-part des couples" },
+    { "page": "/regles-du-salon/", "recherche": "", "document": "feuille Pixie Mariage (QR et adresse écrite)" }
+  ]
+}

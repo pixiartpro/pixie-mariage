@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Pages de renvoi de l’ancienne adresse GitHub Pages (npm run renvoi), fabriquées à la demande
+/renvoi/
